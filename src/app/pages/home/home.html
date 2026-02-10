@@ -1,0 +1,67 @@
+<div class="header">
+  <p class="title">Lyfe</p>
+  <div class="nav-options">
+    <p (click)="scrollTo('home')" [class.active]="activeSection() === 'home'">Home</p>
+    <p (click)="scrollTo('game')" [class.active]="activeSection() === 'game'">Game</p>
+    <p (click)="scrollTo('developer')" [class.active]="activeSection() === 'developer'">
+      Developer
+    </p>
+    <p (click)="scrollTo('code')" [class.active]="activeSection() === 'code'">Code</p>
+  </div>
+  <div class="user-options">
+    <p>Play</p>
+  </div>
+</div>
+
+<div class="content">
+  <section id="home" class="section hero-section">
+    <h1 class="hero-title">Lyfe</h1>
+    <p class="hero-subtitle">A digital simulation of existence.</p>
+    <div class="hero-actions">
+      <button class="primary-btn" (click)="scrollTo('game')">Explore the World</button>
+    </div>
+  </section>
+  <section id="game" class="section">
+    <h2 class="section-title">The Game</h2>
+    <div class="section-content">
+      <p>
+        Experience a new way of living in the digital realm. Lyfe offers an immersive simulation
+        where every choice matters. Build your legacy, connect with others, and shape the world
+        around you.
+      </p>
+      <div class="game-showcase">
+        <div class="game-placeholder">Screenshot Placeholder 1</div>
+        <div class="game-placeholder">Screenshot Placeholder 2</div>
+        <div class="game-placeholder">Screenshot Placeholder 3</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="developer" class="section">
+    <h2 class="section-title">The Developer</h2>
+    <div class="section-content">
+      <p>
+        Built with passion and a vision for the future of gaming. Our team is dedicated to creating
+        experiences that push the boundaries of web technologies.
+      </p>
+    </div>
+  </section>
+
+  <section id="code" class="section">
+    <h2 class="section-title">The Code</h2>
+    <div class="section-content">
+      <p>
+        We believe in transparency and community collaboration. The frontend codebase is open for
+        everyone to explore, learn from, and contribute to.
+      </p>
+      <div class="code-note">
+        <p>
+          <span class="highlight">Note:</span> While our frontend is open source, the backend code
+          remains closed to ensure the integrity of the game economy and prevent market
+          manipulation.
+        </p>
+      </div>
+      <button class="github-btn">View on GitHub</button>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,202 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 3rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: rgba(10, 10, 10, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: padding 0.3s ease;
+}
+
+.title {
+  font-size: 2rem;
+  font-family: 'pixels';
+}
+
+.nav-options,
+.user-options {
+  display: flex;
+  align-items: center;
+}
+
+.nav-options {
+  gap: 3rem;
+}
+
+.user-options {
+  gap: 1rem;
+}
+
+.nav-options p,
+.user-options p {
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  user-select: none;
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+
+.nav-options p:hover,
+.nav-options p.active,
+.user-options p:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.nav-options p:active,
+.user-options p:active {
+  background-color: #ffffff;
+  color: #000000;
+  transform: translateY(1px);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-section {
+  min-height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.hero-title {
+  font-family: 'pixels';
+  font-size: 8rem;
+  margin-bottom: 1rem;
+  letter-spacing: 4px;
+  text-shadow: 4px 4px 0px rgba(255, 255, 255, 0.1);
+}
+
+.hero-subtitle {
+  font-family: 'poppins', sans-serif;
+  font-size: 1.5rem;
+  color: #cccccc;
+  margin-bottom: 3rem;
+  letter-spacing: 1px;
+}
+
+.primary-btn {
+  padding: 1rem 2.5rem;
+  font-family: 'pixels';
+  font-size: 1.5rem;
+  background-color: #ffffff;
+  color: #0a0a0a;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+  background-color: #f0f0f0;
+}
+
+.primary-btn:active {
+  transform: translateY(0);
+}
+
+.section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.section-title {
+  font-family: 'pixels';
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  letter-spacing: 2px;
+}
+
+.section-content {
+  max-width: 800px;
+  font-family: 'poppins', sans-serif;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #cccccc;
+}
+
+.highlight {
+  color: #ff5555;
+  font-weight: bold;
+}
+
+.game-showcase {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+  width: 100%;
+}
+
+.game-placeholder {
+  aspect-ratio: 16 / 9;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'pixels';
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+}
+
+.game-placeholder:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-5px);
+}
+
+.code-note {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 85, 85, 0.3);
+  background-color: rgba(255, 85, 85, 0.05);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+
+.github-btn {
+  margin-top: 2rem;
+  padding: 1rem 2rem;
+  font-family: 'pixels';
+  font-size: 1.2rem;
+  background-color: transparent;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.github-btn:hover {
+  background-color: #ffffff;
+  color: #0a0a0a;
+}

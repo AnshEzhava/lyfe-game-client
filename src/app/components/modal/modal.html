@@ -1,0 +1,15 @@
+<div class="modal-overlay" [class.open]="isOpen">
+  <div class="modal-content">
+    <h3>{{ title }}</h3>
+    <p>Please enter a display name to continue.</p>
+    <div class="input-group">
+      <input
+        type="text"
+        [(ngModel)]="displayName"
+        placeholder="Enter your name"
+        (keyup.enter)="onSubmit()"
+      />
+      <button (click)="onSubmit()" [disabled]="!displayName().trim()">Start Playing</button>
+    </div>
+  </div>
+</div>

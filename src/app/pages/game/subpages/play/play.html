@@ -1,1 +1,7 @@
-<p>play works!</p>
+<div class="play-container">
+  <h2>🎮 Game</h2>
+  <p>Backend Health: {{ healthStatus() }}</p>
+
+  <app-modal title="Welcome!" [isOpen]="showModal()" (submitName)="onModalSubmit($event)">
+  </app-modal>
+</div>

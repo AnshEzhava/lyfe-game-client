@@ -33,3 +33,7 @@ body {
   background-size: 80px 80px;
   min-height: 100vh;
 }
+
+.clerk-footer-hidden {
+  display: none !important;
+}

@@ -1,1 +1,19 @@
-<p>auth works!</p>
+<div class="auth-container">
+  <div class="auth-wrapper">
+    @if (showSignIn()) {
+      <div class="auth-card" @fadeIn>
+        <clerk-sign-in [props]="signInProps"></clerk-sign-in>
+        <p class="toggle-text">
+          Don't have an account? <span (click)="toggleMode()">Sign up</span>
+        </p>
+      </div>
+    } @else {
+      <div class="auth-card" @fadeIn>
+        <clerk-sign-up [props]="signUpProps"></clerk-sign-up>
+        <p class="toggle-text">
+          Already have an account? <span (click)="toggleMode()">Sign in</span>
+        </p>
+      </div>
+    }
+  </div>
+</div>

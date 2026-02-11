@@ -1,7 +1,65 @@
 <div class="play-container">
-  <h2>🎮 Game</h2>
-  <p>Backend Health: {{ healthStatus() }}</p>
+  <!-- Header -->
+  <header class="play-header">
+    <div class="logo">LyfeGame</div>
+    <div class="status-bar">
+      <!-- User Info -->
+      <div class="status-item user-info">
+        <img src="/images/user.png" alt="User Avatar" class="icon-avatar" />
+        <span class="username">{{ user()?.username || 'Player' }}</span>
+      </div>
 
+      <!-- Date -->
+      <div class="status-item date-info">
+        <span>{{ currentDate() }}</span>
+      </div>
+
+      <!-- Time / Weather -->
+      <div class="status-item time-info">
+        <img
+          [src]="isNight() ? '/images/moon.png' : '/images/sun.png'"
+          alt="Weather"
+          class="icon-weather"
+        />
+        <span>{{ currentTime() }}</span>
+      </div>
+
+      <!-- Currency -->
+      <div class="status-item currency-info">
+        <span>Branks</span>
+        <img src="/images/branks.png" alt="Branks" class="icon-currency" />
+        <span class="amount">: {{ balance() }}</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Grid -->
+  <div class="play-grid">
+    <!-- Left Column: Stock Market -->
+    <div class="grid-item stock-market">
+      <h3>Stock Market</h3>
+    </div>
+
+    <!-- Middle Column -->
+    <div class="grid-column middle-column">
+      <div class="grid-item user-stats">
+        <h3>User Stats</h3>
+      </div>
+      <div class="grid-item job-education">
+        <h3>Job / Education</h3>
+      </div>
+      <div class="grid-item leaderboards">
+        <h3>Leaderboards</h3>
+      </div>
+    </div>
+
+    <!-- Right Column: News -->
+    <div class="grid-item news">
+      <h3>News</h3>
+    </div>
+  </div>
+
+  <!-- Modal for New User -->
   <app-modal title="Welcome!" [isOpen]="showModal()" (submitName)="onModalSubmit($event)">
   </app-modal>
 </div>

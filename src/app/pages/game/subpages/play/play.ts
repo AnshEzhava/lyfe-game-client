@@ -20,6 +20,11 @@ export class Play implements OnInit {
   user = toSignal(this.clerkService.user$);
   healthStatus = signal<string>('Checking...');
   showModal = signal(false);
+  balance = signal<number>(0);
+
+  currentDate = signal<string>('');
+  currentTime = signal<string>('');
+  isNight = signal<boolean>(false);
 
   constructor() {
     effect(() => {
@@ -29,10 +34,36 @@ export class Play implements OnInit {
         this.router.navigate(['/game/auth']);
       }
     });
+
+    this.startClock();
+  }
+
+  startClock() {
+    setInterval(() => {
+      const now = new Date();
+      this.currentTime.set(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+      this.isNight.set(now.getHours() >= 18 || now.getHours() < 6);
+
+      const options: Intl.DateTimeFormatOptions = {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      };
+      const dateParts = now.toLocaleDateString('en-GB', options).split(' ');
+      // Simple ordinal suffix logic
+      const day = parseInt(dateParts[0]);
+      let suffix = 'th';
+      if (day === 1 || day === 21 || day === 31) suffix = 'st';
+      if (day === 2 || day === 22) suffix = 'nd';
+      if (day === 3 || day === 23) suffix = 'rd';
+
+      this.currentDate.set(`${day}${suffix} ${dateParts[1]} ${dateParts[2]}`);
+    }, 1000);
   }
 
   ngOnInit() {
     this.checkUser();
+    this.getBalance();
   }
 
   checkUser() {
@@ -47,6 +78,17 @@ export class Play implements OnInit {
         } else {
           this.healthStatus.set(`❌ Error: ${err.status} ${err.statusText}`);
         }
+      },
+    });
+  }
+
+  getBalance() {
+    this.http.get('http://localhost:8080/api/user/balance').subscribe({
+      next: (res: any) => {
+        this.balance.set(res.balance);
+      },
+      error: (err) => {
+        alert('Failed to get balance: ' + err.statusText);
       },
     });
   }

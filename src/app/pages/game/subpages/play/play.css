@@ -1,0 +1,130 @@
+.play-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  gap: 1rem;
+  color: #fff;
+  font-family: 'poppins', sans-serif;
+  overflow: hidden;
+}
+
+/* Header */
+.play-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1.5rem;
+  border: 1px solid #fff;
+  border-radius: 12px;
+  height: 80px;
+}
+
+.logo {
+  font-family: 'pixels', sans-serif;
+  font-size: 2rem;
+}
+
+.status-bar {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  font-family: 'pixels', sans-serif;
+  font-size: 1.1rem;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background-color: #111;
+  min-width: 120px; /* Ensure they have some minimum width */
+  justify-content: center;
+}
+
+.status-item img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.username {
+  color: #aaa;
+}
+
+.amount {
+  color: #4caf50; /* Green for money */
+}
+
+/* Main Grid */
+.play-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 1rem;
+  flex: 1;
+  min-height: 0; /* Important for grid within flex */
+}
+
+.grid-item {
+  border: 1px solid #fff;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.grid-item h3 {
+  font-family: 'pixels', sans-serif;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Specific Columns */
+.middle-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.user-stats {
+  flex: 1;
+}
+
+.job-education {
+  flex: 2; /* Bigger section */
+}
+
+.leaderboards {
+  flex: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .play-header {
+    flex-direction: column;
+    height: auto;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .status-bar {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .play-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    overflow-y: auto;
+  }
+
+  .middle-column {
+    flex-direction: column;
+  }
+}

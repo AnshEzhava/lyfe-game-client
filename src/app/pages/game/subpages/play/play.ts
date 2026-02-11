@@ -1,8 +1,8 @@
 import { Component, inject, signal, effect, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 import { ClerkService } from 'ngx-clerk';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { UserService } from '../../../../services/user.service';
 import { Modal } from '../../../../components/modal/modal';
 
 @Component({
@@ -15,7 +15,7 @@ import { Modal } from '../../../../components/modal/modal';
 export class Play implements OnInit {
   private clerkService = inject(ClerkService);
   private router = inject(Router);
-  private http = inject(HttpClient);
+  private userService = inject(UserService);
 
   user = toSignal(this.clerkService.user$);
   healthStatus = signal<string>('Checking...');
@@ -28,8 +28,6 @@ export class Play implements OnInit {
 
   constructor() {
     effect(() => {
-      // If user is undefined (loading) or null (not signed in), handle accordingly
-      // Here we blindly redirect if strictly null, but be careful with 'undefined' initial state
       if (this.user() === null) {
         this.router.navigate(['/game/auth']);
       }
@@ -50,7 +48,6 @@ export class Play implements OnInit {
         year: 'numeric',
       };
       const dateParts = now.toLocaleDateString('en-GB', options).split(' ');
-      // Simple ordinal suffix logic
       const day = parseInt(dateParts[0]);
       let suffix = 'th';
       if (day === 1 || day === 21 || day === 31) suffix = 'st';
@@ -67,7 +64,7 @@ export class Play implements OnInit {
   }
 
   checkUser() {
-    this.http.get('http://localhost:8080/api/user/find').subscribe({
+    this.userService.findUser().subscribe({
       next: (res) => {
         this.healthStatus.set(`✅ User Found: ${JSON.stringify(res)}`);
       },
@@ -83,8 +80,8 @@ export class Play implements OnInit {
   }
 
   getBalance() {
-    this.http.get('http://localhost:8080/api/user/balance').subscribe({
-      next: (res: any) => {
+    this.userService.getBalance().subscribe({
+      next: (res) => {
         this.balance.set(res.balance);
       },
       error: (err) => {
@@ -94,11 +91,11 @@ export class Play implements OnInit {
   }
 
   onModalSubmit(displayName: string) {
-    this.http.post('http://localhost:8080/api/user/add', { displayName }).subscribe({
+    this.userService.createUser(displayName).subscribe({
       next: (res) => {
         this.showModal.set(false);
         this.healthStatus.set('✅ User Created! Reloading...');
-        this.checkUser(); // Reload user data
+        this.checkUser();
       },
       error: (err) => {
         alert('Failed to create user: ' + err.statusText);

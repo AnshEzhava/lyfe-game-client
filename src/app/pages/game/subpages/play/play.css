@@ -42,7 +42,7 @@
   border: 1px solid #333;
   border-radius: 8px;
   background-color: #111;
-  min-width: 120px; /* Ensure they have some minimum width */
+  min-width: 120px;
   justify-content: center;
 }
 
@@ -57,16 +57,15 @@
 }
 
 .amount {
-  color: #4caf50; /* Green for money */
+  color: #4caf50;
 }
 
-/* Main Grid */
 .play-grid {
   display: grid;
   grid-template-columns: 1fr 1.2fr 1fr;
   gap: 1rem;
   flex: 1;
-  min-height: 0; /* Important for grid within flex */
+  min-height: 0;
 }
 
 .grid-item {
@@ -85,7 +84,6 @@
   margin-bottom: 0.5rem;
 }
 
-/* Specific Columns */
 .middle-column {
   display: flex;
   flex-direction: column;
@@ -97,14 +95,13 @@
 }
 
 .job-education {
-  flex: 2; /* Bigger section */
+  flex: 2;
 }
 
 .leaderboards {
   flex: 1;
 }
 
-/* Responsive adjustments */
 @media (max-width: 1024px) {
   .play-header {
     flex-direction: column;

@@ -1,9 +1,10 @@
-import { Component, inject, signal, effect, OnInit } from '@angular/core';
+import { Component, inject, signal, effect, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ClerkService } from 'ngx-clerk';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { UserService } from '../../../../services/user.service';
+import { UserResponse } from '../../../../types/api/user.types';
 import { Modal } from '../../../../components/modal/modal';
 
 @Component({
@@ -19,14 +20,18 @@ export class Play implements OnInit {
   private userService = inject(UserService);
 
   user = toSignal(this.clerkService.user$);
+  gameUser = signal<UserResponse | null>(null);
   healthStatus = signal<string>('Checking...');
   showModal = signal(false);
-  balance = signal<number>(0);
 
   currentDate = signal<string>('');
   currentTime = signal<string>('');
   isNight = signal<boolean>(false);
   expandedSection = signal<string | null>(null);
+
+  // Computed signal for intelligence
+  intelligence = computed(() => this.gameUser()?.stats?.intelligence || 0);
+  branks = computed(() => this.gameUser()?.balance || 0);
 
   expand(section: string) {
     if (!document.startViewTransition) {
@@ -83,13 +88,13 @@ export class Play implements OnInit {
 
   ngOnInit() {
     this.checkUser();
-    this.getBalance();
   }
 
   checkUser() {
     this.userService.findUser().subscribe({
       next: (res) => {
         this.healthStatus.set(`✅ User Found: ${JSON.stringify(res)}`);
+        this.gameUser.set(res);
       },
       error: (err) => {
         if (err.status === 404) {
@@ -98,17 +103,6 @@ export class Play implements OnInit {
         } else {
           this.healthStatus.set(`❌ Error: ${err.status} ${err.statusText}`);
         }
-      },
-    });
-  }
-
-  getBalance() {
-    this.userService.getBalance().subscribe({
-      next: (res) => {
-        this.balance.set(res.balance);
-      },
-      error: (err) => {
-        alert('Failed to get balance: ' + err.statusText);
       },
     });
   }

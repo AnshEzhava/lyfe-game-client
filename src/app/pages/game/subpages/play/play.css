@@ -138,18 +138,118 @@
 /* Ensure h3 looks the same in overlay */
 .expanded-overlay h3 {
   font-family: 'pixels', sans-serif;
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* User Stats (now Intelligence) Styles */
+.user-stats {
+  cursor: default; /* Non-expandable */
+}
+
+/* Remove hover effect for non-expandable item */
+.user-stats:hover {
+  transform: none;
+  box-shadow: none;
+  background-color: transparent;
+}
+
+.stats-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.9rem;
+}
+
+.stat-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: #3498db; /* Blue for Intelligence */
+}
+
+.progress-bar {
+  flex: 1;
+  height: 10px;
+  background-color: #333;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid #555;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.fill-intelligence {
+  background-color: #3498db;
+} /* Blue */
+
+/* Expanded Stats Styles - REMOVED */
+
+.actions-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.action-btn {
+  background-color: #222;
+  border: 1px solid #fff;
+  color: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'pixels', sans-serif;
+  font-size: 1rem;
+  transition:
+    transform 0.1s,
+    background-color 0.2s;
+}
+
+.action-btn:hover {
+  background-color: #333;
+  transform: scale(1.05);
+}
+
+.action-btn:active {
+  transform: scale(0.95);
+}
+
+.action-cost {
+  display: block;
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 0.2rem;
+}
+
+.user-stats {
+  flex: 1;
 }
 
 .middle-column {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-}
-
-.user-stats {
-  flex: 1;
 }
 
 .job-education {

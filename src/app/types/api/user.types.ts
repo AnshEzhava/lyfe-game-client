@@ -3,6 +3,9 @@ export interface UserResponse {
   clerkId: string;
   displayName: string;
   balance: number;
+  stats?: {
+    intelligence: number;
+  };
 }
 
 export interface BalanceResponse {
@@ -11,4 +14,10 @@ export interface BalanceResponse {
 
 export interface CreateUserRequest {
   displayName: string;
+}
+
+export interface ApiResponse<T> {
+  responseCode: number;
+  responseMessage: string;
+  response: T;
 }

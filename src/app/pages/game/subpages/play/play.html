@@ -29,22 +29,99 @@
   </header>
 
   <div class="play-grid">
-    <div class="grid-item stock-market">
-      <h3>Stock Market</h3>
+    <!-- Stock Market -->
+    <div
+      class="grid-item stock-market"
+      [class.invisible-placeholder]="expandedSection() === 'stock'"
+      [style.view-transition-name]="expandedSection() === 'stock' ? 'none' : 'stock'"
+      (click)="expand('stock')"
+    >
+      <h3 [style.view-transition-name]="expandedSection() === 'stock' ? 'none' : 'title-stock'">
+        Stock Market
+      </h3>
     </div>
+
     <div class="grid-column middle-column">
-      <div class="grid-item user-stats">
-        <h3>User Stats</h3>
+      <!-- User Stats -->
+      <div
+        class="grid-item user-stats"
+        [class.invisible-placeholder]="expandedSection() === 'user-stats'"
+        [style.view-transition-name]="expandedSection() === 'user-stats' ? 'none' : 'user-stats'"
+        (click)="expand('user-stats')"
+      >
+        <h3
+          [style.view-transition-name]="expandedSection() === 'user-stats' ? 'none' : 'title-stock'"
+        >
+          User Stats
+        </h3>
       </div>
-      <div class="grid-item job-education">
-        <h3>Job / Education</h3>
+
+      <!-- Job / Education -->
+      <div
+        class="grid-item job-education"
+        [class.invisible-placeholder]="expandedSection() === 'job'"
+        [style.view-transition-name]="expandedSection() === 'job' ? 'none' : 'job'"
+        (click)="expand('job')"
+      >
+        <h3 [style.view-transition-name]="expandedSection() === 'job' ? 'none' : 'title-job'">
+          Job / Education
+        </h3>
       </div>
-      <div class="grid-item leaderboards">
-        <h3>Leaderboards</h3>
+
+      <!-- Leaderboards -->
+      <div
+        class="grid-item leaderboards"
+        [class.invisible-placeholder]="expandedSection() === 'leaderboards'"
+        [style.view-transition-name]="
+          expandedSection() === 'leaderboards' ? 'none' : 'leaderboards'
+        "
+        (click)="expand('leaderboards')"
+      >
+        <h3
+          [style.view-transition-name]="
+            expandedSection() === 'leaderboards' ? 'none' : 'title-leaderboards'
+          "
+        >
+          Leaderboards
+        </h3>
       </div>
     </div>
-    <div class="grid-item news">
-      <h3>News</h3>
+
+    <!-- News -->
+    <div
+      class="grid-item news"
+      [class.invisible-placeholder]="expandedSection() === 'news'"
+      [style.view-transition-name]="expandedSection() === 'news' ? 'none' : 'news'"
+      (click)="expand('news')"
+    >
+      <h3 [style.view-transition-name]="expandedSection() === 'news' ? 'none' : 'title-news'">
+        News
+      </h3>
+    </div>
+
+    <!-- Overlay for Expanded Item -->
+    <div
+      class="expanded-overlay"
+      *ngIf="expandedSection()"
+      [style.view-transition-name]="expandedSection()"
+    >
+      <button class="close-btn" (click)="close($event)">X</button>
+
+      <div *ngIf="expandedSection() === 'stock'">
+        <h3 style="view-transition-name: title-stock">Stock Market 1</h3>
+      </div>
+      <div *ngIf="expandedSection() === 'user-stats'">
+        <h3 style="view-transition-name: title-stock">User Stats 1</h3>
+      </div>
+      <div *ngIf="expandedSection() === 'job'">
+        <h3 style="view-transition-name: title-job">Job / Education 1</h3>
+      </div>
+      <div *ngIf="expandedSection() === 'leaderboards'">
+        <h3 style="view-transition-name: title-leaderboards">Leaderboards 1</h3>
+      </div>
+      <div *ngIf="expandedSection() === 'news'">
+        <h3 style="view-transition-name: title-news">News 1</h3>
+      </div>
     </div>
   </div>
   <app-modal title="Welcome!" [isOpen]="showModal()" (submitName)="onModalSubmit($event)">

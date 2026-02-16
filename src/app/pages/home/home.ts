@@ -1,4 +1,5 @@
 import { Component, AfterViewInit, OnDestroy, signal, ElementRef, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -10,6 +11,7 @@ export class Home implements AfterViewInit, OnDestroy {
   activeSection = signal<string>('home');
   private observer: IntersectionObserver | null = null;
   private readonly elementRef = inject(ElementRef);
+  router = inject(Router);
 
   ngAfterViewInit() {
     setTimeout(() => {
@@ -54,5 +56,9 @@ export class Home implements AfterViewInit, OnDestroy {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }
+  }
+
+  navigate(path: string) {
+    this.router.navigate([path]);
   }
 }

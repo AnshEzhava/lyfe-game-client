@@ -1,4 +1,5 @@
 import { Component, inject, signal, effect, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ClerkService } from 'ngx-clerk';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -8,7 +9,7 @@ import { Modal } from '../../../../components/modal/modal';
 @Component({
   selector: 'app-play',
   standalone: true,
-  imports: [Modal],
+  imports: [Modal, CommonModule],
   templateUrl: './play.html',
   styleUrl: './play.css',
 })
@@ -25,6 +26,28 @@ export class Play implements OnInit {
   currentDate = signal<string>('');
   currentTime = signal<string>('');
   isNight = signal<boolean>(false);
+  expandedSection = signal<string | null>(null);
+
+  expand(section: string) {
+    if (!document.startViewTransition) {
+      this.expandedSection.set(section);
+      return;
+    }
+    document.startViewTransition(() => {
+      this.expandedSection.set(section);
+    });
+  }
+
+  close(event?: Event) {
+    if (event) event.stopPropagation();
+    if (!document.startViewTransition) {
+      this.expandedSection.set(null);
+      return;
+    }
+    document.startViewTransition(() => {
+      this.expandedSection.set(null);
+    });
+  }
 
   constructor() {
     effect(() => {

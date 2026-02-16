@@ -8,7 +8,7 @@
     </p>
     <p (click)="scrollTo('code')" [class.active]="activeSection() === 'code'">Code</p>
   </div>
-  <div class="user-options">
+  <div class="user-options" (click)="navigate('/game/auth')">
     <p>Play</p>
   </div>
 </div>

@@ -1,0 +1,67 @@
+/* Fixed stack anchored to bottom-right — never affects page layout */
+.toast-stack {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column-reverse; /* newest on top */
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 8px;
+  font-family: 'poppins', sans-serif;
+  font-size: 0.85rem;
+  color: #fff;
+  cursor: pointer;
+  pointer-events: all;
+  max-width: 320px;
+
+  /* Slide in from the right */
+  animation: toast-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.toast-success {
+  background: #0d1a0d;
+  border: 1px solid #2d6a2d;
+}
+
+.toast-success .toast-dot {
+  background: #4caf50;
+}
+
+.toast-error {
+  background: #1a0d0d;
+  border: 1px solid #6a2d2d;
+}
+
+.toast-error .toast-dot {
+  background: #e74c3c;
+}
+
+.toast-info {
+  background: #0d131a;
+  border: 1px solid #2d4a6a;
+}
+
+.toast-info .toast-dot {
+  background: #3498db;
+}
+
+.toast-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}

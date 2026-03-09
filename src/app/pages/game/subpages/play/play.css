@@ -42,14 +42,45 @@
   border: 1px solid #333;
   border-radius: 8px;
   background-color: #111;
-  min-width: 120px;
   justify-content: center;
+  /* Fixed widths per pill prevent any layout shift when content changes */
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Lock each pill to the widest value it can show */
+.user-info {
+  width: 150px;
+}
+.date-info {
+  width: 175px;
+}
+.time-info {
+  width: 145px;
+}
+.currency-info {
+  width: 180px;
+}
+
+/* Tabular nums keeps digit widths uniform inside the pixel font */
+.date-info span,
+.time-info span,
+.currency-info .amount {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
 }
 
 .status-item img {
   width: 28px;
   height: 28px;
   object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* Moon image tends to render smaller — boost it slightly */
+.icon-moon {
+  width: 34px;
+  height: 34px;
 }
 
 .username {
@@ -60,6 +91,7 @@
   color: #4caf50;
 }
 
+/* Grid */
 .play-grid {
   display: grid;
   grid-template-columns: 1fr 1.2fr 1fr;
@@ -69,7 +101,7 @@
   position: relative; /* Anchor for absolute positioning of overlay */
 }
 
-/* Custom easing for "spring-like" effect (iOS style) */
+/* Spring-like view transition easing (iOS style) */
 ::view-transition-group(*) {
   animation-duration: 0.6s;
   animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -102,7 +134,6 @@
   padding: 1rem;
   position: relative;
   cursor: pointer;
-  /* Remove transition: all 0.3s ease; as we are using View Transitions */
 }
 
 .grid-item h3 {
@@ -111,12 +142,12 @@
   margin-bottom: 0.5rem;
 }
 
-/* When expanded, the original item becomes invisible but keeps space */
+/* When expanded, the original item becomes invisible but keeps its space */
 .invisible-placeholder {
   visibility: hidden;
 }
 
-/* The overlay providing the expanded view */
+/* Overlay */
 .expanded-overlay {
   position: absolute;
   inset: 0;
@@ -132,22 +163,20 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: 1px solid #fff; /* Match grid item border */
+  border: 1px solid #fff;
 }
 
-/* Ensure h3 looks the same in overlay */
 .expanded-overlay h3 {
   font-family: 'pixels', sans-serif;
   font-size: 1.5rem;
   margin-bottom: 2rem;
 }
 
-/* User Stats (now Intelligence) Styles */
+/* No hover on non-expandable card */
 .user-stats {
-  cursor: default; /* Non-expandable */
+  cursor: default;
 }
 
-/* Remove hover effect for non-expandable item */
 .user-stats:hover {
   transform: none;
   box-shadow: none;
@@ -180,7 +209,7 @@
 .stat-icon svg {
   width: 100%;
   height: 100%;
-  fill: #3498db; /* Blue for Intelligence */
+  fill: #3498db;
 }
 
 .progress-bar {
@@ -201,9 +230,7 @@
 
 .fill-intelligence {
   background-color: #3498db;
-} /* Blue */
-
-/* Expanded Stats Styles - REMOVED */
+}
 
 .actions-container {
   display: grid;
@@ -252,8 +279,26 @@
   gap: 1rem;
 }
 
+/* Override grid-item centering so panels fill the card top-to-bottom */
 .job-education {
   flex: 2;
+  justify-content: flex-start;
+  overflow: hidden;
+  transition:
+    box-shadow 0.35s ease,
+    border-color 0.35s ease,
+    transform 0.35s ease;
+  background: rgba(15, 15, 15, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.job-education:hover {
+  box-shadow:
+    0 0 25px rgba(76, 175, 80, 0.15),
+    0 0 25px rgba(52, 152, 219, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
 }
 
 .leaderboards {
@@ -317,4 +362,560 @@
 
 .close-btn:hover {
   background: #555;
+}
+
+.overlay-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow: hidden;
+}
+
+.overlay-content > h3 {
+  margin-bottom: 1.5rem;
+  align-self: center;
+}
+
+.coming-soon {
+  color: #666;
+  font-size: 0.9rem;
+  align-self: center;
+  margin-top: 2rem;
+}
+
+/* Job / Education expanded overlay */
+.job-overlay {
+  padding-top: 0.5rem;
+}
+
+.overlay-header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.tab-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #333;
+  width: 100%;
+  padding-bottom: 0.5rem;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  color: #888;
+  font-family: 'pixels', sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.3rem 1rem;
+  border-radius: 6px 6px 0 0;
+  transition:
+    color 0.2s,
+    background 0.2s;
+}
+
+.tab-btn.active {
+  color: #fff;
+  background: #222;
+  border: 1px solid #444;
+  border-bottom: none;
+}
+
+.tab-btn:hover:not(.active) {
+  color: #ccc;
+}
+
+.tab-content {
+  width: 100%;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Active panel */
+.active-panel {
+  background: #161616;
+  border: 1px solid #3a3a3a;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.inactive-panel {
+  color: #666;
+  font-size: 0.85rem;
+  padding: 0.5rem 0;
+}
+
+.active-panel-title {
+  font-size: 0.75rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.complete-title {
+  color: #4caf50 !important;
+}
+
+.active-panel-name {
+  font-family: 'pixels', sans-serif;
+  font-size: 1.1rem;
+  color: #fff;
+}
+
+.active-panel-wage {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.wage-label {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.wage-amount {
+  font-family: 'pixels', sans-serif;
+  color: #4caf50;
+  font-size: 1rem;
+}
+
+.active-panel-rate {
+  font-size: 0.78rem;
+  color: #666;
+}
+
+.active-panel-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+/* Course timer */
+.course-timer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-top: 0.25rem;
+}
+
+.timer-label {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.timer-value {
+  font-family: 'pixels', sans-serif;
+  font-size: 1.1rem;
+  color: #3498db;
+}
+
+.timer-bar-wrap {
+  height: 6px;
+  background: #222;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+
+.timer-bar-fill {
+  height: 100%;
+  background: #3498db;
+  border-radius: 4px;
+  transition: width 1s linear;
+}
+
+.course-complete {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.25rem;
+}
+
+.course-complete p {
+  font-size: 0.85rem;
+  color: #4caf50;
+  margin: 0;
+}
+
+.section-label {
+  font-size: 0.72rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding-top: 0.25rem;
+}
+
+/* Item list */
+.item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding-bottom: 1rem;
+}
+
+.list-item {
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  transition: border-color 0.2s;
+}
+
+.list-item:hover:not(.item-locked):not(.item-active) {
+  border-color: #444;
+}
+
+.item-locked {
+  opacity: 0.45;
+}
+
+.item-active {
+  border-color: #4caf50;
+  background: #0d1a0d;
+}
+
+.item-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.item-name {
+  font-family: 'pixels', sans-serif;
+  font-size: 0.95rem;
+  color: #fff;
+}
+
+.item-badge {
+  font-size: 0.65rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  background: #1a2a1a;
+  color: #4caf50;
+  border: 1px solid #2a4a2a;
+}
+
+.badge-locked {
+  background: #2a1a1a;
+  color: #e74c3c;
+  border-color: #4a2a2a;
+}
+
+.item-desc {
+  font-size: 0.78rem;
+  color: #888;
+}
+
+.item-meta {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.meta-tag {
+  font-size: 0.7rem;
+  color: #666;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+}
+
+.reward-tag {
+  color: #3498db;
+  border-color: #1a2a3a;
+  background: #0d1a2a;
+}
+
+.item-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.2rem;
+}
+
+.item-rate,
+.item-cost {
+  font-size: 0.78rem;
+  color: #4caf50;
+}
+
+.item-current {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+/* Buttons */
+.btn-primary {
+  background: #1a3a1a;
+  border: 1px solid #4caf50;
+  color: #4caf50;
+  padding: 0.45rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'pixels', sans-serif;
+  font-size: 0.85rem;
+  transition:
+    background 0.2s,
+    transform 0.1s;
+}
+
+.btn-primary:hover {
+  background: #224a22;
+}
+
+.btn-primary:active {
+  transform: scale(0.97);
+}
+
+.btn-danger {
+  background: #3a1a1a;
+  border: 1px solid #e74c3c;
+  color: #e74c3c;
+  padding: 0.45rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'pixels', sans-serif;
+  font-size: 0.85rem;
+  transition:
+    background 0.2s,
+    transform 0.1s;
+}
+
+.btn-danger:hover {
+  background: #4a2020;
+}
+
+.btn-danger:active {
+  transform: scale(0.97);
+}
+
+.btn-sm {
+  padding: 0.3rem 0.75rem;
+  font-size: 0.78rem;
+}
+
+/* Job / Education collapsed card */
+
+.je-body {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin-top: 0.2rem;
+}
+
+.je-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  flex-shrink: 0;
+  margin: 0.3rem 0;
+}
+
+.je-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  transition:
+    background 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
+  min-height: 0;
+}
+
+.je-section-job {
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.03) 0%, transparent 100%);
+}
+
+.je-section-edu {
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.03) 0%, transparent 100%);
+}
+
+.je-section--active.je-section-job {
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.02) 100%);
+  border-color: rgba(76, 175, 80, 0.25);
+  box-shadow: inset 0 0 15px rgba(76, 175, 80, 0.05);
+}
+
+.je-section--active.je-section-edu {
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(52, 152, 219, 0.02) 100%);
+  border-color: rgba(52, 152, 219, 0.25);
+  box-shadow: inset 0 0 15px rgba(52, 152, 219, 0.05);
+}
+
+.je-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.je-section-title {
+  font-family: 'poppins', sans-serif;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #777;
+  flex: 1;
+}
+
+.je-icon {
+  width: 15px;
+  height: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.je-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.je-icon-job svg {
+  fill: #4caf50;
+  filter: drop-shadow(0 0 4px rgba(76, 175, 80, 0.6));
+}
+.je-icon-edu svg {
+  fill: #3498db;
+  filter: drop-shadow(0 0 4px rgba(52, 152, 219, 0.6));
+}
+
+.je-badge {
+  font-family: 'pixels', sans-serif;
+  font-size: 0.72rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 5px;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.je-badge-wages {
+  background: rgba(76, 175, 80, 0.15);
+  border: 1px solid rgba(76, 175, 80, 0.35);
+  color: #4caf50;
+  text-shadow: 0 0 5px rgba(76, 175, 80, 0.4);
+}
+
+.je-badge-time {
+  background: rgba(52, 152, 219, 0.15);
+  border: 1px solid rgba(52, 152, 219, 0.35);
+  color: #3498db;
+  text-shadow: 0 0 5px rgba(52, 152, 219, 0.4);
+}
+
+.je-name {
+  font-family: 'pixels', sans-serif;
+  font-size: 0.95rem;
+  color: #eee;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 0.1rem;
+}
+
+.je-progress-wrap {
+  height: 4px;
+  background: rgba(52, 152, 219, 0.12);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 0.25rem;
+  flex-shrink: 0;
+}
+
+.je-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3498db, #85c1e9);
+  border-radius: 2px;
+  transition: width 1s linear;
+  animation: je-edu-pulse 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes je-edu-pulse {
+  0% {
+    box-shadow: 0 0 4px rgba(52, 152, 219, 0.5);
+    filter: brightness(1);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.85);
+    filter: brightness(1.15);
+  }
+}
+
+.je-empty {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  margin-top: 0.15rem;
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease;
+}
+
+.je-section-job:hover .je-empty {
+  border-color: rgba(76, 175, 80, 0.2);
+  background: rgba(76, 175, 80, 0.05);
+}
+
+.je-section-edu:hover .je-empty {
+  border-color: rgba(52, 152, 219, 0.2);
+  background: rgba(52, 152, 219, 0.05);
+}
+
+.je-empty-icon {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+
+.je-empty-job .je-empty-icon {
+  color: rgba(76, 175, 80, 0.5);
+}
+.je-empty-edu .je-empty-icon {
+  color: rgba(52, 152, 219, 0.5);
+}
+
+.je-section:hover .je-empty-icon {
+  transform: scale(1.15);
+}
+
+.je-empty-text {
+  font-family: 'poppins', sans-serif;
+  font-size: 0.72rem;
+  color: #6a6a6a;
+  transition: color 0.25s ease;
+}
+
+.je-section:hover .je-empty-text {
+  color: #aaa;
 }

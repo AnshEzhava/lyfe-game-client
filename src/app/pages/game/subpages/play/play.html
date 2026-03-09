@@ -22,9 +22,8 @@
       </div>
 
       <div class="status-item currency-info">
-        <span>Branks</span>
         <img src="/images/branks.png" alt="Branks" class="icon-currency" />
-        <span class="amount">: {{ branks() }}</span>
+        <span class="amount">Branks: {{ branks() }}</span>
       </div>
     </div>
   </header>
@@ -37,6 +36,52 @@
       (click)="expand('stock')"
     >
       <h3>Stock Market</h3>
+
+      <div class="sm-collapsed-body">
+        <ng-container *ngIf="stockQuotes().length > 0; else smLoading">
+          <!-- When the user holds stocks: show sparkline chart sections -->
+          <ng-container *ngIf="investedStocks().length > 0; else smTickers">
+            <div class="sm-collapsed-charts">
+              <div
+                *ngFor="let s of investedStocks(); let i = index"
+                class="sm-chart-section"
+                [style.background]="getChartScheme(i).bg"
+                [style.border-color]="getChartScheme(i).border"
+              >
+                <div class="sm-chart-header">
+                  <span class="sm-chart-ticker" [style.color]="getChartScheme(i).stroke">
+                    {{ s.ticker }}
+                  </span>
+                  <span class="sm-chart-price">{{ formatPrice(s.currentPrice) }} B</span>
+                </div>
+                <div class="sm-chart-body">
+                  <app-stock-sparkline
+                    [prices]="s.priceHistory"
+                    [color]="getChartScheme(i).stroke"
+                  ></app-stock-sparkline>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <!-- Fallback: top-mover tickers when no holdings -->
+          <ng-template #smTickers>
+            <div *ngFor="let s of topMovers()" class="sm-ticker-row">
+              <span class="sm-ticker" [class.sm-govt]="s.govtBond">{{ s.ticker }}</span>
+              <span class="sm-ticker-price">{{ formatPrice(s.currentPrice) }}</span>
+              <span
+                class="sm-ticker-change"
+                [class.change-up]="s.priceChangePct24h >= 0"
+                [class.change-down]="s.priceChangePct24h < 0"
+              >
+                {{ formatPriceChange(s.priceChangePct24h) }}
+              </span>
+            </div>
+          </ng-template>
+        </ng-container>
+        <ng-template #smLoading>
+          <div class="sm-loading">Loading market...</div>
+        </ng-template>
+      </div>
     </div>
 
     <div class="grid-column middle-column">
@@ -172,9 +217,243 @@
       </button>
 
       <!-- Stock Market -->
-      <div *ngIf="expandedSection() === 'stock'" class="overlay-content">
-        <h3>Stock Market</h3>
-        <p class="coming-soon">Coming soon.</p>
+      <div *ngIf="expandedSection() === 'stock'" class="overlay-content stock-overlay">
+        <div class="overlay-header">
+          <h3>Stock Market</h3>
+          <div class="sm-net-worth">Net Worth: {{ netWorth() | number: '1.0-0' }} B</div>
+        </div>
+
+        <div class="tab-bar">
+          <button
+            class="tab-btn"
+            [class.active]="stockTab() === 'market'"
+            (click)="stockTab.set('market')"
+          >
+            Market
+          </button>
+          <button
+            class="tab-btn"
+            [class.active]="stockTab() === 'portfolio'"
+            (click)="stockTab.set('portfolio')"
+          >
+            Portfolio
+          </button>
+          <button
+            class="tab-btn"
+            [class.active]="stockTab() === 'mycompany'"
+            (click)="stockTab.set('mycompany')"
+          >
+            My Company
+          </button>
+          <button
+            class="tab-btn"
+            [class.active]="stockTab() === 'orders'"
+            (click)="stockTab.set('orders'); loadPendingOrders()"
+          >
+            Orders
+          </button>
+        </div>
+
+        <!-- Market tab -->
+        <div *ngIf="stockTab() === 'market'" class="tab-content">
+          <div class="item-list sm-stock-list">
+            <div
+              *ngFor="let stock of stockQuotes(); let i = index"
+              class="list-item sm-stock-row"
+              (click)="openTradeModal(stock)"
+            >
+              <div class="sm-row-top">
+                <div class="sm-row-left">
+                  <span class="sm-row-ticker" [class.sm-govt]="stock.govtBond">
+                    {{ stock.ticker }}
+                    <span *ngIf="stock.govtBond" class="sm-govt-badge">GOV</span>
+                  </span>
+                  <span class="sm-row-name">{{ stock.name }}</span>
+                </div>
+                <div class="sm-row-right">
+                  <span class="sm-row-price">{{ formatPrice(stock.currentPrice) }} B</span>
+                  <span
+                    class="sm-row-change"
+                    [class.change-up]="stock.priceChangePct24h >= 0"
+                    [class.change-down]="stock.priceChangePct24h < 0"
+                  >
+                    {{ formatPriceChange(stock.priceChangePct24h) }}
+                  </span>
+                </div>
+                <div class="sm-row-holding" *ngIf="getHoldingForStock(stock.id) as h">
+                  <span class="holding-shares">{{ h.sharesOwned | number: '1.0-0' }} shares</span>
+                </div>
+                <div class="sm-row-yield" *ngIf="stock.govtBond && stock.yieldRateBps > 0">
+                  <span class="yield-badge">{{ stock.yieldRateBps / 100 }}% yield/day</span>
+                </div>
+              </div>
+              <div class="sm-row-chart">
+                <app-stock-sparkline
+                  [prices]="stock.priceHistory"
+                  [color]="getChartScheme(i).stroke"
+                ></app-stock-sparkline>
+              </div>
+            </div>
+
+            <div *ngIf="stockQuotes().length === 0" class="inactive-panel">
+              Loading market data...
+            </div>
+          </div>
+        </div>
+
+        <!-- Portfolio tab -->
+        <div *ngIf="stockTab() === 'portfolio'" class="tab-content">
+          <div class="active-panel sm-net-worth-panel">
+            <div class="active-panel-title">Net Worth</div>
+            <div class="active-panel-name sm-net-worth-value">
+              {{ netWorth() | number: '1.0-0' }} B
+            </div>
+            <div class="active-panel-rate">Branks: {{ branks() | number: '1.0-0' }}</div>
+          </div>
+
+          <div class="section-label">Holdings</div>
+          <div class="item-list" *ngIf="portfolio()?.holdings?.length; else noHoldings">
+            <div *ngFor="let h of portfolio()!.holdings; let i = index" class="list-item sm-holding-row">
+              <div class="item-header">
+                <span class="item-name" [style.color]="getChartScheme(i).stroke">{{ h.ticker }}</span>
+                <span class="item-badge">{{ h.sharesOwned | number: '1.0-0' }} shares</span>
+              </div>
+              <div class="sm-holding-meta">
+                <span>Price: {{ h.currentPrice | number: '1.2-2' }} B</span>
+                <span class="reward-tag">Value: {{ h.currentValue | number: '1.0-0' }} B</span>
+              </div>
+              <div class="sm-holding-chart">
+                <app-stock-sparkline
+                  [prices]="getStockHistory(h.stockId)"
+                  [color]="getChartScheme(i).stroke"
+                ></app-stock-sparkline>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #noHoldings>
+            <div class="inactive-panel">No holdings yet. Buy stocks in the Market tab.</div>
+          </ng-template>
+        </div>
+
+        <!-- Orders tab -->
+        <div *ngIf="stockTab() === 'orders'" class="tab-content">
+          <div *ngIf="pendingOrders().length === 0" class="inactive-panel">
+            No pending limit orders.
+          </div>
+          <div class="item-list" *ngIf="pendingOrders().length > 0">
+            <div *ngFor="let order of pendingOrders()" class="list-item sm-order-row">
+              <div class="sm-order-header">
+                <span class="sm-row-ticker">{{ getTickerForStockId(order.stockId) }}</span>
+                <span
+                  class="sm-order-action"
+                  [class.sm-order-action-buy]="order.action === 'BUY'"
+                  [class.sm-order-action-sell]="order.action === 'SELL'"
+                >{{ order.action }}</span>
+              </div>
+              <div class="sm-order-meta">
+                <span>{{ order.quantity | number: '1.0-0' }} shares</span>
+                <span>Limit: {{ order.limitPrice | number: '1.2-2' }} B</span>
+              </div>
+              <div class="sm-order-footer">
+                <button class="btn-sm btn-danger" (click)="cancelOrder(order.id)">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- My Company tab -->
+        <div *ngIf="stockTab() === 'mycompany'" class="tab-content">
+          <ng-container *ngIf="portfolio()?.holdings?.length === 0 || !gameUser()?.balance">
+            <div class="inactive-panel">Loading...</div>
+          </ng-container>
+
+          <ng-container *ngIf="gameUser() as u">
+            <!-- If user has no IPO -->
+            <ng-container *ngIf="!hasOwnIPO()">
+              <div class="active-panel">
+                <div class="active-panel-title">Launch Your Company</div>
+                <div class="active-panel-rate">
+                  Requires 1,000,000 Branks. Your balance:
+                  {{ branks() | number: '1.0-0' }} B
+                </div>
+              </div>
+
+              <div *ngIf="branks() >= 1000000" class="ipo-form">
+                <div class="section-label">IPO Details</div>
+                <div class="trade-field">
+                  <label class="trade-label">Company Name</label>
+                  <input
+                    class="trade-input"
+                    type="text"
+                    placeholder="e.g. Lyfe Corp"
+                    [ngModel]="ipoForm().name"
+                    (ngModelChange)="setIpoName($event)"
+                  />
+                </div>
+                <div class="trade-field">
+                  <label class="trade-label">Ticker (1-5 letters)</label>
+                  <input
+                    class="trade-input"
+                    type="text"
+                    maxlength="5"
+                    placeholder="e.g. LYFE"
+                    [ngModel]="ipoForm().ticker"
+                    (ngModelChange)="setIpoTicker($event)"
+                  />
+                </div>
+                <div class="trade-field">
+                  <label class="trade-label">Total Share Supply</label>
+                  <input
+                    class="trade-input"
+                    type="number"
+                    min="1000"
+                    [ngModel]="ipoForm().totalSupply"
+                    (ngModelChange)="setIpoTotalSupply(+$event)"
+                  />
+                </div>
+                <div class="trade-field">
+                  <label class="trade-label">Initial Price per Share (B)</label>
+                  <input
+                    class="trade-input"
+                    type="number"
+                    min="1"
+                    [ngModel]="ipoForm().initialPricePerShare"
+                    (ngModelChange)="setIpoInitialPrice(+$event)"
+                  />
+                </div>
+                <div class="trade-field">
+                  <label class="trade-label">Public Float (%)</label>
+                  <input
+                    class="trade-input"
+                    type="number"
+                    min="1"
+                    max="99"
+                    [ngModel]="ipoForm().publicFloatPct"
+                    (ngModelChange)="setIpoPublicFloat(+$event)"
+                  />
+                </div>
+                <div class="sm-ipo-cost">
+                  Liquidity cost:
+                  {{
+                    ipoForm().totalSupply *
+                      ipoForm().publicFloatPct *
+                      0.01 *
+                      ipoForm().initialPricePerShare | number: '1.0-0'
+                  }}
+                  B
+                </div>
+                <button class="btn-primary" style="margin-top: 12px" (click)="submitIPO()">
+                  Launch IPO
+                </button>
+              </div>
+
+              <div *ngIf="branks() < 1000000" class="inactive-panel">
+                You need 1,000,000 Branks to launch an IPO. Keep earning!
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
       </div>
 
       <!-- Job / Education -->
@@ -346,4 +625,13 @@
 
   <app-modal title="Welcome!" [isOpen]="showModal()" (submitName)="onModalSubmit($event)">
   </app-modal>
+
+  <app-stock-trade-modal
+    *ngIf="tradeModalOpen() && selectedStock()"
+    [stock]="selectedStock()"
+    [userBranks]="branks()"
+    [sharesOwned]="getHoldingForStock(selectedStock()!.id)?.sharesOwned ?? 0"
+    (tradeComplete)="onTradeComplete($event)"
+    (closed)="tradeModalOpen.set(false)"
+  ></app-stock-trade-modal>
 </div>

@@ -13,4 +13,13 @@ export const ENDPOINTS = {
   GET_EDUCATION: '/user/education',
   ENROLL_COURSE: '/user/education/enroll',
   COMPLETE_COURSE: '/user/education/complete',
+
+  // Stock endpoints
+  GET_STOCKS: '/stocks',
+  TRADE_STOCK: '/stocks/trade',
+  PLACE_LIMIT_ORDER: '/stocks/limit',
+  CANCEL_LIMIT_ORDER: '/stocks/limit',
+  GET_LIMIT_ORDERS: '/stocks/limit',
+  GET_PORTFOLIO: '/stocks/portfolio',
+  CREATE_IPO: '/stocks/ipo',
 };

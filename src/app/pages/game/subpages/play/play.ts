@@ -1,9 +1,11 @@
 import { Component, inject, signal, effect, OnInit, OnDestroy, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ClerkService } from 'ngx-clerk';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { UserService } from '../../../../services/user.service';
+import { StockService } from '../../../../services/stock.service';
 import { ToastService } from '../../../../services/toast.service';
 import {
   ActiveCourseInfo,
@@ -14,15 +16,37 @@ import {
   JobStatusResponse,
   UserResponse,
 } from '../../../../types/api/user.types';
+import {
+  HoldingInfo,
+  IPOCreateRequest,
+  PendingOrder,
+  PortfolioResponse,
+  PriceTick,
+  StockInfo,
+  StockQuoteResponse,
+} from '../../../../types/api/stock.types';
 import { Modal } from '../../../../components/modal/modal';
+import { StockTradeModal } from '../../../../components/stock-trade-modal/stock-trade-modal';
+import { StockSparkline } from '../../../../components/stock-sparkline/stock-sparkline';
 
 // 1 real second = 1 game minute → multiplier = 60
 const GAME_TIME_MULTIPLIER = 60;
 
+const CHART_SCHEMES = [
+  { stroke: '#4caf50', bg: 'rgba(76,175,80,0.07)',   border: 'rgba(76,175,80,0.28)'   },
+  { stroke: '#3498db', bg: 'rgba(52,152,219,0.07)',  border: 'rgba(52,152,219,0.28)'  },
+  { stroke: '#e67e22', bg: 'rgba(230,126,34,0.07)',  border: 'rgba(230,126,34,0.28)'  },
+  { stroke: '#9b59b6', bg: 'rgba(155,89,182,0.07)',  border: 'rgba(155,89,182,0.28)'  },
+  { stroke: '#1abc9c', bg: 'rgba(26,188,156,0.07)',  border: 'rgba(26,188,156,0.28)'  },
+  { stroke: '#e74c3c', bg: 'rgba(231,76,60,0.07)',   border: 'rgba(231,76,60,0.28)'   },
+  { stroke: '#f1c40f', bg: 'rgba(241,196,15,0.07)',  border: 'rgba(241,196,15,0.28)'  },
+  { stroke: '#00bcd4', bg: 'rgba(0,188,212,0.07)',   border: 'rgba(0,188,212,0.28)'   },
+];
+
 @Component({
   selector: 'app-play',
   standalone: true,
-  imports: [Modal, CommonModule],
+  imports: [Modal, CommonModule, FormsModule, StockTradeModal, StockSparkline],
   templateUrl: './play.html',
   styleUrl: './play.css',
 })
@@ -30,6 +54,7 @@ export class Play implements OnInit, OnDestroy {
   private clerkService = inject(ClerkService);
   private router = inject(Router);
   private userService = inject(UserService);
+  private stockService = inject(StockService);
   private toast = inject(ToastService);
 
   user = toSignal(this.clerkService.user$);
@@ -59,9 +84,40 @@ export class Play implements OnInit, OnDestroy {
   intelligence = computed(() => this.gameUser()?.stats?.intelligence ?? 0);
   branks = computed(() => this.gameUser()?.balance ?? 0);
 
+  // ─── Stock signals ──────────────────────────────────────────────────────
+  stockQuotes = signal<StockInfo[]>([]);
+  portfolio = signal<PortfolioResponse | null>(null);
+  netWorth = computed(() => this.portfolio()?.netWorth ?? this.branks());
+  stockTab = signal<'market' | 'portfolio' | 'mycompany' | 'orders'>('market');
+  selectedStock = signal<StockInfo | null>(null);
+  tradeModalOpen = signal(false);
+  pendingOrders = signal<PendingOrder[]>([]);
+  ipoForm = signal({
+    name: '',
+    ticker: '',
+    totalSupply: 100000,
+    initialPricePerShare: 10,
+    publicFloatPct: 30,
+  });
+
+  /** Top movers for collapsed card: sorted by absolute % change, take top 3 */
+  topMovers = computed<StockInfo[]>(() => {
+    return [...this.stockQuotes()]
+      .sort((a, b) => Math.abs(b.priceChangePct24h) - Math.abs(a.priceChangePct24h))
+      .slice(0, 3);
+  });
+
+  /** Stocks the user currently holds shares in (for collapsed chart view) */
+  investedStocks = computed<StockInfo[]>(() => {
+    const holdings = this.portfolio()?.holdings ?? [];
+    const heldIds = new Set(holdings.filter((h) => h.sharesOwned > 0).map((h) => h.stockId));
+    return this.stockQuotes().filter((s) => heldIds.has(s.id));
+  });
+
   private clockInterval: ReturnType<typeof setInterval> | null = null;
   private wageInterval: ReturnType<typeof setInterval> | null = null;
   private courseInterval: ReturnType<typeof setInterval> | null = null;
+  private disconnectWs: (() => void) | null = null;
 
   constructor() {
     effect(() => {
@@ -80,6 +136,7 @@ export class Play implements OnInit, OnDestroy {
     if (this.clockInterval) clearInterval(this.clockInterval);
     if (this.wageInterval) clearInterval(this.wageInterval);
     if (this.courseInterval) clearInterval(this.courseInterval);
+    this.disconnectWs?.();
   }
 
   startGameClock() {
@@ -163,6 +220,8 @@ export class Play implements OnInit, OnDestroy {
         this.gameUser.set(res);
         this.loadJobStatus();
         this.loadEducationStatus();
+        this.loadStocks();
+        this.loadPortfolio();
       },
       error: (err) => {
         if (err.status === 404) {
@@ -292,6 +351,154 @@ export class Play implements OnInit, OnDestroy {
       },
     });
   }
+
+  // ─── Stock methods ───────────────────────────────────────────────────────
+
+  loadStocks() {
+    this.stockService.getAllStocks().subscribe({
+      next: (res) => {
+        this.stockQuotes.set(res.stocks);
+        this.startPriceStream(res.stocks.map((s) => s.id));
+      },
+      error: () => {},
+    });
+  }
+
+  loadPortfolio() {
+    this.stockService.getPortfolio().subscribe({
+      next: (res) => this.portfolio.set(res),
+      error: () => {},
+    });
+  }
+
+  private startPriceStream(stockIds: string[]) {
+    this.disconnectWs?.();
+    this.disconnectWs = this.stockService.connectPriceStream(stockIds, (tick: PriceTick) => {
+      this.stockQuotes.update((quotes) =>
+        quotes.map((q) =>
+          q.id === tick.stockId
+            ? {
+                ...q,
+                currentPrice: tick.price,
+                liquidityBranks: tick.liquidityBranks,
+                liquidityShares: tick.liquidityShares,
+                priceHistory: [...(q.priceHistory ?? []).slice(-99), tick.price],
+              }
+            : q,
+        ),
+      );
+    });
+  }
+
+  openTradeModal(stock: StockInfo) {
+    this.selectedStock.set(stock);
+    this.tradeModalOpen.set(true);
+  }
+
+  onTradeComplete(updatedUser: UserResponse) {
+    this.gameUser.set(updatedUser);
+    this.tradeModalOpen.set(false);
+    this.selectedStock.set(null);
+    this.loadPortfolio();
+    this.loadStocks();
+  }
+
+  submitIPO() {
+    const form = this.ipoForm();
+    if (!form.name || !form.ticker) {
+      this.toast.show('Name and ticker are required.', 'error');
+      return;
+    }
+    const req: IPOCreateRequest = {
+      name: form.name,
+      ticker: form.ticker.toUpperCase(),
+      totalSupply: form.totalSupply,
+      initialPricePerShare: form.initialPricePerShare,
+      publicFloatPct: form.publicFloatPct,
+    };
+    this.stockService.createIPO(req).subscribe({
+      next: () => {
+        this.toast.show(`${req.ticker} is now listed on the exchange!`);
+        this.loadStocks();
+        this.loadPortfolio();
+        this.userService.findUser().subscribe({ next: (u) => this.gameUser.set(u) });
+      },
+      error: (err) => {
+        this.toast.show(err.error?.responseMessage ?? 'IPO failed.', 'error');
+      },
+    });
+  }
+
+  /** True if the user has already launched an IPO (owns a non-govt stock as founder) */
+  hasOwnIPO = computed<boolean>(() =>
+    this.stockQuotes().some(
+      (s) => !s.govtBond && this.getHoldingForStock(s.id) !== null,
+    ),
+  );
+
+  setIpoName(v: string) {
+    this.ipoForm.update((f) => ({ ...f, name: v }));
+  }
+  setIpoTicker(v: string) {
+    this.ipoForm.update((f) => ({ ...f, ticker: v.toUpperCase() }));
+  }
+  setIpoTotalSupply(v: number) {
+    this.ipoForm.update((f) => ({ ...f, totalSupply: v }));
+  }
+  setIpoInitialPrice(v: number) {
+    this.ipoForm.update((f) => ({ ...f, initialPricePerShare: v }));
+  }
+  setIpoPublicFloat(v: number) {
+    this.ipoForm.update((f) => ({ ...f, publicFloatPct: v }));
+  }
+
+  getHoldingForStock(stockId: string): HoldingInfo | null {
+    return this.portfolio()?.holdings.find((h) => h.stockId === stockId) ?? null;
+  }
+
+  formatPrice(price: number): string {
+    if (price >= 1000) return price.toFixed(0);
+    if (price >= 10) return price.toFixed(1);
+    return price.toFixed(2);
+  }
+
+  formatPriceChange(pct: number): string {
+    const sign = pct >= 0 ? '+' : '';
+    return `${sign}${pct.toFixed(2)}%`;
+  }
+
+  getChartScheme(index: number) {
+    return CHART_SCHEMES[index % CHART_SCHEMES.length];
+  }
+
+  getStockHistory(stockId: string): number[] {
+    return this.stockQuotes().find((s) => s.id === stockId)?.priceHistory ?? [];
+  }
+
+  getTickerForStockId(stockId: string): string {
+    return this.stockQuotes().find((s) => s.id === stockId)?.ticker ?? stockId.slice(0, 6);
+  }
+
+  loadPendingOrders() {
+    this.stockService.getPendingOrders().subscribe({
+      next: (orders) => this.pendingOrders.set(orders),
+      error: () => {},
+    });
+  }
+
+  cancelOrder(orderId: string) {
+    this.stockService.cancelLimitOrder(orderId).subscribe({
+      next: () => {
+        this.toast.show('Order cancelled.');
+        this.loadPendingOrders();
+      },
+      error: (err) => {
+        this.toast.show(err.error?.responseMessage ?? 'Could not cancel order.', 'error');
+      },
+    });
+  }
+
+  // ─── Overlay ─────────────────────────────────────────────────────────────
 
   private closeTimer: ReturnType<typeof setTimeout> | null = null;
 

@@ -16,19 +16,29 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 1.5rem;
-  border: 1px solid #fff;
+  border: 1px solid rgba(255, 255, 255, 0.13);
   border-radius: 12px;
   height: 80px;
+  background: rgba(8, 8, 8, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 4px 32px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .logo {
   font-family: 'pixels', sans-serif;
   font-size: 2rem;
+  letter-spacing: 0.04em;
+  text-shadow:
+    0 0 28px rgba(76, 175, 80, 0.45),
+    0 0 56px rgba(76, 175, 80, 0.15);
 }
 
 .status-bar {
   display: flex;
-  gap: 2rem;
+  gap: 1.25rem;
   align-items: center;
   font-family: 'pixels', sans-serif;
   font-size: 1.1rem;
@@ -38,14 +48,20 @@
   display: flex;
   align-items: center;
   gap: 0.8rem;
+  min-width: fit-content;
   padding: 0.5rem 1rem;
-  border: 1px solid #333;
+  border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 8px;
-  background-color: #111;
+  background: rgba(255, 255, 255, 0.04);
   justify-content: center;
   /* Fixed widths per pill prevent any layout shift when content changes */
   white-space: nowrap;
   overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.status-item:hover {
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Lock each pill to the widest value it can show */
@@ -59,7 +75,7 @@
   width: 145px;
 }
 .currency-info {
-  width: 180px;
+  width: 145px;
 }
 
 /* Tabular nums keeps digit widths uniform inside the pixel font */
@@ -917,4 +933,362 @@
 
 .je-section:hover .je-empty-text {
   color: #aaa;
+}
+
+/* ─── Stock Market — Collapsed Card ─────────────────────────────────────── */
+
+.stock-market {
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.sm-collapsed-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
+.sm-ticker-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  transition: background 0.2s;
+}
+
+.sm-ticker-row:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.sm-ticker {
+  font-family: 'pixels', monospace;
+  font-size: 0.8rem;
+  color: #e0e0e0;
+  min-width: 42px;
+  letter-spacing: 0.04em;
+}
+
+.sm-ticker.sm-govt {
+  color: #f0c040;
+}
+
+.sm-ticker-price {
+  flex: 1;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.65);
+  text-align: right;
+}
+
+.sm-ticker-change {
+  font-size: 0.72rem;
+  font-weight: 600;
+  min-width: 52px;
+  text-align: right;
+}
+
+.change-up {
+  color: #4caf50;
+}
+
+.change-down {
+  color: #e74c3c;
+}
+
+.sm-loading {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.3);
+  text-align: center;
+  padding: 10px 0;
+}
+
+/* ─── Stock Market — Overlay ─────────────────────────────────────────────── */
+
+.stock-overlay .overlay-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sm-net-worth {
+  font-size: 0.82rem;
+  color: #4caf50;
+  font-weight: 600;
+}
+
+.sm-stock-list {
+  gap: 6px;
+}
+
+.sm-stock-row {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 14px;
+  transition: background 0.2s;
+}
+
+.sm-stock-row:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.sm-row-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sm-row-chart {
+  height: 40px;
+  width: 100%;
+}
+
+.sm-row-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sm-row-ticker {
+  font-family: 'pixels', monospace;
+  font-size: 0.9rem;
+  color: #e0e0e0;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sm-row-ticker.sm-govt {
+  color: #f0c040;
+}
+
+.sm-govt-badge {
+  font-size: 0.62rem;
+  background: rgba(240, 192, 64, 0.15);
+  border: 1px solid rgba(240, 192, 64, 0.3);
+  color: #f0c040;
+  border-radius: 4px;
+  padding: 1px 5px;
+  letter-spacing: 0.06em;
+}
+
+.sm-row-name {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.sm-row-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.sm-row-price {
+  font-size: 0.88rem;
+  color: #e0e0e0;
+  font-weight: 600;
+}
+
+.sm-row-change {
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.sm-row-holding {
+  margin-left: 8px;
+}
+
+.holding-shares {
+  font-size: 0.72rem;
+  color: rgba(76, 175, 80, 0.7);
+  background: rgba(76, 175, 80, 0.08);
+  border-radius: 4px;
+  padding: 2px 7px;
+}
+
+.sm-row-yield {
+  margin-left: 4px;
+}
+
+.yield-badge {
+  font-size: 0.68rem;
+  color: #f0c040;
+  background: rgba(240, 192, 64, 0.08);
+  border: 1px solid rgba(240, 192, 64, 0.2);
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+/* Net worth panel in portfolio tab */
+.sm-net-worth-panel .active-panel-name.sm-net-worth-value {
+  font-size: 1.6rem;
+  color: #4caf50;
+}
+
+.sm-holding-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.45);
+  padding: 4px 0 0;
+}
+
+/* IPO form */
+.ipo-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.trade-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.trade-label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.trade-input {
+  padding: 9px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #e0e0e0;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: 'poppins', sans-serif;
+}
+
+.trade-input:focus {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.sm-ipo-cost {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: right;
+  margin-top: -4px;
+}
+
+/* ─── Collapsed sparkline chart sections ─────────────────────────────────── */
+
+.sm-collapsed-charts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
+.sm-chart-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 6px 8px 4px;
+  min-height: 0;
+  transition:
+    background 0.4s ease,
+    border-color 0.4s ease;
+  overflow: hidden;
+}
+
+.sm-chart-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  margin-bottom: 3px;
+}
+
+.sm-chart-ticker {
+  font-family: 'pixels', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  flex: 1;
+  text-shadow: 0 0 6px currentColor;
+}
+
+.sm-chart-price {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.45);
+  text-align: right;
+}
+
+.sm-chart-body {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
+/* ─── Portfolio holding chart ─────────────────────────────────────────────── */
+
+.sm-holding-chart {
+  height: 50px;
+  margin-top: 6px;
+  width: 100%;
+}
+
+/* ─── Orders tab ─────────────────────────────────────────────────────────── */
+
+.sm-order-row {
+  gap: 6px;
+}
+
+.sm-order-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sm-order-action {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.sm-order-action-buy {
+  color: #4caf50;
+  background: rgba(76, 175, 80, 0.12);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.sm-order-action-sell {
+  color: #e74c3c;
+  background: rgba(231, 76, 60, 0.12);
+  border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+.sm-order-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.sm-order-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2px;
 }

@@ -1,0 +1,120 @@
+<div class="trade-modal-backdrop" (click)="closed.emit()">
+  <div class="trade-modal" (click)="$event.stopPropagation()">
+    <div class="trade-modal-header">
+      <div class="trade-modal-title">
+        <span class="trade-ticker">{{ stock?.ticker }}</span>
+        <span class="trade-name">{{ stock?.name }}</span>
+        <span class="trade-price">{{ stock?.currentPrice | number: '1.2-2' }} B</span>
+      </div>
+      <button class="trade-close" (click)="closed.emit()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path
+            d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <div class="trade-tabs">
+      <button class="trade-tab" [class.active]="tradeTab() === 'BUY'" (click)="setTab('BUY')">
+        Buy
+      </button>
+      <button class="trade-tab" [class.active]="tradeTab() === 'SELL'" (click)="setTab('SELL')">
+        Sell
+      </button>
+    </div>
+
+    <div class="trade-body">
+      <!-- Order type toggle -->
+      <div class="order-type-row">
+        <button
+          class="order-type-btn"
+          [class.active]="orderType() === 'MARKET'"
+          (click)="orderType.set('MARKET')"
+        >
+          Market
+        </button>
+        <button
+          class="order-type-btn"
+          [class.active]="orderType() === 'LIMIT'"
+          (click)="orderType.set('LIMIT')"
+        >
+          Limit
+        </button>
+      </div>
+
+      <!-- Quantity -->
+      <div class="trade-field">
+        <label class="trade-label">Quantity</label>
+        <div class="trade-input-row">
+          <input
+            class="trade-input"
+            type="number"
+            min="1"
+            [ngModel]="quantity()"
+            (ngModelChange)="quantity.set($event)"
+          />
+          <button class="btn-max" (click)="setMax()">MAX</button>
+        </div>
+      </div>
+
+      <!-- Limit price (only for limit orders) -->
+      <div class="trade-field" *ngIf="orderType() === 'LIMIT'">
+        <label class="trade-label">Limit Price (B)</label>
+        <input
+          class="trade-input"
+          type="number"
+          min="0.01"
+          step="0.01"
+          [ngModel]="limitPrice()"
+          (ngModelChange)="limitPrice.set($event)"
+        />
+      </div>
+
+      <!-- Price preview -->
+      <div class="trade-preview" *ngIf="orderType() === 'MARKET'">
+        <div class="preview-row">
+          <span class="preview-label">Estimated {{ tradeTab() === 'BUY' ? 'cost' : 'return' }}</span>
+          <span class="preview-value">
+            {{ estimatedCost() === Infinity ? '∞' : (estimatedCost() | number: '1.0-0') }} B
+          </span>
+        </div>
+        <div class="preview-row">
+          <span class="preview-label">Avg price per share</span>
+          <span class="preview-value">{{ avgPrice | number: '1.2-2' }} B</span>
+        </div>
+        <div class="preview-row">
+          <span class="preview-label">Price impact</span>
+          <span
+            class="preview-value"
+            [class.impact-positive]="tradeTab() === 'SELL'"
+            [class.impact-negative]="tradeTab() === 'BUY'"
+          >
+            {{ priceImpactPct() | number: '1.2-2' }}%
+          </span>
+        </div>
+      </div>
+
+      <!-- Balance info -->
+      <div class="trade-balance">
+        <span *ngIf="tradeTab() === 'BUY'">Balance: {{ userBranks | number: '1.0-0' }} B</span>
+        <span *ngIf="tradeTab() === 'SELL'">Owned: {{ sharesOwned | number: '1.0-0' }} shares</span>
+      </div>
+
+      <button
+        class="trade-submit"
+        [class.btn-buy]="tradeTab() === 'BUY'"
+        [class.btn-sell]="tradeTab() === 'SELL'"
+        [disabled]="isSubmitting() || !canAfford || quantity() <= 0"
+        (click)="submit()"
+      >
+        <span *ngIf="!isSubmitting()">{{ tradeTab() === 'BUY' ? 'Buy' : 'Sell' }}</span>
+        <span *ngIf="isSubmitting()">Processing...</span>
+      </button>
+
+      <div class="trade-warning" *ngIf="!canAfford && quantity() > 0">
+        {{ tradeTab() === 'BUY' ? 'Insufficient Branks' : 'Insufficient shares' }}
+      </div>
+    </div>
+  </div>
+</div>

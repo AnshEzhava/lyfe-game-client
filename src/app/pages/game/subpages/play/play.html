@@ -33,13 +33,10 @@
     <!-- Stock Market -->
     <div
       class="grid-item stock-market"
-      [class.invisible-placeholder]="expandedSection() === 'stock'"
-      [style.view-transition-name]="expandedSection() === 'stock' ? 'none' : 'stock'"
+      [class.invisible-placeholder]="expandedSection() === 'stock' && overlayVisible()"
       (click)="expand('stock')"
     >
-      <h3 [style.view-transition-name]="expandedSection() === 'stock' ? 'none' : 'title-stock'">
-        Stock Market
-      </h3>
+      <h3>Stock Market</h3>
     </div>
 
     <div class="grid-column middle-column">
@@ -66,26 +63,26 @@
       <!-- Job / Education -->
       <div
         class="grid-item job-education"
-        [class.invisible-placeholder]="expandedSection() === 'job'"
-        [style.view-transition-name]="expandedSection() === 'job' ? 'none' : 'job'"
+        [class.invisible-placeholder]="expandedSection() === 'job' && overlayVisible()"
         (click)="expand('job')"
       >
-        <h3 [style.view-transition-name]="expandedSection() === 'job' ? 'none' : 'title-job'">
-          Job / Education
-        </h3>
+        <h3>Job / Education</h3>
 
         <div class="je-body">
-
           <!-- Job section -->
           <div class="je-section je-section-job" [class.je-section--active]="activeJob()">
             <div class="je-section-header">
               <span class="je-icon je-icon-job">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M20 6h-2.18c.07-.44.18-.88.18-1.34C18 3.1 16.91 2 15.56 2H8.44C7.09 2 6 3.1 6 4.66c0 .46.11.9.18 1.34H4C2.9 6 2 6.9 2 8v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM15.56 4c.24 0 .44.2.44.66V5H8v-.34c0-.46.2-.66.44-.66h7.12zM20 19H4V8h16v11z"/>
+                  <path
+                    d="M20 6h-2.18c.07-.44.18-.88.18-1.34C18 3.1 16.91 2 15.56 2H8.44C7.09 2 6 3.1 6 4.66c0 .46.11.9.18 1.34H4C2.9 6 2 6.9 2 8v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM15.56 4c.24 0 .44.2.44.66V5H8v-.34c0-.46.2-.66.44-.66h7.12zM20 19H4V8h16v11z"
+                  />
                 </svg>
               </span>
               <span class="je-section-title">Job</span>
-              <span class="je-badge je-badge-wages" *ngIf="activeJob()">+{{ pendingWages() }} B</span>
+              <span class="je-badge je-badge-wages" *ngIf="activeJob()"
+                >+{{ pendingWages() }} B</span
+              >
             </div>
             <ng-container *ngIf="activeJob(); else jobEmpty">
               <div class="je-name">{{ activeJob()!.jobName }}</div>
@@ -105,18 +102,29 @@
             <div class="je-section-header">
               <span class="je-icon je-icon-edu">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 3L1 9l4 2.18V15c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-3.82L21 9l-9-6zm6 8.15L12 14.5 6 11.15V10l6 3.5 6-3.5v1.15zM7 15v-2.47l5 2.7 5-2.7V15H7z"/>
+                  <path
+                    d="M12 3L1 9l4 2.18V15c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-3.82L21 9l-9-6zm6 8.15L12 14.5 6 11.15V10l6 3.5 6-3.5v1.15zM7 15v-2.47l5 2.7 5-2.7V15H7z"
+                  />
                 </svg>
               </span>
               <span class="je-section-title">Education</span>
-              <span class="je-badge je-badge-time" *ngIf="activeCourse()">{{ formatCountdown(courseRemainingMs()) }}</span>
+              <span class="je-badge je-badge-time" *ngIf="activeCourse()">{{
+                formatCountdown(courseRemainingMs())
+              }}</span>
             </div>
             <ng-container *ngIf="activeCourse(); else eduEmpty">
               <div class="je-name">{{ activeCourse()!.courseName }}</div>
               <div class="je-progress-wrap">
                 <div
                   class="je-progress-fill"
-                  [style.width.%]="activeCourse()!.complete ? 100 : (1 - courseRemainingMs() / (activeCourse()!.completesAt - activeCourse()!.enrolledAt)) * 100"
+                  [style.width.%]="
+                    activeCourse()!.complete
+                      ? 100
+                      : (1 -
+                          courseRemainingMs() /
+                            (activeCourse()!.completesAt - activeCourse()!.enrolledAt)) *
+                        100
+                  "
                 ></div>
               </div>
             </ng-container>
@@ -127,68 +135,57 @@
               </div>
             </ng-template>
           </div>
-
         </div>
       </div>
 
       <!-- Leaderboards -->
       <div
         class="grid-item leaderboards"
-        [class.invisible-placeholder]="expandedSection() === 'leaderboards'"
-        [style.view-transition-name]="
-          expandedSection() === 'leaderboards' ? 'none' : 'leaderboards'
-        "
+        [class.invisible-placeholder]="expandedSection() === 'leaderboards' && overlayVisible()"
         (click)="expand('leaderboards')"
       >
-        <h3
-          [style.view-transition-name]="
-            expandedSection() === 'leaderboards' ? 'none' : 'title-leaderboards'
-          "
-        >
-          Leaderboards
-        </h3>
+        <h3>Leaderboards</h3>
       </div>
     </div>
 
     <!-- News -->
     <div
       class="grid-item news"
-      [class.invisible-placeholder]="expandedSection() === 'news'"
-      [style.view-transition-name]="expandedSection() === 'news' ? 'none' : 'news'"
+      [class.invisible-placeholder]="expandedSection() === 'news' && overlayVisible()"
       (click)="expand('news')"
     >
-      <h3 [style.view-transition-name]="expandedSection() === 'news' ? 'none' : 'title-news'">
-        News
-      </h3>
+      <h3>News</h3>
     </div>
 
     <!-- Overlay for Expanded Item -->
     <div
       class="expanded-overlay"
       *ngIf="expandedSection()"
-      [style.view-transition-name]="expandedSection()"
+      [class.overlay-visible]="overlayVisible()"
     >
-      <button class="close-btn" (click)="close($event)">X</button>
+      <button class="close-btn" (click)="close($event)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path
+            d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+          />
+        </svg>
+      </button>
 
       <!-- Stock Market -->
       <div *ngIf="expandedSection() === 'stock'" class="overlay-content">
-        <h3 style="view-transition-name: title-stock">Stock Market</h3>
+        <h3>Stock Market</h3>
         <p class="coming-soon">Coming soon.</p>
       </div>
 
       <!-- Job / Education -->
       <div *ngIf="expandedSection() === 'job'" class="overlay-content job-overlay">
         <div class="overlay-header">
-          <h3 [style.view-transition-name]="'title-job'">Job / Education</h3>
+          <h3>Job / Education</h3>
         </div>
 
         <!-- Tab switcher -->
         <div class="tab-bar">
-          <button
-            class="tab-btn"
-            [class.active]="jobTab() === 'jobs'"
-            (click)="jobTab.set('jobs')"
-          >
+          <button class="tab-btn" [class.active]="jobTab() === 'jobs'" (click)="jobTab.set('jobs')">
             Jobs
           </button>
           <button
@@ -202,7 +199,6 @@
 
         <!-- Jobs tab -->
         <div *ngIf="jobTab() === 'jobs'" class="tab-content">
-
           <!-- Active job panel -->
           <div class="active-panel" *ngIf="activeJob(); else noJob">
             <div class="active-panel-title">Currently Working</div>
@@ -212,7 +208,7 @@
               <span class="wage-amount">{{ pendingWages() }} Branks</span>
             </div>
             <div class="active-panel-rate">
-              {{ activeJob()!.effectiveHourlyRate | number:'1.0-1' }} B/game-hr
+              {{ activeJob()!.effectiveHourlyRate | number: '1.0-1' }} B/game-hr
             </div>
             <div class="active-panel-actions">
               <button class="btn-primary" (click)="claimWage()">Claim Wages</button>
@@ -236,11 +232,15 @@
               <div class="item-header">
                 <span class="item-name">{{ job.name }}</span>
                 <span class="item-badge" *ngIf="job.partTime">Part-time</span>
-                <span class="item-badge badge-locked" *ngIf="!job.eligible">IQ {{ job.minIntelligence }}+</span>
+                <span class="item-badge badge-locked" *ngIf="!job.eligible"
+                  >IQ {{ job.minIntelligence }}+</span
+                >
               </div>
               <div class="item-desc">{{ job.description }}</div>
               <div class="item-footer">
-                <span class="item-rate">{{ job.effectiveHourlyRate | number:'1.0-1' }} B/game-hr</span>
+                <span class="item-rate"
+                  >{{ job.effectiveHourlyRate | number: '1.0-1' }} B/game-hr</span
+                >
                 <button
                   class="btn-sm btn-primary"
                   *ngIf="job.eligible && activeJob()?.jobId !== job.id"
@@ -256,11 +256,12 @@
 
         <!-- Education tab -->
         <div *ngIf="jobTab() === 'education'" class="tab-content">
-
           <!-- Active enrollment panel -->
           <div class="active-panel" *ngIf="activeCourse(); else noCourse">
             <div class="active-panel-title" *ngIf="!activeCourse()!.complete">Enrolled</div>
-            <div class="active-panel-title complete-title" *ngIf="activeCourse()!.complete">Completed!</div>
+            <div class="active-panel-title complete-title" *ngIf="activeCourse()!.complete">
+              Completed!
+            </div>
             <div class="active-panel-name">{{ activeCourse()!.courseName }}</div>
 
             <div *ngIf="!activeCourse()!.complete" class="course-timer">
@@ -269,12 +270,20 @@
               <div class="timer-bar-wrap">
                 <div
                   class="timer-bar-fill"
-                  [style.width.%]="100 - (courseRemainingMs() / (activeCourse()!.completesAt - activeCourse()!.enrolledAt) * 100)"
+                  [style.width.%]="
+                    100 -
+                    (courseRemainingMs() /
+                      (activeCourse()!.completesAt - activeCourse()!.enrolledAt)) *
+                      100
+                  "
                 ></div>
               </div>
             </div>
 
-            <div *ngIf="activeCourse()!.complete && !activeCourse()!.rewardClaimed" class="course-complete">
+            <div
+              *ngIf="activeCourse()!.complete && !activeCourse()!.rewardClaimed"
+              class="course-complete"
+            >
               <p>+{{ activeCourse()!.intelligenceReward }} Intelligence awaiting claim</p>
               <button class="btn-primary" (click)="completeCourse()">Claim Reward</button>
             </div>
@@ -294,7 +303,9 @@
             >
               <div class="item-header">
                 <span class="item-name">{{ course.name }}</span>
-                <span class="item-badge badge-locked" *ngIf="!course.eligible">IQ {{ course.minIntelligence }}+</span>
+                <span class="item-badge badge-locked" *ngIf="!course.eligible"
+                  >IQ {{ course.minIntelligence }}+</span
+                >
               </div>
               <div class="item-desc">{{ course.description }}</div>
               <div class="item-meta">
@@ -310,7 +321,9 @@
                 >
                   Enroll
                 </button>
-                <span class="item-current" *ngIf="activeCourse()?.courseId === course.id">Enrolled</span>
+                <span class="item-current" *ngIf="activeCourse()?.courseId === course.id"
+                  >Enrolled</span
+                >
               </div>
             </div>
           </div>
@@ -319,13 +332,13 @@
 
       <!-- Leaderboards -->
       <div *ngIf="expandedSection() === 'leaderboards'" class="overlay-content">
-        <h3 style="view-transition-name: title-leaderboards">Leaderboards</h3>
+        <h3>Leaderboards</h3>
         <p class="coming-soon">Coming soon.</p>
       </div>
 
       <!-- News -->
       <div *ngIf="expandedSection() === 'news'" class="overlay-content">
-        <h3 style="view-transition-name: title-news">News</h3>
+        <h3>News</h3>
         <p class="coming-soon">Coming soon.</p>
       </div>
     </div>

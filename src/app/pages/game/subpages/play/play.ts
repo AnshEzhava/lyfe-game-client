@@ -41,6 +41,7 @@ export class Play implements OnInit, OnDestroy {
   isNight = signal<boolean>(false);
 
   expandedSection = signal<string | null>(null);
+  overlayVisible = signal(false);
   jobTab = signal<'jobs' | 'education'>('jobs');
 
   jobStatus = signal<JobStatusResponse | null>(null);
@@ -49,7 +50,9 @@ export class Play implements OnInit, OnDestroy {
   pendingWages = signal<number>(0);
 
   educationStatus = signal<EducationStatusResponse | null>(null);
-  activeCourse = computed<ActiveCourseInfo | null>(() => this.educationStatus()?.activeCourse ?? null);
+  activeCourse = computed<ActiveCourseInfo | null>(
+    () => this.educationStatus()?.activeCourse ?? null,
+  );
   availableCourses = computed<CourseInfo[]>(() => this.educationStatus()?.availableCourses ?? []);
   courseRemainingMs = signal<number>(0);
 
@@ -94,7 +97,20 @@ export class Play implements OnInit, OnDestroy {
       this.gameTime.set(`${displayHour}:${mins} ${ampm}`);
 
       const day = gameDate.getUTCDate();
-      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const monthNames = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ];
       const month = monthNames[gameDate.getUTCMonth()];
       const year = gameDate.getUTCFullYear();
       let suffix = 'th';
@@ -215,7 +231,10 @@ export class Play implements OnInit, OnDestroy {
         if (res.user) this.gameUser.set(res.user);
         this.toast.show(`Claimed ${res.wagesClaimed} Branks!`);
         // Stop ticker immediately so it doesn't overshoot while the status reloads
-        if (this.wageInterval) { clearInterval(this.wageInterval); this.wageInterval = null; }
+        if (this.wageInterval) {
+          clearInterval(this.wageInterval);
+          this.wageInterval = null;
+        }
         this.pendingWages.set(0);
         this.loadJobStatus();
       },
@@ -274,25 +293,30 @@ export class Play implements OnInit, OnDestroy {
     });
   }
 
+  private closeTimer: ReturnType<typeof setTimeout> | null = null;
+
   expand(section: string) {
-    if (!document.startViewTransition) {
-      this.expandedSection.set(section);
-      return;
+    // Cancel any pending close cleanup
+    if (this.closeTimer) {
+      clearTimeout(this.closeTimer);
+      this.closeTimer = null;
     }
-    document.startViewTransition(() => {
-      this.expandedSection.set(section);
+    this.expandedSection.set(section);
+    // Allow the DOM to render hidden overlay, then trigger transition
+    requestAnimationFrame(() => {
+      this.overlayVisible.set(true);
     });
   }
 
   close(event?: Event) {
     if (event) event.stopPropagation();
-    if (!document.startViewTransition) {
+    // Start the CSS exit transition
+    this.overlayVisible.set(false);
+    // After transition ends, remove content from DOM
+    this.closeTimer = setTimeout(() => {
       this.expandedSection.set(null);
-      return;
-    }
-    document.startViewTransition(() => {
-      this.expandedSection.set(null);
-    });
+      this.closeTimer = null;
+    }, 350);
   }
 
   formatCountdown(ms: number): string {

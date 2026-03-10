@@ -1292,3 +1292,96 @@
   justify-content: flex-end;
   margin-top: 2px;
 }
+
+/* ─── My Company stats ───────────────────────────────────────────────────── */
+
+.sm-company-name {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.sm-company-stats {
+  gap: 4px;
+}
+
+.sm-company-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: default;
+}
+
+.sm-company-stat-row:hover {
+  border-color: #2a2a2a;
+}
+
+.sm-company-stat-label {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.sm-company-stat-hint {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.22);
+  font-style: italic;
+  margin-left: 4px;
+}
+
+.sm-company-stat-total {
+  border-top: 1px solid #2a2a2a;
+  margin-top: 2px;
+}
+
+.sm-company-stat-total .sm-company-stat-value {
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.sm-company-stat-value {
+  font-size: 0.88rem;
+  color: #e0e0e0;
+  font-weight: 600;
+}
+
+/* ─── Sector select ──────────────────────────────────────────────────────── */
+
+.trade-select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23888' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+.trade-select option {
+  background: #1a1a1a;
+  color: #e0e0e0;
+}
+
+/* ─── Dilution form ──────────────────────────────────────────────────────── */
+
+.sm-dilute-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #0d0d0d;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-top: 4px;
+}
+
+.sm-dilute-preview {
+  font-size: 0.76rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: -4px;
+}
+
+.sm-dilute-btn {
+  align-self: flex-start;
+}

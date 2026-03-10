@@ -5,6 +5,7 @@ import { Client } from '@stomp/stompjs';
 import { CONFIG } from '../config/environment';
 import { ENDPOINTS } from '../config/endpoints';
 import {
+  DiluteRequest,
   IPOCreateRequest,
   LimitOrderRequest,
   LimitOrderResponse,
@@ -59,6 +60,13 @@ export class StockService {
 
   createIPO(req: IPOCreateRequest): Observable<StockInfo> {
     return this.http.post<StockInfo>(`${CONFIG.API_URL}${ENDPOINTS.CREATE_IPO}`, req);
+  }
+
+  dilute(stockId: string, req: DiluteRequest): Observable<TradeResponse> {
+    return this.http.post<TradeResponse>(
+      `${CONFIG.API_URL}${ENDPOINTS.DILUTE}/${stockId}/dilute`,
+      req,
+    );
   }
 
   /** Connects to the STOMP WebSocket and subscribes to price updates for all given stockIds. */

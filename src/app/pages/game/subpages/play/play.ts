@@ -17,11 +17,14 @@ import {
   UserResponse,
 } from '../../../../types/api/user.types';
 import {
+  DiluteRequest,
   HoldingInfo,
   IPOCreateRequest,
   PendingOrder,
   PortfolioResponse,
   PriceTick,
+  Sector,
+  SECTOR_OPTIONS,
   StockInfo,
   StockQuoteResponse,
 } from '../../../../types/api/stock.types';
@@ -92,13 +95,16 @@ export class Play implements OnInit, OnDestroy {
   selectedStock = signal<StockInfo | null>(null);
   tradeModalOpen = signal(false);
   pendingOrders = signal<PendingOrder[]>([]);
+  readonly SECTOR_OPTIONS = SECTOR_OPTIONS;
   ipoForm = signal({
     name: '',
     ticker: '',
+    sector: 'IT' as Sector,
     totalSupply: 100000,
     initialPricePerShare: 10,
     publicFloatPct: 30,
   });
+  diluteQty = signal<number>(0);
 
   /** Top movers for collapsed card: sorted by absolute % change, take top 3 */
   topMovers = computed<StockInfo[]>(() => {
@@ -412,6 +418,7 @@ export class Play implements OnInit, OnDestroy {
     const req: IPOCreateRequest = {
       name: form.name,
       ticker: form.ticker.toUpperCase(),
+      sector: form.sector,
       totalSupply: form.totalSupply,
       initialPricePerShare: form.initialPricePerShare,
       publicFloatPct: form.publicFloatPct,
@@ -429,11 +436,14 @@ export class Play implements OnInit, OnDestroy {
     });
   }
 
-  /** True if the user has already launched an IPO (owns a non-govt stock as founder) */
+  /** True if the user has already launched an IPO (is the founder of any stock) */
   hasOwnIPO = computed<boolean>(() =>
-    this.stockQuotes().some(
-      (s) => !s.govtBond && this.getHoldingForStock(s.id) !== null,
-    ),
+    this.stockQuotes().some((s) => s.founderClerkId === this.user()?.id),
+  );
+
+  /** The stock the current user founded, if any */
+  myCompany = computed<StockInfo | null>(
+    () => this.stockQuotes().find((s) => s.founderClerkId === this.user()?.id) ?? null,
   );
 
   setIpoName(v: string) {
@@ -441,6 +451,9 @@ export class Play implements OnInit, OnDestroy {
   }
   setIpoTicker(v: string) {
     this.ipoForm.update((f) => ({ ...f, ticker: v.toUpperCase() }));
+  }
+  setIpoSector(v: Sector) {
+    this.ipoForm.update((f) => ({ ...f, sector: v }));
   }
   setIpoTotalSupply(v: number) {
     this.ipoForm.update((f) => ({ ...f, totalSupply: v }));
@@ -494,6 +507,31 @@ export class Play implements OnInit, OnDestroy {
       },
       error: (err) => {
         this.toast.show(err.error?.responseMessage ?? 'Could not cancel order.', 'error');
+      },
+    });
+  }
+
+  dilute() {
+    const co = this.myCompany();
+    if (!co) return;
+    const qty = this.diluteQty();
+    if (!qty || qty <= 0) {
+      this.toast.show('Enter a valid quantity to dilute.', 'error');
+      return;
+    }
+    const req: DiluteRequest = { quantity: qty };
+    this.stockService.dilute(co.id, req).subscribe({
+      next: (res) => {
+        this.toast.show(
+          `Diluted ${res.sharesTransacted | 0} shares for ${res.branksDelta | 0} Branks.`,
+        );
+        this.diluteQty.set(0);
+        if (res.user) this.gameUser.set(res.user);
+        this.loadStocks();
+        this.loadPortfolio();
+      },
+      error: (err) => {
+        this.toast.show(err.error?.responseMessage ?? 'Dilution failed.', 'error');
       },
     });
   }

@@ -1,8 +1,38 @@
+export type Sector =
+  | 'IT'
+  | 'FINANCE'
+  | 'HEALTHCARE'
+  | 'ENERGY'
+  | 'AGRICULTURE'
+  | 'TRADE'
+  | 'SCIENCE'
+  | 'ENTERTAINMENT'
+  | 'MANUFACTURING'
+  | 'REAL_ESTATE';
+
+export const SECTOR_LABELS: Record<Sector, string> = {
+  IT: 'Technology & IT',
+  FINANCE: 'Finance & Banking',
+  HEALTHCARE: 'Healthcare & Pharma',
+  ENERGY: 'Energy & Utilities',
+  AGRICULTURE: 'Agriculture & Food',
+  TRADE: 'Retail & Trade',
+  SCIENCE: 'Research & Science',
+  ENTERTAINMENT: 'Entertainment & Media',
+  MANUFACTURING: 'Manufacturing',
+  REAL_ESTATE: 'Real Estate',
+};
+
+export const SECTOR_OPTIONS: { value: Sector; label: string }[] = (
+  Object.keys(SECTOR_LABELS) as Sector[]
+).map((k) => ({ value: k, label: SECTOR_LABELS[k] }));
+
 export interface StockInfo {
   id: string;
   ticker: string;
   name: string;
   govtBond: boolean;
+  sector: Sector | null;
   currentPrice: number;
   priceChange24h: number;
   priceChangePct24h: number;
@@ -11,6 +41,8 @@ export interface StockInfo {
   totalSupply: number;
   yieldRateBps: number;
   priceHistory: number[];
+  founderClerkId: string | null;
+  founderSharesRetained: number;
 }
 
 export interface StockQuoteResponse {
@@ -73,9 +105,14 @@ export interface PortfolioResponse {
 export interface IPOCreateRequest {
   name: string;
   ticker: string;
+  sector: Sector;
   totalSupply: number;
   initialPricePerShare: number;
   publicFloatPct: number;
+}
+
+export interface DiluteRequest {
+  quantity: number;
 }
 
 export interface PriceTick {

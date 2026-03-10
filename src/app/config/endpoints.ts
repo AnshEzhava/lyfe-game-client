@@ -22,4 +22,5 @@ export const ENDPOINTS = {
   GET_LIMIT_ORDERS: '/stocks/limit',
   GET_PORTFOLIO: '/stocks/portfolio',
   CREATE_IPO: '/stocks/ipo',
+  DILUTE: '/stocks',
 };

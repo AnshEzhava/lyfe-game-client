@@ -364,12 +364,101 @@
 
         <!-- My Company tab -->
         <div *ngIf="stockTab() === 'mycompany'" class="tab-content">
-          <ng-container *ngIf="portfolio()?.holdings?.length === 0 || !gameUser()?.balance">
+          <ng-container *ngIf="!gameUser()">
             <div class="inactive-panel">Loading...</div>
           </ng-container>
 
-          <ng-container *ngIf="gameUser() as u">
-            <!-- If user has no IPO -->
+          <ng-container *ngIf="gameUser()">
+            <!-- User already has a company -->
+            <ng-container *ngIf="myCompany() as co">
+              <div class="active-panel">
+                <div class="active-panel-title">Your Company</div>
+                <div class="sm-company-name">
+                  <span class="sm-row-ticker">{{ co.ticker }}</span>
+                  <span class="sm-row-name" style="font-size:1rem; color:#ccc;">{{ co.name }}</span>
+                </div>
+              </div>
+
+              <div class="item-list sm-company-stats">
+                <div class="list-item sm-company-stat-row">
+                  <span class="sm-company-stat-label">Current Price</span>
+                  <span class="sm-company-stat-value">{{ formatPrice(co.currentPrice) }} B</span>
+                </div>
+                <div class="list-item sm-company-stat-row">
+                  <span class="sm-company-stat-label">Market Cap</span>
+                  <span class="sm-company-stat-value">
+                    {{ (co.currentPrice * co.totalSupply) | number: '1.0-0' }} B
+                  </span>
+                </div>
+                <div class="list-item sm-company-stat-row">
+                  <span class="sm-company-stat-label">Total Supply</span>
+                  <span class="sm-company-stat-value">{{ co.totalSupply | number: '1.0-0' }}</span>
+                </div>
+                <div class="list-item sm-company-stat-row">
+                  <span class="sm-company-stat-label">
+                    Your Retained Shares
+                    <span class="sm-company-stat-hint">(dilutable)</span>
+                  </span>
+                  <span class="sm-company-stat-value" style="color:#4caf50;">
+                    {{ co.founderSharesRetained | number: '1.0-0' }}
+                    ({{ (co.founderSharesRetained / co.totalSupply * 100) | number: '1.1-1' }}%)
+                  </span>
+                </div>
+                <ng-container *ngIf="getHoldingForStock(co.id) as h">
+                  <ng-container *ngIf="h.sharesOwned > 0">
+                    <div class="list-item sm-company-stat-row">
+                      <span class="sm-company-stat-label">
+                        Market Holdings
+                        <span class="sm-company-stat-hint">(sell via market)</span>
+                      </span>
+                      <span class="sm-company-stat-value" style="color:#3498db;">
+                        {{ h.sharesOwned | number: '1.0-0' }}
+                        ({{ (h.sharesOwned / co.totalSupply * 100) | number: '1.1-1' }}%)
+                      </span>
+                    </div>
+                    <div class="list-item sm-company-stat-row sm-company-stat-total">
+                      <span class="sm-company-stat-label">Total Founder Stake</span>
+                      <span class="sm-company-stat-value">
+                        {{ (co.founderSharesRetained + h.sharesOwned) | number: '1.0-0' }}
+                        ({{ ((co.founderSharesRetained + h.sharesOwned) / co.totalSupply * 100) | number: '1.1-1' }}%)
+                      </span>
+                    </div>
+                  </ng-container>
+                </ng-container>
+                <div class="list-item sm-company-stat-row">
+                  <span class="sm-company-stat-label">Pool Depth</span>
+                  <span class="sm-company-stat-value">
+                    {{ co.liquidityBranks | number: '1.0-0' }} B /
+                    {{ co.liquidityShares | number: '1.0-0' }} shares
+                  </span>
+                </div>
+              </div>
+
+              <!-- Dilution form -->
+              <div class="section-label" style="margin-top: 8px;">Sell Retained Shares (Dilute)</div>
+              <div class="sm-dilute-form">
+                <div class="trade-field">
+                  <label class="trade-label">Shares to sell into pool</label>
+                  <input
+                    class="trade-input"
+                    type="number"
+                    min="1"
+                    placeholder="Quantity"
+                    [ngModel]="diluteQty()"
+                    (ngModelChange)="diluteQty.set(+$event)"
+                  />
+                </div>
+                <div class="sm-dilute-preview" *ngIf="diluteQty() > 0">
+                  Pool impact: ~{{ (diluteQty() / co.liquidityShares * 100) | number: '1.1-1' }}%
+                  &nbsp;|&nbsp; Max allowed: 10%
+                </div>
+                <button class="btn-primary sm-dilute-btn" (click)="dilute()">
+                  Sell {{ diluteQty() | number: '1.0-0' }} shares into pool
+                </button>
+              </div>
+            </ng-container>
+
+            <!-- User has no company yet -->
             <ng-container *ngIf="!hasOwnIPO()">
               <div class="active-panel">
                 <div class="active-panel-title">Launch Your Company</div>
@@ -401,6 +490,16 @@
                     [ngModel]="ipoForm().ticker"
                     (ngModelChange)="setIpoTicker($event)"
                   />
+                </div>
+                <div class="trade-field">
+                  <label class="trade-label">Sector</label>
+                  <select
+                    class="trade-input trade-select"
+                    [ngModel]="ipoForm().sector"
+                    (ngModelChange)="setIpoSector($event)"
+                  >
+                    <option *ngFor="let opt of SECTOR_OPTIONS" [value]="opt.value">{{ opt.label }}</option>
+                  </select>
                 </div>
                 <div class="trade-field">
                   <label class="trade-label">Total Share Supply</label>

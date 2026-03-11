@@ -200,6 +200,21 @@
       (click)="expand('news')"
     >
       <h3>News</h3>
+      <div class="news-collapsed-body">
+        <ng-container *ngIf="newsItems().length > 0; else newsLoading">
+          <div *ngFor="let item of newsItems().slice(0, 3)" class="news-collapsed-row">
+            <span
+              class="news-impact-dot"
+              [class.impact-pos]="item.impactPct >= 0"
+              [class.impact-neg]="item.impactPct < 0"
+            ></span>
+            <span class="news-collapsed-headline">{{ item.headline }}</span>
+          </div>
+        </ng-container>
+        <ng-template #newsLoading>
+          <div class="news-collapsed-empty">Latest news will appear here.</div>
+        </ng-template>
+      </div>
     </div>
 
     <!-- Overlay for Expanded Item -->
@@ -715,9 +730,34 @@
       </div>
 
       <!-- News -->
-      <div *ngIf="expandedSection() === 'news'" class="overlay-content">
-        <h3>News</h3>
-        <p class="coming-soon">Coming soon.</p>
+      <div *ngIf="expandedSection() === 'news'" class="overlay-content news-overlay">
+        <div class="overlay-header">
+          <h3>News Feed</h3>
+        </div>
+
+        <div class="tab-content">
+          <div *ngIf="newsItems().length === 0" class="inactive-panel">
+            No news yet. Check back soon.
+          </div>
+          <div class="item-list news-list" *ngIf="newsItems().length > 0">
+            <div *ngFor="let item of newsItems()" class="list-item news-item">
+              <div class="news-item-header">
+                <span class="news-target-label">
+                  <span *ngIf="item.ticker" class="news-ticker">{{ item.ticker }}</span>
+                  <span *ngIf="!item.ticker" class="news-sector-tag">{{ item.targetLabel }}</span>
+                </span>
+                <span
+                  class="news-impact-badge"
+                  [class.impact-badge-pos]="item.impactPct >= 0"
+                  [class.impact-badge-neg]="item.impactPct < 0"
+                >{{ formatImpact(item.impactPct) }}</span>
+                <span class="news-timestamp">{{ formatNewsTime(item.publishedAt) }}</span>
+              </div>
+              <div class="news-headline">{{ item.headline }}</div>
+              <div class="news-body">{{ item.body }}</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

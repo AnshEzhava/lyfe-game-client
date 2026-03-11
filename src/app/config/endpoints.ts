@@ -14,6 +14,9 @@ export const ENDPOINTS = {
   ENROLL_COURSE: '/user/education/enroll',
   COMPLETE_COURSE: '/user/education/complete',
 
+  // News endpoints
+  GET_NEWS: '/news',
+
   // Stock endpoints
   GET_STOCKS: '/stocks',
   TRADE_STOCK: '/stocks/trade',

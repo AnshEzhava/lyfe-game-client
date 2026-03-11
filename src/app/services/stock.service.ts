@@ -17,6 +17,7 @@ import {
   TradeRequest,
   TradeResponse,
 } from '../types/api/stock.types';
+import { NewsItem } from '../types/api/news.types';
 
 @Injectable({
   providedIn: 'root',
@@ -73,6 +74,7 @@ export class StockService {
   connectPriceStream(
     stockIds: string[],
     onTick: (tick: PriceTick) => void,
+    onNews?: (item: NewsItem) => void,
   ): () => void {
     this.stompClient = new Client({
       brokerURL: `${CONFIG.WS_URL}/ws/stocks`,
@@ -89,6 +91,15 @@ export class StockService {
           }
         });
       }
+      if (onNews) {
+        this.stompClient!.subscribe('/topic/news', (msg) => {
+          try {
+            onNews(JSON.parse(msg.body) as NewsItem);
+          } catch {
+            // malformed message — ignore
+          }
+        });
+      }
     };
 
     this.stompClient.activate();
@@ -97,6 +108,10 @@ export class StockService {
       this.stompClient?.deactivate();
       this.stompClient = null;
     };
+  }
+
+  getNews(): Observable<NewsItem[]> {
+    return this.http.get<NewsItem[]>(`${CONFIG.API_URL}${ENDPOINTS.GET_NEWS}`);
   }
 
   disconnectPriceStream() {

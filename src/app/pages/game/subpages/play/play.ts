@@ -28,6 +28,7 @@ import {
   StockInfo,
   StockQuoteResponse,
 } from '../../../../types/api/stock.types';
+import { NewsItem } from '../../../../types/api/news.types';
 import { Modal } from '../../../../components/modal/modal';
 import { StockTradeModal } from '../../../../components/stock-trade-modal/stock-trade-modal';
 import { StockSparkline } from '../../../../components/stock-sparkline/stock-sparkline';
@@ -95,6 +96,7 @@ export class Play implements OnInit, OnDestroy {
   selectedStock = signal<StockInfo | null>(null);
   tradeModalOpen = signal(false);
   pendingOrders = signal<PendingOrder[]>([]);
+  newsItems = signal<NewsItem[]>([]);
   readonly SECTOR_OPTIONS = SECTOR_OPTIONS;
   ipoForm = signal({
     name: '',
@@ -379,21 +381,27 @@ export class Play implements OnInit, OnDestroy {
 
   private startPriceStream(stockIds: string[]) {
     this.disconnectWs?.();
-    this.disconnectWs = this.stockService.connectPriceStream(stockIds, (tick: PriceTick) => {
-      this.stockQuotes.update((quotes) =>
-        quotes.map((q) =>
-          q.id === tick.stockId
-            ? {
-                ...q,
-                currentPrice: tick.price,
-                liquidityBranks: tick.liquidityBranks,
-                liquidityShares: tick.liquidityShares,
-                priceHistory: [...(q.priceHistory ?? []).slice(-99), tick.price],
-              }
-            : q,
-        ),
-      );
-    });
+    this.disconnectWs = this.stockService.connectPriceStream(
+      stockIds,
+      (tick: PriceTick) => {
+        this.stockQuotes.update((quotes) =>
+          quotes.map((q) =>
+            q.id === tick.stockId
+              ? {
+                  ...q,
+                  currentPrice: tick.price,
+                  liquidityBranks: tick.liquidityBranks,
+                  liquidityShares: tick.liquidityShares,
+                  priceHistory: [...(q.priceHistory ?? []).slice(-99), tick.price],
+                }
+              : q,
+          ),
+        );
+      },
+      (item: NewsItem) => {
+        this.newsItems.update((prev) => [item, ...prev].slice(0, 20));
+      },
+    );
   }
 
   openTradeModal(stock: StockInfo) {
@@ -499,6 +507,13 @@ export class Play implements OnInit, OnDestroy {
     });
   }
 
+  loadNews() {
+    this.stockService.getNews().subscribe({
+      next: (items) => this.newsItems.set(items),
+      error: () => {},
+    });
+  }
+
   cancelOrder(orderId: string) {
     this.stockService.cancelLimitOrder(orderId).subscribe({
       next: () => {
@@ -547,6 +562,7 @@ export class Play implements OnInit, OnDestroy {
       this.closeTimer = null;
     }
     this.expandedSection.set(section);
+    if (section === 'news') this.loadNews();
     // Allow the DOM to render hidden overlay, then trigger transition
     requestAnimationFrame(() => {
       this.overlayVisible.set(true);
@@ -589,5 +605,20 @@ export class Play implements OnInit, OnDestroy {
     if (gameHours > 0) parts.push(`${gameHours}h`);
     if (mins > 0 || parts.length === 0) parts.push(`${mins}m`);
     return parts.join(' ');
+  }
+
+  formatNewsTime(ms: number): string {
+    const diff = Date.now() - ms;
+    const secs = Math.floor(diff / 1000);
+    if (secs < 60) return `${secs}s ago`;
+    const mins = Math.floor(secs / 60);
+    if (mins < 60) return `${mins}m ago`;
+    const hours = Math.floor(mins / 60);
+    return `${hours}h ago`;
+  }
+
+  formatImpact(pct: number): string {
+    const sign = pct >= 0 ? '+' : '';
+    return `${sign}${pct.toFixed(1)}%`;
   }
 }

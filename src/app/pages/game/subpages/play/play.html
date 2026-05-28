@@ -79,7 +79,12 @@
           </ng-template>
         </ng-container>
         <ng-template #smLoading>
-          <div class="sm-loading">Loading market...</div>
+          <div class="skeleton-row" *ngFor="let _ of [1, 2, 3]">
+            <div class="skeleton-bar skeleton-ticker"></div>
+            <div class="skeleton-bar skeleton-fill"></div>
+            <div class="skeleton-bar skeleton-change"></div>
+          </div>
+          <div class="skeleton-chart"></div>
         </ng-template>
       </div>
     </div>
@@ -212,7 +217,10 @@
           </div>
         </ng-container>
         <ng-template #newsLoading>
-          <div class="news-collapsed-empty">Latest news will appear here.</div>
+          <div class="skeleton-row" *ngFor="let _ of [1, 2]">
+            <div class="skeleton-bar" style="width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0"></div>
+            <div class="skeleton-bar skeleton-fill" style="height: 10px"></div>
+          </div>
         </ng-template>
       </div>
     </div>
@@ -310,8 +318,11 @@
               </div>
             </div>
 
-            <div *ngIf="stockQuotes().length === 0" class="inactive-panel">
-              Loading market data...
+            <div *ngIf="stockQuotes().length === 0" class="empty-state">
+              <div class="empty-state-icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg"><path d="M3 13h2v8H3zM7 9h2v12H7zM11 11h2v10h-2zM15 6h2v15h-2zM19 3h2v18h-2z" fill="currentColor"/></svg>
+              </div>
+              <span class="empty-state-text">Loading market data...</span>
             </div>
           </div>
         </div>
@@ -347,14 +358,24 @@
           </div>
 
           <ng-template #noHoldings>
-            <div class="inactive-panel">No holdings yet. Buy stocks in the Market tab.</div>
+            <div class="empty-state">
+              <div class="empty-state-icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z" fill="currentColor"/></svg>
+              </div>
+              <span class="empty-state-text">No holdings yet</span>
+              <span class="empty-state-hint">Buy stocks in the Market tab to build your portfolio</span>
+            </div>
           </ng-template>
         </div>
 
         <!-- Orders tab -->
         <div *ngIf="stockTab() === 'orders'" class="tab-content">
-          <div *ngIf="pendingOrders().length === 0" class="inactive-panel">
-            No pending limit orders.
+          <div *ngIf="pendingOrders().length === 0" class="empty-state">
+            <div class="empty-state-icon">
+              <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" fill="currentColor"/></svg>
+            </div>
+            <span class="empty-state-text">No pending limit orders</span>
+            <span class="empty-state-hint">Place limit orders from the Market tab</span>
           </div>
           <div class="item-list" *ngIf="pendingOrders().length > 0">
             <div *ngFor="let order of pendingOrders()" class="list-item sm-order-row">
@@ -380,7 +401,10 @@
         <!-- My Company tab -->
         <div *ngIf="stockTab() === 'mycompany'" class="tab-content">
           <ng-container *ngIf="!gameUser()">
-            <div class="inactive-panel">Loading...</div>
+            <div class="empty-state">
+              <div class="skeleton-bar" style="width: 120px; height: 14px"></div>
+              <div class="skeleton-bar" style="width: 80px; height: 10px"></div>
+            </div>
           </ng-container>
 
           <ng-container *ngIf="gameUser()">
@@ -562,8 +586,12 @@
                 </button>
               </div>
 
-              <div *ngIf="branks() < 1000000" class="inactive-panel">
-                You need 1,000,000 Branks to launch an IPO. Keep earning!
+              <div *ngIf="branks() < 1000000" class="empty-state">
+                <div class="empty-state-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg"><path d="M12 7V3H2v18h20V7H12z" fill="currentColor"/></svg>
+                </div>
+                <span class="empty-state-text">1,000,000 Branks required to launch an IPO</span>
+                <span class="empty-state-hint">Balance: {{ branks() | number: '1.0-0' }} B — keep earning!</span>
               </div>
             </ng-container>
           </ng-container>
@@ -610,7 +638,13 @@
           </div>
 
           <ng-template #noJob>
-            <div class="inactive-panel">No active job. Select one below.</div>
+            <div class="empty-state">
+              <div class="empty-state-icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.34C18 3.1 16.91 2 15.56 2H8.44C7.09 2 6 3.1 6 4.66c0 .46.11.9.18 1.34H4C2.9 6 2 6.9 2 8v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z" fill="currentColor"/></svg>
+              </div>
+              <span class="empty-state-text">No active job</span>
+              <span class="empty-state-hint">Pick a job below to start earning Branks</span>
+            </div>
           </ng-template>
 
           <!-- Job list -->
@@ -683,7 +717,13 @@
           </div>
 
           <ng-template #noCourse>
-            <div class="inactive-panel">Not currently enrolled. Enroll in a course below.</div>
+            <div class="empty-state">
+              <div class="empty-state-icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg"><path d="M12 3L1 9l4 2.18V15c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-3.82L21 9l-9-6z" fill="currentColor"/></svg>
+              </div>
+              <span class="empty-state-text">Not enrolled in a course</span>
+              <span class="empty-state-hint">Study to boost Intelligence and unlock better jobs</span>
+            </div>
           </ng-template>
 
           <!-- Course list -->
@@ -736,8 +776,12 @@
         </div>
 
         <div class="tab-content">
-          <div *ngIf="newsItems().length === 0" class="inactive-panel">
-            No news yet. Check back soon.
+          <div *ngIf="newsItems().length === 0" class="empty-state">
+            <div class="empty-state-icon">
+              <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="currentColor"/></svg>
+            </div>
+            <span class="empty-state-text">No news yet</span>
+            <span class="empty-state-hint">Breaking stories will appear as the market moves</span>
           </div>
           <div class="item-list news-list" *ngIf="newsItems().length > 0">
             <div *ngFor="let item of newsItems()" class="list-item news-item">

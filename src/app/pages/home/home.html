@@ -1,67 +1,309 @@
-<div class="header">
+<div class="header" [class.scrolled]="scrolled()">
   <p class="title">Lyfe</p>
   <div class="nav-options">
     <p (click)="scrollTo('home')" [class.active]="activeSection() === 'home'">Home</p>
-    <p (click)="scrollTo('game')" [class.active]="activeSection() === 'game'">Game</p>
-    <p (click)="scrollTo('developer')" [class.active]="activeSection() === 'developer'">
-      Developer
-    </p>
-    <p (click)="scrollTo('code')" [class.active]="activeSection() === 'code'">Code</p>
+    <p (click)="scrollTo('features')" [class.active]="activeSection() === 'features'">Features</p>
+    <p (click)="scrollTo('tech')" [class.active]="activeSection() === 'tech'">Tech</p>
+    <p (click)="scrollTo('about')" [class.active]="activeSection() === 'about'">About</p>
   </div>
   <div class="user-options" (click)="navigate('/game/auth')">
-    <p>Play</p>
+    <p>Play Now</p>
   </div>
 </div>
 
 <div class="content">
+  <!-- Hero -->
   <section id="home" class="section hero-section">
+    <div class="hero-badge">Real-time multiplayer economy sim</div>
     <h1 class="hero-title">Lyfe</h1>
-    <p class="hero-subtitle">A digital simulation of existence.</p>
+    <p class="hero-subtitle">
+      Trade stocks on an AMM-powered exchange. Build a career. Launch your own company.<br />
+      A full-stack economy simulation where every decision shapes your fortune.
+    </p>
     <div class="hero-actions">
-      <button class="primary-btn" (click)="scrollTo('game')">Explore the World</button>
+      <button class="primary-btn" (click)="navigate('/game/auth')">
+        Start Playing
+        <svg class="btn-arrow" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="secondary-btn" (click)="scrollTo('features')">See How It Works</button>
+    </div>
+
+    <div class="hero-preview">
+      <div class="preview-card">
+        <div class="preview-header">
+          <span class="preview-dot green"></span>
+          <span class="preview-dot red"></span>
+          <span class="preview-dot yellow"></span>
+          <span class="preview-title-bar">LyfeGame — Stock Market</span>
+        </div>
+        <div class="preview-body">
+          <div class="preview-stock-row">
+            <span class="preview-ticker">NXRA</span>
+            <span class="preview-price">142.8 B</span>
+            <span class="preview-change up">+5.42%</span>
+          </div>
+          <div class="preview-stock-row">
+            <span class="preview-ticker">BOLT</span>
+            <span class="preview-price">89.3 B</span>
+            <span class="preview-change down">-2.17%</span>
+          </div>
+          <div class="preview-stock-row">
+            <span class="preview-ticker">GOVB</span>
+            <span class="preview-price">1,000.0 B</span>
+            <span class="preview-change up govt">2.5% yield</span>
+          </div>
+          <div class="preview-sparkline">
+            <svg viewBox="0 0 200 40" preserveAspectRatio="none">
+              <path d="M0,35 Q20,30 40,28 T80,20 T120,25 T160,12 T200,8" stroke="#4caf50" stroke-width="2" fill="none" vector-effect="non-scaling-stroke"/>
+              <path d="M0,35 Q20,30 40,28 T80,20 T120,25 T160,12 T200,8 L200,40 L0,40 Z" fill="#4caf50" fill-opacity="0.1"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-indicator" (click)="scrollTo('features')">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </div>
   </section>
-  <section id="game" class="section">
-    <h2 class="section-title">The Game</h2>
-    <div class="section-content">
-      <p>
-        Experience a new way of living in the digital realm. Lyfe offers an immersive simulation
-        where every choice matters. Build your legacy, connect with others, and shape the world
-        around you.
-      </p>
-      <div class="game-showcase">
-        <div class="game-placeholder">Screenshot Placeholder 1</div>
-        <div class="game-placeholder">Screenshot Placeholder 2</div>
-        <div class="game-placeholder">Screenshot Placeholder 3</div>
+
+  <!-- Features -->
+  <section id="features" class="section features-section">
+    <div class="section-header">
+      <span class="section-tag">Game Systems</span>
+      <h2 class="section-title">A Living Economy</h2>
+      <p class="section-desc">Four interconnected systems that create an emergent game economy.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon icon-market">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 13h2v8H3zM7 9h2v12H7zM11 11h2v10h-2zM15 6h2v15h-2zM19 3h2v18h-2z"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Stock Market</h3>
+        <p class="feature-desc">
+          An Automated Market Maker (AMM) exchange using constant-product pricing.
+          Real-time price feeds via WebSocket, limit orders, and wash-trade detection.
+        </p>
+        <div class="feature-tags">
+          <span class="ftag">AMM Formula</span>
+          <span class="ftag">Limit Orders</span>
+          <span class="ftag">WebSocket</span>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon icon-company">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">IPO & Company</h3>
+        <p class="feature-desc">
+          Launch your own publicly traded company. Set share supply, pricing, and float percentage.
+          Manage founder shares and dilute into the liquidity pool.
+        </p>
+        <div class="feature-tags">
+          <span class="ftag">Founder Shares</span>
+          <span class="ftag">Dilution</span>
+          <span class="ftag">Liquidity Pool</span>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon icon-career">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 6h-2.18c.07-.44.18-.88.18-1.34C18 3.1 16.91 2 15.56 2H8.44C7.09 2 6 3.1 6 4.66c0 .46.11.9.18 1.34H4C2.9 6 2 6.9 2 8v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Jobs & Education</h3>
+        <p class="feature-desc">
+          Earn wages scaled by intelligence. Enroll in courses to unlock higher-paying careers.
+          Balance part-time work with full-time study for optimal progression.
+        </p>
+        <div class="feature-tags">
+          <span class="ftag">Skill Progression</span>
+          <span class="ftag">Wage Scaling</span>
+          <span class="ftag">Prerequisites</span>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon icon-news">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12zM7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">AI News Engine</h3>
+        <p class="feature-desc">
+          Dynamic news generated by Mistral AI that targets specific stocks and sectors.
+          Buoyant stocks get bearish news for mean-reversion — the market corrects itself.
+        </p>
+        <div class="feature-tags">
+          <span class="ftag">Mistral LLM</span>
+          <span class="ftag">Mean Reversion</span>
+          <span class="ftag">Market Impact</span>
+        </div>
       </div>
     </div>
   </section>
 
-  <section id="developer" class="section">
-    <h2 class="section-title">The Developer</h2>
-    <div class="section-content">
-      <p>
-        Built with passion and a vision for the future of gaming. Our team is dedicated to creating
-        experiences that push the boundaries of web technologies.
-      </p>
+  <!-- How the AMM Works -->
+  <section class="section mechanics-section">
+    <div class="section-header">
+      <span class="section-tag">Under the Hood</span>
+      <h2 class="section-title">How the Market Works</h2>
+      <p class="section-desc">Prices are determined algorithmically, not by order books.</p>
     </div>
-  </section>
 
-  <section id="code" class="section">
-    <h2 class="section-title">The Code</h2>
-    <div class="section-content">
-      <p>
-        We believe in transparency and community collaboration. The frontend codebase is open for
-        everyone to explore, learn from, and contribute to.
-      </p>
-      <div class="code-note">
-        <p>
-          <span class="highlight">Note:</span> While our frontend is open source, the backend code
-          remains closed to ensure the integrity of the game economy and prevent market
-          manipulation.
+    <div class="mechanics-content">
+      <div class="mechanic-card formula-card">
+        <h4 class="mechanic-label">Constant-Product AMM</h4>
+        <div class="formula">
+          <span class="formula-text">Buy Cost = B &times; s &frasl; (S &minus; s)</span>
+        </div>
+        <p class="mechanic-desc">
+          Each stock has a liquidity pool of Branks (B) and shares (S).
+          Buying <em>s</em> shares costs more as the pool depletes — large trades move the price.
         </p>
       </div>
-      <button class="github-btn">View on GitHub</button>
+
+      <div class="mechanic-pillars">
+        <div class="pillar">
+          <div class="pillar-value">10%</div>
+          <div class="pillar-label">Max Pool Impact</div>
+          <div class="pillar-desc">Single trade limit</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-value">30s</div>
+          <div class="pillar-label">Trade Cooldown</div>
+          <div class="pillar-desc">Per-stock throttle</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-value">20%</div>
+          <div class="pillar-label">Wash-Trade Penalty</div>
+          <div class="pillar-desc">Sell within 60s of buy</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-value">60&times;</div>
+          <div class="pillar-label">Time Acceleration</div>
+          <div class="pillar-desc">1 real sec = 1 game min</div>
+        </div>
+      </div>
     </div>
   </section>
+
+  <!-- Tech Stack -->
+  <section id="tech" class="section tech-section">
+    <div class="section-header">
+      <span class="section-tag">Architecture</span>
+      <h2 class="section-title">Built With</h2>
+      <p class="section-desc">A full-stack application with real-time capabilities.</p>
+    </div>
+
+    <div class="tech-layout">
+      <div class="tech-column">
+        <h4 class="tech-column-title">Frontend</h4>
+        <div class="tech-list">
+          <div class="tech-item">
+            <span class="tech-name">Angular 21</span>
+            <span class="tech-detail">Standalone components, signals</span>
+          </div>
+          <div class="tech-item">
+            <span class="tech-name">TypeScript</span>
+            <span class="tech-detail">Strict mode, full type safety</span>
+          </div>
+          <div class="tech-item">
+            <span class="tech-name">RxJS + Signals</span>
+            <span class="tech-detail">Hybrid reactive state management</span>
+          </div>
+          <div class="tech-item">
+            <span class="tech-name">STOMP / WebSocket</span>
+            <span class="tech-detail">Real-time price streaming</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tech-divider"></div>
+
+      <div class="tech-column">
+        <h4 class="tech-column-title">Backend</h4>
+        <div class="tech-list">
+          <div class="tech-item">
+            <span class="tech-name">Spring Boot 3</span>
+            <span class="tech-detail">REST API, scheduling, WebSocket</span>
+          </div>
+          <div class="tech-item">
+            <span class="tech-name">MongoDB</span>
+            <span class="tech-detail">Document store with embedded models</span>
+          </div>
+          <div class="tech-item">
+            <span class="tech-name">Spring Security</span>
+            <span class="tech-detail">OAuth2 / JWT via Clerk</span>
+          </div>
+          <div class="tech-item">
+            <span class="tech-name">Mistral AI</span>
+            <span class="tech-detail">Dynamic news generation</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arch-diagram">
+      <div class="arch-node arch-client">Angular Client</div>
+      <div class="arch-arrow">
+        <svg viewBox="0 0 60 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0,12 H50 M44,6 L54,12 L44,18" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="arch-label">REST + WS</span>
+      </div>
+      <div class="arch-node arch-server">Spring Boot API</div>
+      <div class="arch-arrow">
+        <svg viewBox="0 0 60 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0,12 H50 M44,6 L54,12 L44,18" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="arch-label">Queries</span>
+      </div>
+      <div class="arch-node arch-db">MongoDB</div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="section about-section">
+    <div class="section-header">
+      <span class="section-tag">The Project</span>
+      <h2 class="section-title">About LyfeGame</h2>
+    </div>
+    <div class="about-content">
+      <p>
+        LyfeGame is a personal project exploring how interconnected game systems
+        create emergent economic behavior. The AMM-based stock exchange mirrors
+        mechanics from decentralized finance, while the career and education
+        systems gate progression through skill investment rather than time alone.
+      </p>
+      <p>
+        The AI news engine creates a feedback loop — market conditions influence
+        the news, and the news influences the market — producing organic price
+        movements without manual intervention.
+      </p>
+      <div class="about-links">
+        <a class="about-link" href="https://github.com" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" fill="currentColor"/>
+          </svg>
+          View Source
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <span class="footer-text">LyfeGame — Built with Angular, Spring Boot & Mistral AI</span>
+  </footer>
 </div>

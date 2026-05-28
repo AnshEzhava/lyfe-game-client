@@ -1,4 +1,12 @@
-import { Component, AfterViewInit, OnDestroy, signal, ElementRef, inject } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  OnDestroy,
+  signal,
+  ElementRef,
+  inject,
+  HostListener,
+} from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,9 +17,15 @@ import { Router } from '@angular/router';
 })
 export class Home implements AfterViewInit, OnDestroy {
   activeSection = signal<string>('home');
+  scrolled = signal(false);
   private observer: IntersectionObserver | null = null;
   private readonly elementRef = inject(ElementRef);
   router = inject(Router);
+
+  @HostListener('window:scroll')
+  onScroll() {
+    this.scrolled.set(window.scrollY > 50);
+  }
 
   ngAfterViewInit() {
     setTimeout(() => {
@@ -29,7 +43,7 @@ export class Home implements AfterViewInit, OnDestroy {
         });
       }, options);
 
-      const sections = this.elementRef.nativeElement.querySelectorAll('section');
+      const sections = this.elementRef.nativeElement.querySelectorAll('section[id]');
       sections.forEach((section: Element) => {
         this.observer?.observe(section);
       });

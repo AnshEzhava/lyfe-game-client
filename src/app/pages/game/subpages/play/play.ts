@@ -97,6 +97,9 @@ export class Play implements OnInit, OnDestroy {
   tradeModalOpen = signal(false);
   pendingOrders = signal<PendingOrder[]>([]);
   newsItems = signal<NewsItem[]>([]);
+  newsTab = signal<'your-news' | 'all'>('your-news');
+  newsSearch = signal('');
+  newsSort = signal<'time' | 'impact'>('time');
   readonly SECTOR_OPTIONS = SECTOR_OPTIONS;
   ipoForm = signal({
     name: '',
@@ -120,6 +123,55 @@ export class Play implements OnInit, OnDestroy {
     const holdings = this.portfolio()?.holdings ?? [];
     const heldIds = new Set(holdings.filter((h) => h.sharesOwned > 0).map((h) => h.stockId));
     return this.stockQuotes().filter((s) => heldIds.has(s.id));
+  });
+
+  heldStockIds = computed<Set<string>>(() => {
+    const holdings = this.portfolio()?.holdings ?? [];
+    const ids = new Set(holdings.filter((h) => h.sharesOwned > 0).map((h) => h.stockId));
+    const co = this.myCompany();
+    if (co) ids.add(co.id);
+    return ids;
+  });
+
+  heldSectors = computed<Set<string>>(() => {
+    const ids = this.heldStockIds();
+    return new Set(
+      this.stockQuotes()
+        .filter((s) => ids.has(s.id) && s.sector)
+        .map((s) => s.sector!),
+    );
+  });
+
+  filteredNews = computed<NewsItem[]>(() => {
+    let items = [...this.newsItems()];
+
+    if (this.newsTab() === 'your-news') {
+      const stockIds = this.heldStockIds();
+      const sectors = this.heldSectors();
+      items = items.filter((n) => {
+        if (n.targetType === 'COMPANY') return stockIds.has(n.targetId);
+        if (n.targetType === 'SECTOR') return sectors.has(n.targetId);
+        return false;
+      });
+    }
+
+    const q = this.newsSearch().toLowerCase().trim();
+    if (q) {
+      items = items.filter(
+        (n) =>
+          n.headline.toLowerCase().includes(q) ||
+          n.targetLabel.toLowerCase().includes(q) ||
+          (n.ticker?.toLowerCase().includes(q) ?? false),
+      );
+    }
+
+    if (this.newsSort() === 'impact') {
+      items.sort((a, b) => Math.abs(b.impactPct) - Math.abs(a.impactPct));
+    } else {
+      items.sort((a, b) => b.publishedAt - a.publishedAt);
+    }
+
+    return items;
   });
 
   private clockInterval: ReturnType<typeof setInterval> | null = null;
@@ -230,6 +282,7 @@ export class Play implements OnInit, OnDestroy {
         this.loadEducationStatus();
         this.loadStocks();
         this.loadPortfolio();
+        this.loadNews();
       },
       error: (err) => {
         if (err.status === 404) {
@@ -399,7 +452,10 @@ export class Play implements OnInit, OnDestroy {
         );
       },
       (item: NewsItem) => {
-        this.newsItems.update((prev) => [item, ...prev].slice(0, 20));
+        this.newsItems.update((prev) => {
+          if (prev.some((n) => n.id === item.id)) return prev;
+          return [item, ...prev].slice(0, 50);
+        });
       },
     );
   }

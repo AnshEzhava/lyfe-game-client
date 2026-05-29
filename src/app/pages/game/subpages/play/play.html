@@ -25,6 +25,13 @@
         <img src="/images/branks.png" alt="Branks" class="icon-currency" />
         <span class="amount">Branks: {{ branks() }}</span>
       </div>
+
+      <div class="status-item iq-info">
+        <svg class="icon-iq" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z" fill="currentColor"/>
+        </svg>
+        <span class="iq-value">IQ: {{ intelligence() }}</span>
+      </div>
     </div>
   </header>
 
@@ -90,26 +97,6 @@
     </div>
 
     <div class="grid-column middle-column">
-      <!-- Intelligence — Non-expandable -->
-      <div class="grid-item user-stats">
-        <h3 style="margin-bottom: 0">Intelligence</h3>
-
-        <div class="stats-container">
-          <div class="stat-row">
-            <div class="stat-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
-                />
-              </svg>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill fill-intelligence" [style.width.%]="intelligence()"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- Job / Education -->
       <div
         class="grid-item job-education"
@@ -775,21 +762,77 @@
           <h3>News Feed</h3>
         </div>
 
+        <div class="tab-bar">
+          <button
+            class="tab-btn"
+            [class.active]="newsTab() === 'your-news'"
+            (click)="newsTab.set('your-news')"
+          >
+            Your News
+          </button>
+          <button
+            class="tab-btn"
+            [class.active]="newsTab() === 'all'"
+            (click)="newsTab.set('all')"
+          >
+            All News
+          </button>
+        </div>
+
+        <div class="news-controls">
+          <div class="news-search-wrap">
+            <svg class="news-search-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="currentColor"/>
+            </svg>
+            <input
+              class="news-search-input"
+              type="text"
+              placeholder="Search headlines, tickers, sectors..."
+              [ngModel]="newsSearch()"
+              (ngModelChange)="newsSearch.set($event)"
+            />
+          </div>
+          <div class="news-sort-toggle">
+            <button
+              class="news-sort-btn"
+              [class.active]="newsSort() === 'time'"
+              (click)="newsSort.set('time')"
+            >Latest</button>
+            <button
+              class="news-sort-btn"
+              [class.active]="newsSort() === 'impact'"
+              (click)="newsSort.set('impact')"
+            >Impact</button>
+          </div>
+        </div>
+
         <div class="tab-content">
-          <div *ngIf="newsItems().length === 0" class="empty-state">
+          <div *ngIf="newsTab() === 'your-news' && heldStockIds().size === 0" class="empty-state">
+            <div class="empty-state-icon">
+              <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z" fill="currentColor"/></svg>
+            </div>
+            <span class="empty-state-text">No investments yet</span>
+            <span class="empty-state-hint">Buy stocks or launch a company to see personalized news here</span>
+          </div>
+
+          <div *ngIf="filteredNews().length === 0 && (newsTab() === 'all' || heldStockIds().size > 0)" class="empty-state">
             <div class="empty-state-icon">
               <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="currentColor"/></svg>
             </div>
-            <span class="empty-state-text">No news yet</span>
-            <span class="empty-state-hint">Breaking stories will appear as the market moves</span>
+            <span class="empty-state-text">{{ newsSearch() ? 'No matching news' : 'No news yet' }}</span>
+            <span class="empty-state-hint">{{ newsSearch() ? 'Try a different search term' : 'Breaking stories will appear as the market moves' }}</span>
           </div>
-          <div class="item-list news-list" *ngIf="newsItems().length > 0">
-            <div *ngFor="let item of newsItems()" class="list-item news-item">
+
+          <div class="item-list news-list" *ngIf="filteredNews().length > 0">
+            <div *ngFor="let item of filteredNews()" class="list-item news-item"
+              [class.news-item-yours]="heldStockIds().has(item.targetId)"
+            >
               <div class="news-item-header">
                 <span class="news-target-label">
                   <span *ngIf="item.ticker" class="news-ticker">{{ item.ticker }}</span>
                   <span *ngIf="!item.ticker" class="news-sector-tag">{{ item.targetLabel }}</span>
                 </span>
+                <span *ngIf="heldStockIds().has(item.targetId)" class="news-yours-badge">Held</span>
                 <span
                   class="news-impact-badge"
                   [class.impact-badge-pos]="item.impactPct >= 0"

@@ -95,6 +95,28 @@
   color: var(--green);
 }
 
+.iq-info {
+  min-width: 90px;
+  border-color: rgba(52, 152, 219, 0.15);
+}
+
+.iq-info:hover {
+  border-color: rgba(52, 152, 219, 0.3);
+}
+
+.icon-iq {
+  width: 20px;
+  height: 20px;
+  color: var(--blue);
+  flex-shrink: 0;
+}
+
+.iq-value {
+  color: var(--blue);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
    Grid
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -102,6 +124,7 @@
 .play-grid {
   display: grid;
   grid-template-columns: 1fr 1.2fr 1fr;
+  grid-template-rows: 1fr;
   gap: 1rem;
   flex: 1;
   min-height: 0;
@@ -148,6 +171,7 @@
 .stock-market {
   justify-content: flex-start;
   align-items: stretch;
+  overflow: hidden;
   border-color: rgba(76, 175, 80, 0.12);
 }
 
@@ -352,7 +376,7 @@
 }
 
 .job-education {
-  flex: 2;
+  flex: 3;
   justify-content: flex-start;
   overflow: hidden;
   background: var(--surface-card);
@@ -904,6 +928,7 @@
   flex: 1;
   min-height: 0;
   width: 100%;
+  overflow-y: auto;
 }
 
 .sm-ticker-row {
@@ -953,19 +978,17 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  flex: 1;
-  min-height: 0;
   width: 100%;
 }
 
 .sm-chart-section {
-  flex: 1;
   display: flex;
   flex-direction: column;
   border-radius: 9px;
   border: 1px solid var(--border-subtle);
   padding: 6px 8px 4px;
-  min-height: 0;
+  min-height: 100px;
+  flex-shrink: 0;
   transition: background 0.4s ease, border-color 0.4s ease;
   overflow: hidden;
 }
@@ -1373,6 +1396,78 @@
 
 .news-overlay { padding-top: 0.5rem; }
 
+.news-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 0 6px;
+}
+
+.news-search-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-hover);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 5px 8px;
+  transition: border-color 0.2s;
+}
+
+.news-search-wrap:focus-within {
+  border-color: var(--purple-border);
+}
+
+.news-search-icon {
+  width: 14px;
+  height: 14px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.news-search-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 0.75rem;
+}
+
+.news-search-input::placeholder {
+  color: var(--text-dim);
+}
+
+.news-sort-toggle {
+  display: flex;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.news-sort-btn {
+  background: var(--surface-hover);
+  border: none;
+  color: var(--text-dim);
+  font-family: inherit;
+  font-size: 0.68rem;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.news-sort-btn + .news-sort-btn {
+  border-left: 1px solid var(--border-subtle);
+}
+
+.news-sort-btn.active {
+  background: var(--purple-dim);
+  color: var(--purple);
+}
+
 .news-list { gap: 8px; }
 
 .news-item {
@@ -1382,6 +1477,22 @@
 }
 
 .news-item:hover { border-color: rgba(255, 255, 255, 0.08); }
+
+.news-item-yours {
+  border-left: 2px solid var(--purple-border);
+}
+
+.news-yours-badge {
+  font-size: 0.6rem;
+  color: var(--purple);
+  background: var(--purple-dim);
+  border: 1px solid var(--purple-border);
+  border-radius: 3px;
+  padding: 0 5px;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
 
 .news-item-header {
   display: flex;

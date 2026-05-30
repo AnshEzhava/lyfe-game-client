@@ -27,6 +27,7 @@ export class Auth {
   user = toSignal(this.clerkService.user$);
 
   readonly signInProps = {
+    forceRedirectUrl: '/game/play',
     appearance: {
       elements: {
         footer: 'clerk-footer-hidden',
@@ -36,6 +37,7 @@ export class Auth {
   } as const;
 
   readonly signUpProps = {
+    forceRedirectUrl: '/game/play',
     appearance: {
       elements: {
         footer: 'clerk-footer-hidden',

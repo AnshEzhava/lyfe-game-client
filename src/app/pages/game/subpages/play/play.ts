@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ClerkService } from 'ngx-clerk';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { take } from 'rxjs/operators';
 import { UserService } from '../../../../services/user.service';
 import { StockService } from '../../../../services/stock.service';
 import { ToastService } from '../../../../services/toast.service';
@@ -604,6 +605,12 @@ export class Play implements OnInit, OnDestroy {
       error: (err) => {
         this.toast.show(err.error?.responseMessage ?? 'Dilution failed.', 'error');
       },
+    });
+  }
+
+  signOut() {
+    this.clerkService.clerk$.pipe(take(1)).subscribe((clerk) => {
+      clerk.signOut().then(() => this.router.navigate(['/']));
     });
   }
 

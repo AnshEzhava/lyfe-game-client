@@ -49,6 +49,7 @@
   align-items: center;
   gap: 0.6rem;
   padding: 0.4rem 0.9rem;
+  height: 38px;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
   background: var(--surface-raised);
@@ -82,13 +83,28 @@
   flex-shrink: 0;
 }
 
-.icon-moon {
-  width: 26px;
-  height: 26px;
+.icon-moon-svg {
+  width: 22px;
+  height: 22px;
+  color: #c9b458;
+  flex-shrink: 0;
 }
 
 .username {
   color: var(--text-muted);
+}
+
+.icon-signout {
+  width: 16px;
+  height: 16px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  margin-left: 2px;
+  transition: color 0.2s;
+}
+
+.user-info:hover .icon-signout {
+  color: var(--red);
 }
 
 .amount {

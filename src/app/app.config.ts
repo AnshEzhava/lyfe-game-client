@@ -15,7 +15,11 @@ import { routes } from './app.routes';
 function initClerk(clerkService: ClerkService) {
   return () =>
     clerkService.__init({
-      publishableKey: 'pk_test_c2VsZWN0ZWQtc29sZS0yNS5jbGVyay5hY2NvdW50cy5kZXYk',
+      publishableKey: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'pk_test_c2VsZWN0ZWQtc29sZS0yNS5jbGVyay5hY2NvdW50cy5kZXYk'
+        : 'pk_live_Y2xlcmsubHlmZS5hbnNoLmNvZGVzJA',
+      afterSignInUrl: '/game/play',
+      afterSignUpUrl: '/game/play',
       appearance: {
         baseTheme: dark,
       },

@@ -1758,11 +1758,26 @@
 }
 
 /* ─── AFK settings + activity feed ──────────────────────────────────────── */
+/* Centered, readable-width container for the Activity overlay */
+.activity-panel {
+  align-self: center;
+  width: 100%;
+  max-width: 760px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.activity-panel .section-label {
+  margin-top: 0.25rem;
+}
+
 .afk-settings {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
-  margin: 1rem 0 1.5rem;
+  margin: 0.5rem 0 1.5rem;
 }
 
 .afk-setting-row {
@@ -1770,10 +1785,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.75rem 0.9rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.02);
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
 }
 
 .afk-setting-text {
@@ -1826,20 +1841,34 @@
 .afk-feed {
   display: flex;
   flex-direction: column;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  overflow: hidden;
 }
 
 .afk-feed-row {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0.75rem;
-  padding: 0.55rem 0.2rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--border-subtle);
   font-size: 0.85rem;
+  transition: background var(--dur-fast) var(--ease-out);
+}
+
+.afk-feed-row:last-child {
+  border-bottom: none;
+}
+
+.afk-feed-row:hover {
+  background: var(--surface-hover);
 }
 
 .afk-feed-amount {
   flex-shrink: 0;
-  min-width: 6.5rem;
+  min-width: 7rem;
+  text-align: right;
   font-variant-numeric: tabular-nums;
   font-weight: 600;
   color: var(--text-muted);
@@ -1929,4 +1958,67 @@
   .afk-feed-amount {
     min-width: 5rem;
   }
+}
+
+/* Activity collapsed-card preview */
+.grid-item.leaderboards {
+  justify-content: flex-start;
+}
+
+.act-collapsed-body {
+  width: 100%;
+  max-width: 460px;
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.25rem;
+  overflow: hidden;
+}
+
+.act-collapsed-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.25rem;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.82rem;
+}
+
+.act-collapsed-row:last-child {
+  border-bottom: none;
+}
+
+.act-collapsed-amount {
+  flex-shrink: 0;
+  min-width: 5.5rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.act-collapsed-amount.pos { color: var(--pos); }
+.act-collapsed-amount.neg { color: var(--neg); }
+
+.act-collapsed-label {
+  flex: 1;
+  min-width: 0;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.act-collapsed-time {
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.act-collapsed-empty {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  align-self: center;
 }

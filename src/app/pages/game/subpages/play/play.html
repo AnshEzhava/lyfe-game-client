@@ -185,21 +185,20 @@
         (click)="expand('activity')"
       >
         <h3>Activity</h3>
-        <div class="news-collapsed-body">
+        <div class="act-collapsed-body">
           <ng-container *ngIf="activityEvents().length > 0; else noActivity">
-            <div *ngFor="let ev of activityEvents().slice(0, 3)" class="news-collapsed-row">
+            <div *ngFor="let ev of activityEvents().slice(0, 6)" class="act-collapsed-row">
               <span
-                class="news-impact-dot"
-                [class.impact-pos]="ev.amount >= 0"
-                [class.impact-neg]="ev.amount < 0"
-              ></span>
-              <span class="news-collapsed-headline">{{ ev.label }}</span>
+                class="act-collapsed-amount"
+                [class.pos]="ev.amount > 0"
+                [class.neg]="ev.amount < 0"
+              >{{ ev.amount > 0 ? '+' : '' }}{{ ev.amount !== 0 ? (ev.amount | number: '1.0-0') + ' B' : '—' }}</span>
+              <span class="act-collapsed-label">{{ ev.label }}</span>
+              <span class="act-collapsed-time">{{ formatNewsTime(ev.at) }}</span>
             </div>
           </ng-container>
           <ng-template #noActivity>
-            <div class="news-collapsed-row">
-              <span class="news-collapsed-headline" style="color: var(--text-muted)">No activity yet</span>
-            </div>
+            <div class="act-collapsed-empty">No activity yet</div>
           </ng-template>
         </div>
       </div>
@@ -778,6 +777,8 @@
       <div *ngIf="expandedSection() === 'activity'" class="overlay-content">
         <h3>Activity</h3>
 
+        <div class="activity-panel">
+        <div class="section-label">Automation</div>
         <div class="afk-settings">
           <div class="afk-setting-row">
             <div class="afk-setting-text">
@@ -807,6 +808,7 @@
           </div>
         </div>
 
+        <div class="section-label">Recent activity</div>
         <div class="afk-feed">
           <ng-container *ngIf="activityEvents().length > 0; else emptyFeed">
             <div *ngFor="let ev of activityEvents()" class="afk-feed-row">
@@ -824,6 +826,7 @@
           <ng-template #emptyFeed>
             <p class="coming-soon">No activity yet. Get a job, invest, and check back.</p>
           </ng-template>
+        </div>
         </div>
       </div>
 

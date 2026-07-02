@@ -176,13 +176,30 @@
         </div>
       </div>
 
-      <!-- Leaderboards -->
+      <!-- Activity -->
       <div
         class="grid-item leaderboards"
-        [class.invisible-placeholder]="expandedSection() === 'leaderboards' && overlayVisible()"
-        (click)="expand('leaderboards')"
+        [class.invisible-placeholder]="expandedSection() === 'activity' && overlayVisible()"
+        (click)="expand('activity')"
       >
-        <h3>Leaderboards</h3>
+        <h3>Activity</h3>
+        <div class="news-collapsed-body">
+          <ng-container *ngIf="activityEvents().length > 0; else noActivity">
+            <div *ngFor="let ev of activityEvents().slice(0, 3)" class="news-collapsed-row">
+              <span
+                class="news-impact-dot"
+                [class.impact-pos]="ev.amount >= 0"
+                [class.impact-neg]="ev.amount < 0"
+              ></span>
+              <span class="news-collapsed-headline">{{ ev.label }}</span>
+            </div>
+          </ng-container>
+          <ng-template #noActivity>
+            <div class="news-collapsed-row">
+              <span class="news-collapsed-headline" style="color: #888">No activity yet</span>
+            </div>
+          </ng-template>
+        </div>
       </div>
     </div>
 
@@ -751,10 +768,57 @@
         </div>
       </div>
 
-      <!-- Leaderboards -->
-      <div *ngIf="expandedSection() === 'leaderboards'" class="overlay-content">
-        <h3>Leaderboards</h3>
-        <p class="coming-soon">Coming soon.</p>
+      <!-- Activity + AFK settings -->
+      <div *ngIf="expandedSection() === 'activity'" class="overlay-content">
+        <h3>Activity</h3>
+
+        <div class="afk-settings">
+          <div class="afk-setting-row">
+            <div class="afk-setting-text">
+              <span class="afk-setting-title">Auto-claim wages</span>
+              <span class="afk-setting-sub">Collect pending wages automatically when you return.</span>
+            </div>
+            <button
+              class="afk-toggle"
+              [class.on]="afkSettings().autoClaimWages"
+              (click)="toggleAutoClaim()"
+            >
+              <span class="afk-toggle-knob"></span>
+            </button>
+          </div>
+          <div class="afk-setting-row">
+            <div class="afk-setting-text">
+              <span class="afk-setting-title">Auto-reinvest</span>
+              <span class="afk-setting-sub">Invest auto-claimed wages into the government bond.</span>
+            </div>
+            <button
+              class="afk-toggle"
+              [class.on]="afkSettings().autoReinvest"
+              (click)="toggleAutoReinvest()"
+            >
+              <span class="afk-toggle-knob"></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="afk-feed">
+          <ng-container *ngIf="activityEvents().length > 0; else emptyFeed">
+            <div *ngFor="let ev of activityEvents()" class="afk-feed-row">
+              <span
+                class="afk-feed-amount"
+                [class.pos]="ev.amount > 0"
+                [class.neg]="ev.amount < 0"
+              >
+                {{ ev.amount > 0 ? '+' : '' }}{{ ev.amount !== 0 ? (ev.amount | number: '1.0-0') + ' B' : '—' }}
+              </span>
+              <span class="afk-feed-label">{{ ev.label }}</span>
+              <span class="afk-feed-time">{{ formatNewsTime(ev.at) }}</span>
+            </div>
+          </ng-container>
+          <ng-template #emptyFeed>
+            <p class="coming-soon">No activity yet. Get a job, invest, and check back.</p>
+          </ng-template>
+        </div>
       </div>
 
       <!-- News -->
@@ -861,4 +925,9 @@
     (tradeComplete)="onTradeComplete($event)"
     (closed)="tradeModalOpen.set(false)"
   ></app-stock-trade-modal>
+
+  <app-welcome-back-modal
+    [summary]="whileAwaySummary()"
+    (closed)="dismissWelcomeBack()"
+  ></app-welcome-back-modal>
 </div>

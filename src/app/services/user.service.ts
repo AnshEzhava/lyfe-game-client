@@ -13,6 +13,10 @@ import {
   JobActionResponse,
   JobStatusResponse,
   UserResponse,
+  WhileAwaySummary,
+  SettingsResponse,
+  ActivityResponse,
+  UserSettings,
 } from '../types/api/user.types';
 
 @Injectable({
@@ -71,5 +75,21 @@ export class UserService {
       `${CONFIG.API_URL}${ENDPOINTS.COMPLETE_COURSE}`,
       {},
     );
+  }
+
+  resumeSession(): Observable<WhileAwaySummary> {
+    return this.http.post<WhileAwaySummary>(`${CONFIG.API_URL}${ENDPOINTS.RESUME_SESSION}`, {});
+  }
+
+  getSettings(): Observable<SettingsResponse> {
+    return this.http.get<SettingsResponse>(`${CONFIG.API_URL}${ENDPOINTS.GET_SETTINGS}`);
+  }
+
+  updateSettings(settings: UserSettings): Observable<SettingsResponse> {
+    return this.http.put<SettingsResponse>(`${CONFIG.API_URL}${ENDPOINTS.UPDATE_SETTINGS}`, settings);
+  }
+
+  getActivity(): Observable<ActivityResponse> {
+    return this.http.get<ActivityResponse>(`${CONFIG.API_URL}${ENDPOINTS.GET_ACTIVITY}`);
   }
 }

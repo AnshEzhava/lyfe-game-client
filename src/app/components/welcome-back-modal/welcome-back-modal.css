@@ -1,0 +1,151 @@
+.wb-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 1100;
+  backdrop-filter: blur(5px);
+}
+
+.wb-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.wb-content {
+  background-color: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.75rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 420px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  font-family: 'poppins', sans-serif;
+}
+
+.wb-content h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.4rem;
+}
+
+.wb-subtitle {
+  margin: 0 0 1.25rem;
+  color: #aaaaaa;
+  font-size: 0.85rem;
+}
+
+.wb-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.wb-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.wb-label {
+  color: #cccccc;
+}
+
+.wb-amount {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.wb-amount.pos {
+  color: #4caf50;
+}
+
+.wb-amount.neg {
+  color: #e74c3c;
+}
+
+.wb-networth {
+  margin-top: 0.4rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.95rem;
+}
+
+.wb-course {
+  margin-top: 1rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  background: rgba(241, 196, 15, 0.1);
+  border: 1px solid rgba(241, 196, 15, 0.25);
+  font-size: 0.85rem;
+}
+
+.wb-news {
+  margin-top: 1.1rem;
+}
+
+.wb-news-title {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #888;
+  margin-bottom: 0.5rem;
+}
+
+.wb-news-item {
+  display: flex;
+  gap: 0.55rem;
+  align-items: baseline;
+  padding: 0.35rem 0;
+  font-size: 0.82rem;
+}
+
+.wb-news-impact {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  min-width: 3.2rem;
+}
+
+.wb-news-impact.pos {
+  color: #4caf50;
+}
+
+.wb-news-impact.neg {
+  color: #e74c3c;
+}
+
+.wb-news-headline {
+  color: #dddddd;
+  line-height: 1.3;
+}
+
+.wb-news-ticker {
+  font-weight: 700;
+  color: #ffffff;
+  margin-right: 0.25rem;
+}
+
+.wb-btn {
+  margin-top: 1.5rem;
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 6px;
+  background: #4caf50;
+  color: #06210a;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.wb-btn:hover {
+  background: #43a047;
+}

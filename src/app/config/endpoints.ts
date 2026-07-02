@@ -3,6 +3,12 @@ export const ENDPOINTS = {
   GET_BALANCE: '/user/balance',
   ADD_USER: '/user/add',
 
+  // AFK / session endpoints
+  RESUME_SESSION: '/user/resume',
+  GET_SETTINGS: '/user/settings',
+  UPDATE_SETTINGS: '/user/settings',
+  GET_ACTIVITY: '/user/activity',
+
   // Job endpoints
   GET_JOBS: '/user/jobs',
   START_JOB: '/user/jobs/start',

@@ -1,0 +1,58 @@
+<div class="wb-overlay" [class.open]="!!summary" (click)="onClose()">
+  <div class="wb-content" *ngIf="summary" (click)="$event.stopPropagation()">
+    <h3>Welcome back</h3>
+    <p class="wb-subtitle">
+      {{ summary.gameDaysAway | number: '1.0-0' }} game-day{{ summary.gameDaysAway === 1 ? '' : 's' }} passed while you were away.
+    </p>
+
+    <div class="wb-rows">
+      <div class="wb-row" *ngIf="summary.wagesEarned > 0">
+        <span class="wb-label">Wages collected</span>
+        <span class="wb-amount pos">+{{ summary.wagesEarned | number: '1.0-0' }} B</span>
+      </div>
+      <div class="wb-row" *ngIf="summary.bondYield > 0">
+        <span class="wb-label">Bond yield</span>
+        <span class="wb-amount pos">+{{ summary.bondYield | number: '1.0-0' }} B</span>
+      </div>
+      <div class="wb-row" *ngIf="summary.autoReinvested > 0">
+        <span class="wb-label">Auto-reinvested into bond</span>
+        <span class="wb-amount">{{ summary.autoReinvested | number: '1.0-0' }} B</span>
+      </div>
+      <div class="wb-row" *ngIf="summary.taxPaid > 0">
+        <span class="wb-label">Annual tax paid</span>
+        <span class="wb-amount neg">-{{ summary.taxPaid | number: '1.0-0' }} B</span>
+      </div>
+      <div class="wb-row wb-networth">
+        <span class="wb-label">Net worth change</span>
+        <span
+          class="wb-amount"
+          [class.pos]="summary.netWorthChange >= 0"
+          [class.neg]="summary.netWorthChange < 0"
+        >
+          {{ summary.netWorthChange >= 0 ? '+' : '' }}{{ summary.netWorthChange | number: '1.0-0' }} B
+        </span>
+      </div>
+    </div>
+
+    <div class="wb-course" *ngIf="summary.courseReady">
+      🎓 <strong>{{ summary.courseReady }}</strong> is ready to claim.
+    </div>
+
+    <div class="wb-news" *ngIf="summary.newsHighlights.length">
+      <div class="wb-news-title">While you were away</div>
+      <div class="wb-news-item" *ngFor="let n of summary.newsHighlights">
+        <span
+          class="wb-news-impact"
+          [class.pos]="n.impactPct >= 0"
+          [class.neg]="n.impactPct < 0"
+        >{{ n.impactPct >= 0 ? '+' : '' }}{{ n.impactPct | number: '1.0-1' }}%</span>
+        <span class="wb-news-headline">
+          <span class="wb-news-ticker" *ngIf="n.ticker">{{ n.ticker }}</span>
+          {{ n.headline }}
+        </span>
+      </div>
+    </div>
+
+    <button class="wb-btn" (click)="onClose()">Continue</button>
+  </div>
+</div>

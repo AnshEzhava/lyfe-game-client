@@ -16,6 +16,9 @@ import {
   JobInfo,
   JobStatusResponse,
   UserResponse,
+  WhileAwaySummary,
+  UserSettings,
+  ActivityEvent,
 } from '../../../../types/api/user.types';
 import {
   DiluteRequest,
@@ -33,6 +36,7 @@ import { NewsItem } from '../../../../types/api/news.types';
 import { Modal } from '../../../../components/modal/modal';
 import { StockTradeModal } from '../../../../components/stock-trade-modal/stock-trade-modal';
 import { StockSparkline } from '../../../../components/stock-sparkline/stock-sparkline';
+import { WelcomeBackModal } from '../../../../components/welcome-back-modal/welcome-back-modal';
 
 // 1 real second = 1 game minute → multiplier = 60
 const GAME_TIME_MULTIPLIER = 60;
@@ -51,7 +55,7 @@ const CHART_SCHEMES = [
 @Component({
   selector: 'app-play',
   standalone: true,
-  imports: [Modal, CommonModule, FormsModule, StockTradeModal, StockSparkline],
+  imports: [Modal, CommonModule, FormsModule, StockTradeModal, StockSparkline, WelcomeBackModal],
   templateUrl: './play.html',
   styleUrl: './play.css',
 })
@@ -65,6 +69,11 @@ export class Play implements OnInit, OnDestroy {
   user = toSignal(this.clerkService.user$);
   gameUser = signal<UserResponse | null>(null);
   showModal = signal(false);
+
+  // ─── AFK / offline-loop signals ───────────────────────────────────────────
+  whileAwaySummary = signal<WhileAwaySummary | null>(null);
+  afkSettings = signal<UserSettings>({ autoClaimWages: false, autoReinvest: false });
+  activityEvents = signal<ActivityEvent[]>([]);
 
   gameDate = signal<string>('');
   gameTime = signal<string>('');
@@ -279,6 +288,9 @@ export class Play implements OnInit, OnDestroy {
     this.userService.findUser().subscribe({
       next: (res) => {
         this.gameUser.set(res);
+        this.resumeSession();
+        this.loadSettings();
+        this.loadActivity();
         this.loadJobStatus();
         this.loadEducationStatus();
         this.loadStocks();
@@ -290,6 +302,66 @@ export class Play implements OnInit, OnDestroy {
           this.showModal.set(true);
         }
       },
+    });
+  }
+
+  // ─── AFK / offline loop ───────────────────────────────────────────────────
+
+  resumeSession() {
+    this.userService.resumeSession().subscribe({
+      next: (summary) => {
+        // Reflect any auto-claimed / auto-reinvested changes in the HUD.
+        if (summary.user) this.gameUser.set(summary.user);
+        if (summary.hasSummary) {
+          this.whileAwaySummary.set(summary);
+        }
+      },
+      error: () => {},
+    });
+  }
+
+  dismissWelcomeBack() {
+    this.whileAwaySummary.set(null);
+    // Refresh state that automations may have changed.
+    this.loadJobStatus();
+    this.loadPortfolio();
+    this.loadActivity();
+  }
+
+  loadSettings() {
+    this.userService.getSettings().subscribe({
+      next: (res) =>
+        this.afkSettings.set({ autoClaimWages: res.autoClaimWages, autoReinvest: res.autoReinvest }),
+      error: () => {},
+    });
+  }
+
+  toggleAutoClaim() {
+    const next = { ...this.afkSettings(), autoClaimWages: !this.afkSettings().autoClaimWages };
+    // Auto-reinvest only makes sense with auto-claim on.
+    if (!next.autoClaimWages) next.autoReinvest = false;
+    this.saveSettings(next);
+  }
+
+  toggleAutoReinvest() {
+    const next = { ...this.afkSettings(), autoReinvest: !this.afkSettings().autoReinvest };
+    if (next.autoReinvest) next.autoClaimWages = true;
+    this.saveSettings(next);
+  }
+
+  private saveSettings(next: UserSettings) {
+    this.afkSettings.set(next);
+    this.userService.updateSettings(next).subscribe({
+      next: (res) =>
+        this.afkSettings.set({ autoClaimWages: res.autoClaimWages, autoReinvest: res.autoReinvest }),
+      error: () => this.toast.show('Failed to update settings', 'error'),
+    });
+  }
+
+  loadActivity() {
+    this.userService.getActivity().subscribe({
+      next: (res) => this.activityEvents.set([...res.events].reverse()),
+      error: () => {},
     });
   }
 
@@ -626,6 +698,7 @@ export class Play implements OnInit, OnDestroy {
     }
     this.expandedSection.set(section);
     if (section === 'news') this.loadNews();
+    if (section === 'activity') this.loadActivity();
     // Allow the DOM to render hidden overlay, then trigger transition
     requestAnimationFrame(() => {
       this.overlayVisible.set(true);

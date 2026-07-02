@@ -5,6 +5,55 @@ export interface UserResponse {
   stats?: {
     intelligence: number;
   };
+  netWorth?: number;
+  totalTaxPaid?: number;
+}
+
+// ─── AFK / offline-loop types ───────────────────────────────────────────────
+
+export interface NewsHighlight {
+  headline: string;
+  ticker: string | null;
+  impactPct: number;
+}
+
+export interface WhileAwaySummary {
+  responseCode: number;
+  responseMessage: string;
+  hasSummary: boolean;
+  gameDaysAway: number;
+  wagesEarned: number;
+  bondYield: number;
+  taxPaid: number;
+  netWorthChange: number;
+  autoClaimed: boolean;
+  autoReinvested: number;
+  newsHighlights: NewsHighlight[];
+  courseReady: string | null;
+  user: UserResponse | null;
+}
+
+export interface UserSettings {
+  autoClaimWages: boolean;
+  autoReinvest: boolean;
+}
+
+export interface SettingsResponse extends UserSettings {
+  responseCode: number;
+  responseMessage: string;
+}
+
+export interface ActivityEvent {
+  type: string;
+  at: number;
+  amount: number;
+  label: string;
+}
+
+export interface ActivityResponse {
+  responseCode: number;
+  responseMessage: string;
+  events: ActivityEvent[];
 }
 
 export interface BalanceResponse {

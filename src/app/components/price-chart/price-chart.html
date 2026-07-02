@@ -1,0 +1,54 @@
+<div class="pc-wrap">
+  <div class="pc-head">
+    <div class="pc-range">
+      <button class="pc-range-btn" [class.active]="range() === 'S'" (click)="setRange('S')">Recent</button>
+      <button class="pc-range-btn" [class.active]="range() === 'M'" (click)="setRange('M')">Mid</button>
+      <button class="pc-range-btn" [class.active]="range() === 'ALL'" (click)="setRange('ALL')">All</button>
+    </div>
+  </div>
+
+  <div class="pc-plot-row">
+    <div
+      class="pc-plot"
+      (mousemove)="onMove($event)"
+      (mouseleave)="clearHover()"
+    >
+      <svg [attr.viewBox]="'0 0 ' + W + ' ' + H" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- horizontal gridlines -->
+        <line [attr.x1]="0" [attr.x2]="W" [attr.y1]="PAD" [attr.y2]="PAD" class="pc-grid" />
+        <line [attr.x1]="0" [attr.x2]="W" [attr.y1]="H / 2" [attr.y2]="H / 2" class="pc-grid" />
+        <line [attr.x1]="0" [attr.x2]="W" [attr.y1]="H - PAD" [attr.y2]="H - PAD" class="pc-grid" />
+
+        <path *ngIf="fillPath()" [attr.d]="fillPath()" [attr.fill]="color()" fill-opacity="0.14" stroke="none" />
+        <polyline
+          *ngIf="linePoints()"
+          [attr.points]="linePoints()"
+          [attr.stroke]="color()"
+          stroke-width="2"
+          stroke-linejoin="round"
+          stroke-linecap="round"
+          fill="none"
+          vector-effect="non-scaling-stroke"
+        />
+
+        <!-- hover crosshair + dot -->
+        <ng-container *ngIf="hoverPoint() as hp">
+          <line [attr.x1]="hp.x" [attr.x2]="hp.x" [attr.y1]="0" [attr.y2]="H" class="pc-crosshair" />
+          <circle [attr.cx]="hp.x" [attr.cy]="hp.y" r="3.5" [attr.fill]="color()" vector-effect="non-scaling-stroke" />
+        </ng-container>
+      </svg>
+
+      <div class="pc-tooltip" *ngIf="hoverPoint() as hp" [style.left.%]="hp.leftPct">
+        {{ hp.value | number: '1.2-2' }} B
+      </div>
+
+      <div class="pc-empty" *ngIf="points().length < 2">Not enough price data yet.</div>
+    </div>
+
+    <div class="pc-y-labels">
+      <span>{{ maxLabel() }}</span>
+      <span>{{ midLabel() }}</span>
+      <span>{{ minLabel() }}</span>
+    </div>
+  </div>
+</div>

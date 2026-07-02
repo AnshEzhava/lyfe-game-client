@@ -28,8 +28,10 @@
       </div>
 
       <div class="status-item iq-info">
-        <svg class="icon-iq" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z" fill="currentColor"/>
+        <svg class="icon-iq" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 4.5a2.5 2.5 0 0 0-4.6 1.36A2.6 2.6 0 0 0 5 8.4a2.6 2.6 0 0 0-.5 3.35A2.7 2.7 0 0 0 5 15.6a2.5 2.5 0 0 0 2.4 3.3A2.3 2.3 0 0 0 12 18.5z"/>
+          <path d="M12 4.5a2.5 2.5 0 0 1 4.6 1.36A2.6 2.6 0 0 1 19 8.4a2.6 2.6 0 0 1 .5 3.35A2.7 2.7 0 0 1 19 15.6a2.5 2.5 0 0 1-2.4 3.3A2.3 2.3 0 0 1 12 18.5z"/>
+          <path d="M12 4.5v14"/>
         </svg>
         <span class="iq-value">IQ: {{ intelligence() }}</span>
       </div>
@@ -196,7 +198,7 @@
           </ng-container>
           <ng-template #noActivity>
             <div class="news-collapsed-row">
-              <span class="news-collapsed-headline" style="color: #888">No activity yet</span>
+              <span class="news-collapsed-headline" style="color: var(--text-muted)">No activity yet</span>
             </div>
           </ng-template>
         </div>
@@ -342,6 +344,10 @@
             <div class="active-panel-rate">Branks: {{ branks() | number: '1.0-0' }}</div>
           </div>
 
+          <div class="sm-allocation">
+            <app-portfolio-donut [segments]="portfolioSegments()"></app-portfolio-donut>
+          </div>
+
           <div class="section-label">Holdings</div>
           <div class="item-list" *ngIf="portfolio()?.holdings?.length; else noHoldings">
             <div *ngFor="let h of portfolio()!.holdings; let i = index" class="list-item sm-holding-row">
@@ -419,7 +425,7 @@
                 <div class="active-panel-title">Your Company</div>
                 <div class="sm-company-name">
                   <span class="sm-row-ticker">{{ co.ticker }}</span>
-                  <span class="sm-row-name" style="font-size:1rem; color:#ccc;">{{ co.name }}</span>
+                  <span class="sm-row-name" style="font-size:1rem; color:var(--text-secondary);">{{ co.name }}</span>
                 </div>
               </div>
 
@@ -443,7 +449,7 @@
                     Your Retained Shares
                     <span class="sm-company-stat-hint">(dilutable)</span>
                   </span>
-                  <span class="sm-company-stat-value" style="color:#4caf50;">
+                  <span class="sm-company-stat-value" style="color:var(--green);">
                     {{ co.founderSharesRetained | number: '1.0-0' }}
                     ({{ (co.founderSharesRetained / co.totalSupply * 100) | number: '1.1-1' }}%)
                   </span>
@@ -455,7 +461,7 @@
                         Market Holdings
                         <span class="sm-company-stat-hint">(sell via market)</span>
                       </span>
-                      <span class="sm-company-stat-value" style="color:#3498db;">
+                      <span class="sm-company-stat-value" style="color:var(--blue);">
                         {{ h.sharesOwned | number: '1.0-0' }}
                         ({{ (h.sharesOwned / co.totalSupply * 100) | number: '1.1-1' }}%)
                       </span>

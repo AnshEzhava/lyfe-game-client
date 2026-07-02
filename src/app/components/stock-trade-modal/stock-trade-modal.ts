@@ -5,11 +5,12 @@ import { StockService } from '../../services/stock.service';
 import { ToastService } from '../../services/toast.service';
 import { StockInfo } from '../../types/api/stock.types';
 import { UserResponse } from '../../types/api/user.types';
+import { PriceChart } from '../price-chart/price-chart';
 
 @Component({
   selector: 'app-stock-trade-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PriceChart],
   templateUrl: './stock-trade-modal.html',
   styleUrl: './stock-trade-modal.css',
 })

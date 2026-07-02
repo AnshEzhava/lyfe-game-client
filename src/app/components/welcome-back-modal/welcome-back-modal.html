@@ -35,7 +35,10 @@
     </div>
 
     <div class="wb-course" *ngIf="summary.courseReady">
-      🎓 <strong>{{ summary.courseReady }}</strong> is ready to claim.
+      <svg class="wb-course-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M12 3L1 9l4 2.18V15c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-3.82L21 9l-9-6zm6 8.15L12 14.5 6 11.15V10l6 3.5 6-3.5v1.15zM7 15v-2.47l5 2.7 5-2.7V15H7z" fill="currentColor"/>
+      </svg>
+      <strong>{{ summary.courseReady }}</strong> is ready to claim.
     </div>
 
     <div class="wb-news" *ngIf="summary.newsHighlights.length">

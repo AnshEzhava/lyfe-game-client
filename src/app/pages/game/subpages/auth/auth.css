@@ -4,30 +4,25 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #0a0a0a;
-  color: #ffffff;
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 80px 80px;
+  color: var(--text-primary);
+  padding: 1.5rem;
 }
 
 .toggle-text {
   margin-top: 1.5rem;
-  font-family: 'poppins', sans-serif;
-  color: #cccccc;
+  font-family: var(--font-body);
+  color: var(--text-muted);
 }
 
 .toggle-text span {
-  color: #ffffff;
-  text-decoration: underline;
+  color: var(--green);
   cursor: pointer;
-  font-weight: bold;
-  transition: color 0.2s ease;
+  font-weight: 600;
+  transition: color var(--dur-fast) var(--ease-out);
 }
 
 .toggle-text span:hover {
-  color: #aaaaaa;
+  color: var(--text-primary);
 }
 
 .auth-wrapper {

@@ -74,7 +74,7 @@ import { CommonModule } from '@angular/common';
 })
 export class StockSparkline {
   prices = input<number[]>([]);
-  color = input<string>('#4caf50');
+  color = input<string>('var(--green)');
 
   private coords = computed<{ x: number; y: number }[]>(() => {
     const pts = this.prices();

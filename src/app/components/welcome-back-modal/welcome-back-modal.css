@@ -1,15 +1,17 @@
 .wb-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.55);
+  background-color: rgba(10, 8, 16, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition: opacity var(--dur-med) var(--ease-out), visibility var(--dur-med) var(--ease-out);
   z-index: 1100;
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 1rem;
 }
 
 .wb-overlay.open {
@@ -18,25 +20,38 @@
 }
 
 .wb-content {
-  background-color: #1a1a1a;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--surface-2);
+  border: 1px solid var(--border-default);
   padding: 1.75rem;
-  border-radius: 12px;
-  width: 90%;
+  border-radius: var(--radius-lg);
+  width: 100%;
   max-width: 420px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  color: #ffffff;
-  font-family: 'poppins', sans-serif;
+  box-shadow: var(--shadow-lg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  animation: wb-pop var(--dur-med) var(--ease-spring) both;
+}
+
+@keyframes wb-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .wb-content h3 {
   margin: 0 0 0.35rem;
-  font-size: 1.4rem;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
 }
 
 .wb-subtitle {
   margin: 0 0 1.25rem;
-  color: #aaaaaa;
+  color: var(--text-muted);
   font-size: 0.85rem;
 }
 
@@ -54,36 +69,47 @@
 }
 
 .wb-label {
-  color: #cccccc;
+  color: var(--text-secondary);
 }
 
 .wb-amount {
   font-variant-numeric: tabular-nums;
   font-weight: 600;
+  color: var(--text-secondary);
 }
 
 .wb-amount.pos {
-  color: #4caf50;
+  color: var(--pos);
 }
 
 .wb-amount.neg {
-  color: #e74c3c;
+  color: var(--neg);
 }
 
 .wb-networth {
   margin-top: 0.4rem;
   padding-top: 0.7rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--border-default);
   font-size: 0.95rem;
 }
 
 .wb-course {
   margin-top: 1rem;
-  padding: 0.6rem 0.8rem;
-  border-radius: 8px;
-  background: rgba(241, 196, 15, 0.1);
-  border: 1px solid rgba(241, 196, 15, 0.25);
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-md);
+  background: var(--yellow-dim);
+  border: 1px solid var(--yellow-border);
   font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.wb-course-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: var(--yellow);
 }
 
 .wb-news {
@@ -94,7 +120,7 @@
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #888;
+  color: var(--text-muted);
   margin-bottom: 0.5rem;
 }
 
@@ -114,38 +140,46 @@
 }
 
 .wb-news-impact.pos {
-  color: #4caf50;
+  color: var(--pos);
 }
 
 .wb-news-impact.neg {
-  color: #e74c3c;
+  color: var(--neg);
 }
 
 .wb-news-headline {
-  color: #dddddd;
+  color: var(--text-secondary);
   line-height: 1.3;
 }
 
 .wb-news-ticker {
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary);
   margin-right: 0.25rem;
 }
 
 .wb-btn {
   margin-top: 1.5rem;
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.8rem;
   border: none;
-  border-radius: 6px;
-  background: #4caf50;
-  color: #06210a;
-  font-weight: 700;
-  font-family: inherit;
+  border-radius: var(--radius-pill);
+  background: var(--green);
+  color: #0d240f;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.98rem;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: transform var(--dur-fast) var(--ease-spring),
+    box-shadow var(--dur-fast) var(--ease-out), filter var(--dur-fast) var(--ease-out);
 }
 
 .wb-btn:hover {
-  background: #43a047;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-pop);
+  filter: brightness(1.05);
+}
+
+.wb-btn:active {
+  transform: translateY(0) scale(0.98);
 }

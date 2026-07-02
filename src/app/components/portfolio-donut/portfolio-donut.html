@@ -1,0 +1,36 @@
+<div class="pd-wrap" *ngIf="total() > 0; else empty">
+  <div class="pd-ring">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle class="pd-track" cx="50" cy="50" [attr.r]="R" fill="none" stroke-width="12" />
+      <circle
+        *ngFor="let a of ringArcs()"
+        cx="50"
+        cy="50"
+        [attr.r]="R"
+        fill="none"
+        stroke-width="12"
+        stroke-linecap="butt"
+        [attr.stroke]="a.color"
+        [attr.stroke-dasharray]="a.dashArray"
+        [attr.stroke-dashoffset]="a.dashOffset"
+        transform="rotate(-90 50 50)"
+      />
+    </svg>
+    <div class="pd-center">
+      <span class="pd-center-label">{{ centerLabel() }}</span>
+      <span class="pd-center-value" [title]="(total() | number: '1.0-0') + ' B'">{{ totalCompact() }}</span>
+    </div>
+  </div>
+
+  <div class="pd-legend">
+    <div class="pd-legend-row" *ngFor="let a of arcs()">
+      <span class="pd-dot" [style.background]="a.color"></span>
+      <span class="pd-legend-label">{{ a.label }}</span>
+      <span class="pd-legend-pct">{{ fmtPct(a.pct) }}</span>
+    </div>
+  </div>
+</div>
+
+<ng-template #empty>
+  <div class="pd-empty">No assets to chart yet.</div>
+</ng-template>

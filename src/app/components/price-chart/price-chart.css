@@ -1,0 +1,122 @@
+.pc-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.pc-head {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.pc-range {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+}
+
+.pc-range-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+
+.pc-range-btn:hover {
+  color: var(--text-secondary);
+}
+
+.pc-range-btn.active {
+  background: var(--surface-3);
+  color: var(--text-primary);
+}
+
+.pc-plot-row {
+  display: flex;
+  gap: 6px;
+  height: 150px;
+  min-height: 0;
+}
+
+.pc-plot {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  overflow: hidden;
+}
+
+.pc-plot svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.pc-grid {
+  stroke: var(--border-subtle);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.pc-crosshair {
+  stroke: var(--border-hover);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  vector-effect: non-scaling-stroke;
+}
+
+.pc-tooltip {
+  position: absolute;
+  top: 8px;
+  transform: translateX(-50%);
+  padding: 0.25rem 0.55rem;
+  background: var(--surface-0);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+}
+
+.pc-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}
+
+.pc-y-labels {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 40px;
+  flex-shrink: 0;
+  padding: 2px 0;
+}
+
+.pc-y-labels span {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}

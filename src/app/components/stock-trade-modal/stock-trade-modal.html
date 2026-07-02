@@ -15,6 +15,13 @@
       </button>
     </div>
 
+    <div class="trade-chart" *ngIf="stock">
+      <app-price-chart
+        [prices]="stock.priceHistory"
+        [color]="stock.priceChangePct24h >= 0 ? 'var(--pos)' : 'var(--neg)'"
+      ></app-price-chart>
+    </div>
+
     <div class="trade-tabs">
       <button class="trade-tab" [class.active]="tradeTab() === 'BUY'" (click)="setTab('BUY')">
         Buy

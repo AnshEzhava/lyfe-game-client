@@ -37,25 +37,27 @@ import { Modal } from '../../../../components/modal/modal';
 import { StockTradeModal } from '../../../../components/stock-trade-modal/stock-trade-modal';
 import { StockSparkline } from '../../../../components/stock-sparkline/stock-sparkline';
 import { WelcomeBackModal } from '../../../../components/welcome-back-modal/welcome-back-modal';
+import { PortfolioDonut, DonutSegment } from '../../../../components/portfolio-donut/portfolio-donut';
 
 // 1 real second = 1 game minute → multiplier = 60
 const GAME_TIME_MULTIPLIER = 60;
 
+// Playful Lyfe-world category palette (kept in sync with the --accent-* tokens in styles.css).
 const CHART_SCHEMES = [
-  { stroke: '#4caf50', bg: 'rgba(76,175,80,0.07)',   border: 'rgba(76,175,80,0.28)'   },
-  { stroke: '#3498db', bg: 'rgba(52,152,219,0.07)',  border: 'rgba(52,152,219,0.28)'  },
-  { stroke: '#e67e22', bg: 'rgba(230,126,34,0.07)',  border: 'rgba(230,126,34,0.28)'  },
-  { stroke: '#9b59b6', bg: 'rgba(155,89,182,0.07)',  border: 'rgba(155,89,182,0.28)'  },
-  { stroke: '#1abc9c', bg: 'rgba(26,188,156,0.07)',  border: 'rgba(26,188,156,0.28)'  },
-  { stroke: '#e74c3c', bg: 'rgba(231,76,60,0.07)',   border: 'rgba(231,76,60,0.28)'   },
-  { stroke: '#f1c40f', bg: 'rgba(241,196,15,0.07)',  border: 'rgba(241,196,15,0.28)'  },
-  { stroke: '#00bcd4', bg: 'rgba(0,188,212,0.07)',   border: 'rgba(0,188,212,0.28)'   },
+  { stroke: '#57c96a', bg: 'rgba(87,201,106,0.09)',  border: 'rgba(87,201,106,0.30)'  },
+  { stroke: '#4dabf7', bg: 'rgba(77,171,247,0.09)',  border: 'rgba(77,171,247,0.30)'  },
+  { stroke: '#ff924d', bg: 'rgba(255,146,77,0.09)',  border: 'rgba(255,146,77,0.30)'  },
+  { stroke: '#b083f0', bg: 'rgba(176,131,240,0.09)', border: 'rgba(176,131,240,0.30)' },
+  { stroke: '#33c9c4', bg: 'rgba(51,201,196,0.09)',  border: 'rgba(51,201,196,0.30)'  },
+  { stroke: '#ff6b6b', bg: 'rgba(255,107,107,0.09)', border: 'rgba(255,107,107,0.30)' },
+  { stroke: '#ffcb47', bg: 'rgba(255,203,71,0.09)',  border: 'rgba(255,203,71,0.30)'  },
+  { stroke: '#ff8fb1', bg: 'rgba(255,143,177,0.09)', border: 'rgba(255,143,177,0.30)' },
 ];
 
 @Component({
   selector: 'app-play',
   standalone: true,
-  imports: [Modal, CommonModule, FormsModule, StockTradeModal, StockSparkline, WelcomeBackModal],
+  imports: [Modal, CommonModule, FormsModule, StockTradeModal, StockSparkline, WelcomeBackModal, PortfolioDonut],
   templateUrl: './play.html',
   styleUrl: './play.css',
 })
@@ -620,6 +622,24 @@ export class Play implements OnInit, OnDestroy {
   getChartScheme(index: number) {
     return CHART_SCHEMES[index % CHART_SCHEMES.length];
   }
+
+  // Net-worth composition for the allocation donut: cash + each holding + founder equity.
+  portfolioSegments = computed<DonutSegment[]>(() => {
+    const p = this.portfolio();
+    const segments: DonutSegment[] = [];
+    segments.push({ label: 'Cash', value: this.branks(), color: 'var(--accent-sun)' });
+    (p?.holdings ?? []).forEach((h, i) => {
+      if (h.currentValue > 0) {
+        segments.push({ label: h.ticker, value: h.currentValue, color: CHART_SCHEMES[i % CHART_SCHEMES.length].stroke });
+      }
+    });
+    const co = this.myCompany();
+    if (co && p) {
+      const equity = Math.max(0, (p.netWorth ?? 0) - this.branks() - (p.holdings ?? []).reduce((s, h) => s + h.currentValue, 0));
+      if (equity > 0) segments.push({ label: co.ticker + ' equity', value: equity, color: 'var(--accent-grape)' });
+    }
+    return segments;
+  });
 
   getStockHistory(stockId: string): number[] {
     return this.stockQuotes().find((s) => s.id === stockId)?.priceHistory ?? [];

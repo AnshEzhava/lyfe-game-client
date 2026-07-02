@@ -1,4 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Rounded, friendly display font for the "Playful Lyfe-world" theme */
+@font-face {
+  font-family: 'fredoka';
+  src: url('../public/fonts/fredoka.woff2') format('woff2');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @font-face {
   font-family: 'pixels';
   src: url('../public/fonts/pixel-font.ttf') format('truetype');
@@ -14,59 +24,95 @@
 }
 
 :root {
-  /* Palette */
-  --green: #4caf50;
-  --green-dim: rgba(76, 175, 80, 0.15);
-  --green-border: rgba(76, 175, 80, 0.3);
-  --green-glow: rgba(76, 175, 80, 0.12);
-  --green-soft: rgba(76, 175, 80, 0.08);
+  /* ─── Brand / semantic accents (friendly, saturated-but-soft) ───────────── */
+  --green: #57c96a; /* brand + positive */
+  --green-dim: rgba(87, 201, 106, 0.16);
+  --green-border: rgba(87, 201, 106, 0.34);
+  --green-glow: rgba(87, 201, 106, 0.16);
+  --green-soft: rgba(87, 201, 106, 0.09);
 
-  --blue: #3498db;
-  --blue-dim: rgba(52, 152, 219, 0.15);
-  --blue-border: rgba(52, 152, 219, 0.3);
-  --blue-glow: rgba(52, 152, 219, 0.12);
-  --blue-soft: rgba(52, 152, 219, 0.08);
+  --blue: #4dabf7; /* info / secondary */
+  --blue-dim: rgba(77, 171, 247, 0.16);
+  --blue-border: rgba(77, 171, 247, 0.34);
+  --blue-glow: rgba(77, 171, 247, 0.16);
+  --blue-soft: rgba(77, 171, 247, 0.09);
 
-  --red: #e74c3c;
-  --red-dim: rgba(231, 76, 60, 0.15);
-  --red-border: rgba(231, 76, 60, 0.3);
+  --red: #ff6b6b; /* coral — negative / danger */
+  --red-dim: rgba(255, 107, 107, 0.16);
+  --red-border: rgba(255, 107, 107, 0.34);
 
-  --yellow: #f0c040;
-  --yellow-dim: rgba(240, 192, 64, 0.15);
-  --yellow-border: rgba(240, 192, 64, 0.3);
+  --yellow: #ffcb47; /* sun — bonds / warnings */
+  --yellow-dim: rgba(255, 203, 71, 0.16);
+  --yellow-border: rgba(255, 203, 71, 0.34);
 
-  --purple: #9b59b6;
-  --purple-dim: rgba(155, 89, 182, 0.12);
-  --purple-border: rgba(155, 89, 182, 0.25);
+  --purple: #b083f0; /* grape — news */
+  --purple-dim: rgba(176, 131, 240, 0.16);
+  --purple-border: rgba(176, 131, 240, 0.3);
 
-  --orange: #e67e22;
-  --cyan: #00bcd4;
+  --orange: #ff924d; /* tangerine — accent */
+  --cyan: #33c9c4; /* teal — accent */
 
-  /* Surfaces */
-  --surface-0: #0a0a0a;
-  --surface-1: #111111;
-  --surface-2: #161616;
-  --surface-3: #1a1a1a;
-  --surface-card: rgba(12, 12, 16, 0.7);
+  /* Category palette (sectors, cards, chart series) */
+  --accent-green: var(--green);
+  --accent-coral: var(--red);
+  --accent-sun: var(--yellow);
+  --accent-sky: var(--blue);
+  --accent-grape: var(--purple);
+  --accent-teal: var(--cyan);
+  --accent-tangerine: var(--orange);
+  --accent-pink: #ff8fb1;
+
+  /* Positive / negative aliases */
+  --pos: var(--green);
+  --neg: var(--red);
+
+  /* ─── Surfaces (warm plum-charcoal, not pure black) ─────────────────────── */
+  --surface-0: #16131f; /* app background base */
+  --surface-1: #1e1a2b;
+  --surface-2: #262035;
+  --surface-3: #2e2740;
+  --surface-card: rgba(38, 32, 53, 0.72); /* blurred cards */
   --surface-hover: rgba(255, 255, 255, 0.06);
-  --surface-raised: rgba(255, 255, 255, 0.04);
+  --surface-raised: rgba(255, 255, 255, 0.045);
 
-  /* Borders */
-  --border-subtle: rgba(255, 255, 255, 0.05);
-  --border-default: rgba(255, 255, 255, 0.1);
-  --border-hover: rgba(255, 255, 255, 0.2);
+  /* Ambient background glow tints */
+  --bg-tint-a: rgba(87, 201, 106, 0.06);
+  --bg-tint-b: rgba(176, 131, 240, 0.06);
 
-  /* Text */
-  --text-primary: #ffffff;
-  --text-secondary: #e0e0e0;
-  --text-muted: rgba(255, 255, 255, 0.45);
-  --text-dim: rgba(255, 255, 255, 0.25);
+  /* ─── Borders ───────────────────────────────────────────────────────────── */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.11);
+  --border-hover: rgba(255, 255, 255, 0.22);
 
-  /* Radius */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 16px;
+  /* ─── Text (warm off-white) ─────────────────────────────────────────────── */
+  --text-primary: #f4f1fa;
+  --text-secondary: #d6cfe6;
+  --text-muted: rgba(244, 241, 250, 0.5);
+  --text-dim: rgba(244, 241, 250, 0.28);
+
+  /* ─── Radius (rounder, chunkier) ────────────────────────────────────────── */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+
+  /* ─── Elevation (soft, layered — no harsh neon) ─────────────────────────── */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.32);
+  --shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.42);
+  --shadow-pop: 0 12px 30px rgba(87, 201, 106, 0.18);
+
+  /* ─── Typography ────────────────────────────────────────────────────────── */
+  --font-display: 'fredoka', 'poppins', sans-serif;
+  --font-body: 'poppins', sans-serif;
+  --font-mono: 'poppins', ui-monospace, monospace;
+
+  /* ─── Motion ────────────────────────────────────────────────────────────── */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 0.16s;
+  --dur-med: 0.28s;
 }
 
 * {
@@ -78,15 +124,33 @@ html,
 body {
   height: 100%;
   margin: 0;
-  font-family: 'poppins', sans-serif;
+  font-family: var(--font-body);
   background-color: var(--surface-0);
   color: var(--text-primary);
 
+  /* Render native controls (number-input spinners, scrollbars, etc.) in a dark
+     style so they match the theme instead of showing a light default box. */
+  color-scheme: dark;
+
+  /* Soft warm ambient glows + a gentle dot grid */
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 80px 80px;
+    radial-gradient(1100px 700px at 12% -8%, var(--bg-tint-a), transparent 60%),
+    radial-gradient(1000px 680px at 100% 0%, var(--bg-tint-b), transparent 55%),
+    radial-gradient(rgba(255, 255, 255, 0.05) 1.4px, transparent 1.4px);
+  background-size:
+    auto,
+    auto,
+    26px 26px;
+  background-attachment: fixed;
   min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  letter-spacing: 0.2px;
 }
 
 .clerk-footer-hidden {

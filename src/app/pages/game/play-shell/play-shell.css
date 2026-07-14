@@ -1,0 +1,175 @@
+.shell {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+  gap: 14px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  overflow: hidden;
+  /* The shared page background: a faint 22px pixel grid over the base surface.
+     Every routed page sits on this, so the grid is "the background". */
+  background-color: var(--surface-0);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* ─── HUD header ─────────────────────────────────────────────────────────── */
+.shell-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 14px 18px;
+  background: var(--surface-1);
+  border: 3px solid var(--edge);
+  box-shadow: var(--shadow-lg);
+  flex-shrink: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--accent);
+  text-shadow: 2px 2px 0 var(--shadow-color);
+}
+
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  font-family: var(--font-body);
+  font-size: 19px;
+  line-height: 1;
+}
+
+.pill {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 11px;
+  background: var(--surface-2);
+  border: 2px solid var(--edge);
+}
+
+.user-info { cursor: pointer; }
+.user-info:hover { border-color: var(--red); }
+
+.username { color: var(--text-primary); }
+.pill-dim { color: var(--text-muted); }
+.pill-sq { color: var(--text-muted); font-size: 14px; }
+
+.pill-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.pill-iq {
+  border-color: var(--accent2);
+  color: var(--accent2);
+}
+.pill-iq .pill-label { color: var(--accent2); }
+
+/* ─── Content area ───────────────────────────────────────────────────────── */
+/* A column flex context so the routed section (Home map / any board) fills the
+   available height. Symmetric padding — the old 24px bottom left a dark gap
+   under the Home board. */
+.shell-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+/* ─── Back-to-map button (replaces the top nav; hub lives on Home) ────────── */
+/* Left-aligned with the section content column (which has 4px side padding), per
+   design — not centered. */
+.back-row {
+  flex: 0 0 auto;
+  width: 100%;
+  margin: 0 0 14px;
+  padding: 0 4px;
+}
+
+.back-btn {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 15px;
+  background: var(--surface-1);
+  border: 3px solid var(--edge);
+  box-shadow: 4px 4px 0 var(--shadow-color);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform var(--dur-fast) steps(2), box-shadow var(--dur-fast) steps(2), border-color var(--dur-fast) steps(2);
+}
+
+.back-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--shadow-color);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.back-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 var(--shadow-color);
+}
+
+.back-arrow {
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1;
+  color: var(--accent);
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .shell {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+    padding: 12px;
+  }
+
+  .shell-header {
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .status-bar {
+    justify-content: center;
+    font-size: 17px;
+  }
+
+  /* Let content flow and grow naturally when the shell stops being 100vh. */
+  .shell-content {
+    display: block;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 640px) {
+  .shell { padding: 8px; }
+}

@@ -23,6 +23,9 @@ export const ENDPOINTS = {
   // News endpoints
   GET_NEWS: '/news',
 
+  // Casino endpoints
+  CASINO_PLAY: '/casino/play',
+
   // Stock endpoints
   GET_STOCKS: '/stocks',
   TRADE_STOCK: '/stocks/trade',

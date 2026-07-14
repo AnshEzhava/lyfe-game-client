@@ -1,0 +1,51 @@
+<div class="game-page">
+  <div class="game-top">
+    <a class="back-link" routerLink=".."><span>&#8592;</span> Casino</a>
+    <span class="game-title">Plinko</span>
+    <span class="game-balance">{{ state.branks() | number: '1.0-0' }} B</span>
+  </div>
+
+  <div class="stage">
+    <div class="board-wrap">
+      <img class="board" src="/casino/plinko/board.png" alt="Plinko board" />
+      <img
+        class="ball"
+        [class.dropping]="dropping()"
+        src="/casino/plinko/ball.png"
+        alt="Ball"
+        [style.left.%]="ballLeft()"
+        [style.top.%]="ballTop()"
+      />
+    </div>
+  </div>
+
+  <!-- Multiplier buckets -->
+  <div class="buckets">
+    <span
+      *ngFor="let m of table(); let i = index"
+      class="bucket"
+      [class.hit]="landedBucket() === i"
+    >{{ m }}×</span>
+  </div>
+
+  <div class="choice-row">
+    <button
+      *ngFor="let r of risks"
+      class="choice-btn"
+      [class.active]="risk() === r"
+      [disabled]="busy()"
+      (click)="risk.set(r)"
+    >{{ r }}</button>
+  </div>
+  <p class="choice-hint">Higher risk = bigger edges, emptier middle.</p>
+
+  <app-bet-controls
+    [balance]="state.branks()"
+    [busy]="busy()"
+    [result]="result()"
+    [bet]="bet()"
+    (betChange)="bet.set($event)"
+    playLabel="Drop"
+    (play)="submit()"
+  />
+</div>

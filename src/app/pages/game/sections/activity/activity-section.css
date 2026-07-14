@@ -1,0 +1,138 @@
+/* Activity page styles. Shared UI primitives live in game-ui.css. */
+
+/* ─── AFK settings + activity feed ──────────────────────────────────────── */
+/* Centered, readable-width container for the Activity overlay */
+.activity-panel {
+  align-self: center;
+  width: 100%;
+  max-width: 760px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.activity-panel .section-label {
+  margin-top: 0.25rem;
+}
+
+.afk-settings {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin: 0.5rem 0 1.5rem;
+}
+
+.afk-setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+}
+
+.afk-setting-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.afk-setting-title {
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.afk-setting-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.afk-toggle {
+  flex-shrink: 0;
+  width: 46px;
+  height: 26px;
+  border-radius: 13px;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.afk-toggle.on {
+  background: var(--green);
+}
+
+.afk-toggle-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--text-primary);
+  transition: transform 0.2s ease;
+}
+
+.afk-toggle.on .afk-toggle-knob {
+  transform: translateX(20px);
+}
+
+.afk-feed {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  overflow: hidden;
+}
+
+.afk-feed-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.85rem;
+  transition: background var(--dur-fast) var(--ease-out);
+}
+
+.afk-feed-row:last-child {
+  border-bottom: none;
+}
+
+.afk-feed-row:hover {
+  background: var(--surface-hover);
+}
+
+.afk-feed-amount {
+  flex-shrink: 0;
+  min-width: 7rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.afk-feed-amount.pos {
+  color: var(--green);
+}
+
+.afk-feed-amount.neg {
+  color: var(--red);
+}
+
+.afk-feed-label {
+  flex: 1;
+  color: var(--text-secondary);
+}
+
+.afk-feed-time {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+

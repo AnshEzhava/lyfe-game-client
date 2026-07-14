@@ -1,118 +1,115 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global styles — "Pixel Arcade" theme (imported from the LyfeGame pixelated design). */
 
-/* Rounded, friendly display font for the "Playful Lyfe-world" theme */
 @font-face {
-  font-family: 'fredoka';
-  src: url('../public/fonts/fredoka.woff2') format('woff2');
-  font-weight: 300 700;
+  font-family: 'press-start';
+  src: url('../public/fonts/press-start-2p.woff2') format('woff2');
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'pixels';
-  src: url('../public/fonts/pixel-font.ttf') format('truetype');
-  font-weight: normal;
+  font-family: 'vt323';
+  src: url('../public/fonts/vt323.woff2') format('woff2');
+  font-weight: 400;
   font-style: normal;
-}
-
-@font-face {
-  font-family: 'poppins';
-  src: url('../public/fonts/poppins.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
+  font-display: swap;
 }
 
 :root {
-  /* ─── Brand / semantic accents (friendly, saturated-but-soft) ───────────── */
-  --green: #57c96a; /* brand + positive */
-  --green-dim: rgba(87, 201, 106, 0.16);
-  --green-border: rgba(87, 201, 106, 0.34);
-  --green-glow: rgba(87, 201, 106, 0.16);
-  --green-soft: rgba(87, 201, 106, 0.09);
+  /* ─── Pixel palette (arcade) ────────────────────────────────────────────── */
+  --bg2: #141426;          /* deepest inset (icon wells) */
+  --edge: #33334f;         /* chunky border */
+  --edge-hi: #48486b;      /* highlighted border */
+  --shadow-color: #05050e; /* hard offset shadow */
 
-  --blue: #4dabf7; /* info / secondary */
-  --blue-dim: rgba(77, 171, 247, 0.16);
-  --blue-border: rgba(77, 171, 247, 0.34);
-  --blue-glow: rgba(77, 171, 247, 0.16);
-  --blue-soft: rgba(77, 171, 247, 0.09);
+  --accent: #ffd23f;       /* primary brand (gold) */
+  --accent2: #ff4d6d;      /* secondary (hot pink/red) */
 
-  --red: #ff6b6b; /* coral — negative / danger */
-  --red-dim: rgba(255, 107, 107, 0.16);
-  --red-border: rgba(255, 107, 107, 0.34);
+  /* Semantic accents */
+  --green: #ffd23f;        /* brand + positive (gold coins) */
+  --green-dim: rgba(255, 210, 63, 0.16);
+  --green-border: rgba(255, 210, 63, 0.55);
+  --green-glow: rgba(255, 210, 63, 0.28);
+  --green-soft: rgba(255, 210, 63, 0.1);
 
-  --yellow: #ffcb47; /* sun — bonds / warnings */
-  --yellow-dim: rgba(255, 203, 71, 0.16);
-  --yellow-border: rgba(255, 203, 71, 0.34);
+  --red: #ff4d6d;          /* negative */
+  --red-dim: rgba(255, 77, 109, 0.18);
+  --red-border: rgba(255, 77, 109, 0.55);
 
-  --purple: #b083f0; /* grape — news */
-  --purple-dim: rgba(176, 131, 240, 0.16);
-  --purple-border: rgba(176, 131, 240, 0.3);
+  --blue: #4dd2ff;         /* info */
+  --blue-dim: rgba(77, 210, 255, 0.16);
+  --blue-border: rgba(77, 210, 255, 0.5);
+  --blue-glow: rgba(77, 210, 255, 0.28);
+  --blue-soft: rgba(77, 210, 255, 0.1);
 
-  --orange: #ff924d; /* tangerine — accent */
-  --cyan: #33c9c4; /* teal — accent */
+  --yellow: #ffd23f;
+  --yellow-dim: rgba(255, 210, 63, 0.16);
+  --yellow-border: rgba(255, 210, 63, 0.5);
 
-  /* Category palette (sectors, cards, chart series) */
-  --accent-green: var(--green);
-  --accent-coral: var(--red);
-  --accent-sun: var(--yellow);
-  --accent-sky: var(--blue);
-  --accent-grape: var(--purple);
-  --accent-teal: var(--cyan);
-  --accent-tangerine: var(--orange);
-  --accent-pink: #ff8fb1;
+  --purple: #c77dff;
+  --purple-dim: rgba(199, 125, 255, 0.16);
+  --purple-border: rgba(199, 125, 255, 0.5);
 
-  /* Positive / negative aliases */
+  --orange: #ff9f4d;
+  --cyan: #4dd2ff;
+
+  /* Category / tile palette (place icons, chart series) */
+  --accent-coral: #ff4d6d;
+  --accent-sky: #4dd2ff;
+  --accent-sun: #ffd23f;
+  --accent-green: #4dff88;
+  --accent-grape: #c77dff;
+  --accent-teal: #4dd2ff;
+  --accent-tangerine: #ff9f4d;
+  --accent-pink: #ff9fb0;
+
   --pos: var(--green);
   --neg: var(--red);
 
-  /* ─── Surfaces (warm plum-charcoal, not pure black) ─────────────────────── */
-  --surface-0: #16131f; /* app background base */
-  --surface-1: #1e1a2b;
-  --surface-2: #262035;
-  --surface-3: #2e2740;
-  --surface-card: rgba(38, 32, 53, 0.72); /* blurred cards */
+  /* ─── Surfaces ──────────────────────────────────────────────────────────── */
+  --surface-0: #0f0f1c;
+  --surface-1: #1b1b30;
+  --surface-2: #23233f;
+  --surface-3: #2b2b4a;
+  --surface-card: #1b1b30;
   --surface-hover: rgba(255, 255, 255, 0.06);
-  --surface-raised: rgba(255, 255, 255, 0.045);
-
-  /* Ambient background glow tints */
-  --bg-tint-a: rgba(87, 201, 106, 0.06);
-  --bg-tint-b: rgba(176, 131, 240, 0.06);
+  --surface-raised: #23233f;
 
   /* ─── Borders ───────────────────────────────────────────────────────────── */
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-default: rgba(255, 255, 255, 0.11);
-  --border-hover: rgba(255, 255, 255, 0.22);
+  --border-subtle: #262640;
+  --border-default: #33334f;
+  --border-hover: #48486b;
 
-  /* ─── Text (warm off-white) ─────────────────────────────────────────────── */
-  --text-primary: #f4f1fa;
-  --text-secondary: #d6cfe6;
-  --text-muted: rgba(244, 241, 250, 0.5);
-  --text-dim: rgba(244, 241, 250, 0.28);
+  /* ─── Text ──────────────────────────────────────────────────────────────── */
+  --text-primary: #f2f2ff;
+  --text-secondary: #c9c9e6;
+  --text-muted: #7c7ca0;
+  --text-dim: #55557a;
 
-  /* ─── Radius (rounder, chunkier) ────────────────────────────────────────── */
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 22px;
-  --radius-xl: 28px;
-  --radius-pill: 999px;
+  /* ─── Radius — pixel art has hard, square corners ───────────────────────── */
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --radius-pill: 0;
 
-  /* ─── Elevation (soft, layered — no harsh neon) ─────────────────────────── */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.32);
-  --shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.42);
-  --shadow-pop: 0 12px 30px rgba(87, 201, 106, 0.18);
+  /* ─── Elevation — hard offset shadows (no blur) ─────────────────────────── */
+  --shadow-sm: 3px 3px 0 var(--shadow-color);
+  --shadow-md: 5px 5px 0 var(--shadow-color);
+  --shadow-lg: 6px 6px 0 var(--shadow-color);
+  --shadow-pop: 9px 9px 0 var(--shadow-color);
 
   /* ─── Typography ────────────────────────────────────────────────────────── */
-  --font-display: 'fredoka', 'poppins', sans-serif;
-  --font-body: 'poppins', sans-serif;
-  --font-mono: 'poppins', ui-monospace, monospace;
+  --font-display: 'press-start', monospace;  /* chunky pixel — short labels/titles only */
+  --font-body: 'vt323', monospace;           /* readable pixel — body + buttons */
+  --font-mono: 'vt323', monospace;
 
-  /* ─── Motion ────────────────────────────────────────────────────────────── */
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --dur-fast: 0.16s;
-  --dur-med: 0.28s;
+  /* ─── Motion — stepped for a retro feel ─────────────────────────────────── */
+  --ease-out: steps(3);
+  --ease-spring: steps(2);
+  --dur-fast: 0.09s;
+  --dur-med: 0.16s;
 }
 
 * {
@@ -125,24 +122,18 @@ body {
   height: 100%;
   margin: 0;
   font-family: var(--font-body);
+  font-size: 18px; /* VT323 has small metrics — scale up for legibility */
   background-color: var(--surface-0);
   color: var(--text-primary);
 
-  /* Render native controls (number-input spinners, scrollbars, etc.) in a dark
-     style so they match the theme instead of showing a light default box. */
-  color-scheme: dark;
-
-  /* Soft warm ambient glows + a gentle dot grid */
+  /* Pixel grid */
   background-image:
-    radial-gradient(1100px 700px at 12% -8%, var(--bg-tint-a), transparent 60%),
-    radial-gradient(1000px 680px at 100% 0%, var(--bg-tint-b), transparent 55%),
-    radial-gradient(rgba(255, 255, 255, 0.05) 1.4px, transparent 1.4px);
-  background-size:
-    auto,
-    auto,
-    26px 26px;
+    linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+  background-size: 22px 22px;
   background-attachment: fixed;
   min-height: 100vh;
+  color-scheme: dark;
 }
 
 h1,
@@ -150,7 +141,16 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display);
-  letter-spacing: 0.2px;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+}
+
+/* Buttons & form controls default to the readable pixel font (VT323). */
+button,
+input,
+select,
+textarea {
+  font-family: var(--font-body);
 }
 
 .clerk-footer-hidden {

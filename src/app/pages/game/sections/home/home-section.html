@@ -1,0 +1,60 @@
+<section class="map">
+  <!-- Ambient glow + checker overlays -->
+  <div class="map-glow"></div>
+  <div class="map-checker"></div>
+
+  <!-- Marching dashed path -->
+  <svg class="map-path" viewBox="0 0 100 100" preserveAspectRatio="none">
+    <polyline
+      points="43,80 20,66 25,34 56,20 76,46 48,54"
+      fill="none"
+      stroke="var(--accent2)"
+      stroke-width="3"
+      stroke-dasharray="2 9"
+      stroke-linecap="round"
+      vector-effect="non-scaling-stroke"
+    />
+  </svg>
+
+  <!-- Corner brackets -->
+  <div class="corner tl"></div>
+  <div class="corner tr"></div>
+  <div class="corner bl"></div>
+  <div class="corner br"></div>
+
+  <!-- Twinkling stars -->
+  <div class="stars">
+    <div class="star" *ngFor="let s of stars" [style.left.%]="s.x" [style.top.%]="s.y" [style.animation-delay]="s.delay">
+      <app-pixel-icon [map]="starMap" [cell]="2" on="var(--accent2)"></app-pixel-icon>
+    </div>
+  </div>
+
+  <!-- Title -->
+  <div class="map-title">
+    <h1>Your Lyfe</h1>
+    <p>Travel the world — pick a place to visit.</p>
+  </div>
+
+  <!-- Places + floating coins -->
+  <div class="places-layer">
+    <div class="coin" *ngFor="let c of coins" [style.left.%]="c.x" [style.top.%]="c.y" [style.animation-delay]="c.delay">
+      <div class="coin-flip">
+        <app-pixel-icon [map]="coinMap" [cell]="6" on="var(--accent2)"></app-pixel-icon>
+      </div>
+    </div>
+
+    <a
+      *ngFor="let p of places"
+      class="place"
+      [routerLink]="p.path"
+      [style.left.%]="p.x"
+      [style.top.%]="p.y"
+    >
+      <span class="place-icon" [style.border-top-color]="p.color">
+        <app-pixel-icon [map]="p.map" [cell]="5" [on]="p.color" alt="var(--surface-1)"></app-pixel-icon>
+      </span>
+      <span class="place-name">{{ p.label }}</span>
+      <span class="place-tag">{{ p.tag }}</span>
+    </a>
+  </div>
+</section>

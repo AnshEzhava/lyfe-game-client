@@ -1,0 +1,21 @@
+.die {
+  width: 110px;
+  height: 110px;
+}
+.die img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.die.rolling {
+  animation: die-tumble 0.28s linear infinite;
+}
+
+@keyframes die-tumble {
+  0%   { transform: rotate(0deg) translateY(0); }
+  25%  { transform: rotate(90deg) translateY(-8px); }
+  50%  { transform: rotate(180deg) translateY(0); }
+  75%  { transform: rotate(270deg) translateY(-8px); }
+  100% { transform: rotate(360deg) translateY(0); }
+}

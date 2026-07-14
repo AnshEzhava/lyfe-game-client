@@ -1,0 +1,45 @@
+<div class="shell">
+  <header class="shell-header">
+    <div class="brand">
+      <app-pixel-icon [map]="maps['logo']" [cell]="4" on="var(--accent)"></app-pixel-icon>
+      <span class="logo">LyfeGame</span>
+    </div>
+
+    <div class="status-bar">
+      <div class="pill user-info" (click)="signOut()">
+        <app-pixel-icon [map]="maps['ava']" [cell]="3" on="var(--accent)"></app-pixel-icon>
+        <span class="username">{{ state.gameUser()?.displayName || state.clerkUser()?.username || 'Player' }}</span>
+        <span class="pill-dim">&#8631;</span>
+      </div>
+
+      <div class="pill"><span class="pill-sq">&#9632;</span>{{ clock.gameDate() }}</div>
+
+      <div class="pill">
+        <app-pixel-icon *ngIf="!clock.isNight()" [map]="maps['sun']" [cell]="2" on="var(--accent2)"></app-pixel-icon>
+        <span *ngIf="clock.isNight()" class="pill-dim">&#9789;</span>
+        {{ clock.gameTime() }}
+      </div>
+
+      <div class="pill"><span class="pill-label">NET</span>{{ state.netWorth() | number: '1.0-0' }} &#8383;</div>
+
+      <div class="pill">
+        <app-pixel-icon [map]="maps['coin']" [cell]="2" on="var(--accent2)"></app-pixel-icon>
+        {{ state.branks() | number: '1.0-0' }}
+      </div>
+
+      <div class="pill pill-iq"><span class="pill-label">IQ</span>{{ state.intelligence() }}</div>
+    </div>
+  </header>
+
+  <main class="shell-content">
+    <div class="back-row" *ngIf="!isHome()">
+      <a class="back-btn" routerLink=".">
+        <span class="back-arrow">&#8592;</span> Back to Map
+      </a>
+    </div>
+    <router-outlet></router-outlet>
+  </main>
+
+  <app-modal title="Welcome!" [isOpen]="state.needsDisplayName()" (submitName)="state.createUser($event)"></app-modal>
+  <app-welcome-back-modal [summary]="state.whileAwaySummary()" (closed)="state.dismissWelcomeBack()"></app-welcome-back-modal>
+</div>

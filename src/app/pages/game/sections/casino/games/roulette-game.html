@@ -1,0 +1,94 @@
+<div class="game-page roulette">
+  <div class="game-top">
+    <a class="back-link" routerLink=".."><span>&#8592;</span> Casino</a>
+    <span class="game-title">Roulette</span>
+    <span class="game-balance">{{ state.branks() | number: '1.0-0' }} B</span>
+  </div>
+
+  <div class="table-surface">
+  <div class="table">
+    <!-- Self-rendered European wheel: the pockets ARE the result. -->
+    <div class="wheel-col">
+      <svg viewBox="0 0 200 200" class="wheel-svg" aria-label="Roulette wheel">
+        <circle cx="100" cy="100" r="99" class="wheel-bowl" />
+        <g class="wheel-rotor" [style.transform]="'rotate(' + wheelAngle() + 'deg)'">
+          <path *ngFor="let p of pockets" [attr.d]="p.path" [attr.fill]="p.color" stroke="var(--rl-line)" stroke-width="0.4" />
+          <text
+            *ngFor="let p of pockets"
+            [attr.x]="p.lx"
+            [attr.y]="p.ly"
+            [attr.transform]="'rotate(' + p.rot + ' ' + p.lx + ' ' + p.ly + ')'"
+            class="pocket-num"
+          >{{ p.n }}</text>
+        </g>
+        <!-- Fixed centre readout -->
+        <circle cx="100" cy="100" r="42" class="wheel-center" [style.fill]="winning() !== null ? centerBg() : 'var(--surface-1)'" />
+        <text *ngIf="winning() !== null" x="100" y="101" class="wheel-result">{{ winning() }}</text>
+        <text *ngIf="winning() === null" x="100" y="101" class="wheel-idle">SPIN</text>
+        <!-- Fixed ball + pointer at top -->
+        <circle cx="100" cy="21" r="4.5" class="ball" [class.spinning]="spinning()" />
+        <polygon points="100,2 93,15 107,15" class="wheel-pointer" />
+      </svg>
+
+      <!-- Always rendered (reserves its slot) so the first spin never nudges the felt down. -->
+      <div class="history">
+        <ng-container *ngIf="history().length">
+          <span class="history-label">Last</span>
+          <span *ngFor="let h of history()" class="history-chip" [style.background]="chipColor(h.color)">{{ h.n }}</span>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Betting felt -->
+    <div class="felt-wrap">
+      <div class="felt">
+        <!-- Zero -->
+        <button class="cell num green zero" [class.sel]="isSel('0')" [class.win]="winning() === 0" (click)="select('0')">0</button>
+
+        <!-- Numbers 1-36 -->
+        <button
+          *ngFor="let c of numberCells"
+          class="cell num"
+          [class.red]="c.color === 'red'"
+          [class.black]="c.color === 'black'"
+          [class.sel]="isSel(c.key)"
+          [class.win]="winning() === +c.key"
+          [style.gridColumn]="c.col"
+          [style.gridRow]="c.row"
+          (click)="select(c.key)"
+        >{{ c.label }}</button>
+
+        <!-- Column (2:1) bets on the right -->
+        <button class="cell out col" [class.sel]="isSel('COL3')" style="grid-column:14;grid-row:1" (click)="select('COL3')">2:1</button>
+        <button class="cell out col" [class.sel]="isSel('COL2')" style="grid-column:14;grid-row:2" (click)="select('COL2')">2:1</button>
+        <button class="cell out col" [class.sel]="isSel('COL1')" style="grid-column:14;grid-row:3" (click)="select('COL1')">2:1</button>
+
+        <!-- Dozens -->
+        <button class="cell out" [class.sel]="isSel('DOZEN1')" style="grid-column:2 / span 4;grid-row:4" (click)="select('DOZEN1')">1st 12</button>
+        <button class="cell out" [class.sel]="isSel('DOZEN2')" style="grid-column:6 / span 4;grid-row:4" (click)="select('DOZEN2')">2nd 12</button>
+        <button class="cell out" [class.sel]="isSel('DOZEN3')" style="grid-column:10 / span 4;grid-row:4" (click)="select('DOZEN3')">3rd 12</button>
+
+        <!-- Even-money row -->
+        <button class="cell out" [class.sel]="isSel('LOW')" style="grid-column:2 / span 2;grid-row:5" (click)="select('LOW')">1–18</button>
+        <button class="cell out" [class.sel]="isSel('EVEN')" style="grid-column:4 / span 2;grid-row:5" (click)="select('EVEN')">EVEN</button>
+        <button class="cell out diamond red" [class.sel]="isSel('RED')" style="grid-column:6 / span 2;grid-row:5" (click)="select('RED')">◆</button>
+        <button class="cell out diamond black" [class.sel]="isSel('BLACK')" style="grid-column:8 / span 2;grid-row:5" (click)="select('BLACK')">◆</button>
+        <button class="cell out" [class.sel]="isSel('ODD')" style="grid-column:10 / span 2;grid-row:5" (click)="select('ODD')">ODD</button>
+        <button class="cell out" [class.sel]="isSel('HIGH')" style="grid-column:12 / span 2;grid-row:5" (click)="select('HIGH')">19–36</button>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <p class="choice-hint">Betting: <strong>{{ selectedLabel() }}</strong> — straight number pays 36×, dozens/columns 3×, even-money 2×.</p>
+
+  <app-bet-controls
+    [balance]="state.branks()"
+    [busy]="busy()"
+    [result]="result()"
+    [bet]="bet()"
+    (betChange)="bet.set($event)"
+    playLabel="Spin"
+    (play)="submit()"
+  />
+</div>

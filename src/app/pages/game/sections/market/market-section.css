@@ -1,0 +1,408 @@
+/* Market page styles. Shared UI primitives (tabs, lists, panels, buttons) live in game-ui.css. */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Stock Market — Overlay
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Title row: pixel heading on the left, gold NET WORTH readout on the right.
+   (Base .overlay-header is a centered column — reset to a spread row here.) */
+.stock-overlay .overlay-header {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 0;
+}
+
+.stock-overlay .overlay-header h3 {
+  white-space: nowrap;
+}
+
+.sm-net-worth {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--accent);
+}
+
+.sm-net-worth-label {
+  font-family: var(--font-display);
+  font-size: 12px;
+}
+
+.sm-net-worth-amt {
+  font-family: var(--font-body);
+  font-size: 24px;
+  letter-spacing: 0.5px;
+}
+
+/* Market tab: a left-aligned grid of fixed-width stock cards on the page grid. */
+.sm-stock-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 420px);
+  justify-content: start;
+  gap: 18px;
+  margin-top: 4px;
+}
+
+@media (max-width: 520px) {
+  .sm-stock-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sm-stock-row {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  padding: 17px 18px;
+  background: var(--surface-1);
+  border: 3px solid var(--edge);
+  box-shadow: var(--shadow-lg);
+  transition: transform var(--dur-fast) steps(2), box-shadow var(--dur-fast) steps(2), border-color var(--dur-fast) steps(2);
+}
+
+.sm-stock-row:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 var(--shadow-color);
+  border-color: var(--edge-hi);
+}
+
+.sm-stock-row:active {
+  transform: translate(2px, 2px);
+  box-shadow: 3px 3px 0 var(--shadow-color);
+}
+
+/* Row 1 — ticker (+ GOV) / price */
+.sm-card-row1 {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.sm-ticker-wrap {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.sm-row-ticker {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+.sm-row-ticker.sm-govt { color: var(--accent); }
+
+.sm-govt-badge {
+  font-family: var(--font-display);
+  font-size: 8px;
+  color: var(--accent2);
+  border: 2px solid var(--accent2);
+  padding: 3px 5px;
+}
+
+.sm-row-price {
+  font-family: var(--font-body);
+  font-size: 23px;
+  color: var(--text-primary);
+}
+
+/* Row 2 — name / change */
+.sm-card-row2 {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.sm-row-name {
+  font-family: var(--font-body);
+  font-size: 18px;
+  color: var(--text-muted);
+}
+
+.sm-row-change {
+  font-family: var(--font-body);
+  font-size: 19px;
+  color: var(--text-muted);
+}
+
+.sm-row-change.change-up { color: #4ade80; }
+.sm-row-change.change-down { color: var(--red); }
+
+/* Row 3 — badges */
+.sm-card-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.yield-badge {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  padding: 3px 9px;
+}
+
+.shares-badge {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--text-muted);
+  border: 2px solid var(--edge);
+  padding: 3px 9px;
+}
+
+/* Row 4 — chart box + high/low readout */
+.sm-card-chart {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+  margin-top: 2px;
+}
+
+.sm-chart-box {
+  flex: 1;
+  height: 118px;
+  background: var(--bg2);
+  border: 2px solid var(--edge);
+  position: relative;
+  overflow: hidden;
+}
+
+.sm-chart-box app-stock-sparkline {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.sm-chart-vals {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2px 0;
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--text-muted);
+  text-align: right;
+  min-width: 44px;
+}
+
+/* Net worth panel in portfolio tab */
+
+.sm-net-worth-panel .active-panel-name.sm-net-worth-value {
+  font-size: 1.6rem;
+  color: var(--green);
+}
+
+.sm-holding-meta {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--text-muted);
+  padding: 4px 0 0;
+}
+
+.sm-holding-chart {
+  height: 50px;
+  margin-top: 6px;
+  width: 100%;
+}
+
+/* ─── IPO form ────────────────────────────────────────────────────────── */
+
+.ipo-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.trade-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.trade-label {
+  font-size: 14px;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.trade-input {
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 17px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: var(--font-body);
+}
+
+.trade-input:focus {
+  border-color: var(--border-hover);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.04);
+}
+
+.sm-ipo-cost {
+  font-size: 15px;
+  color: var(--text-muted);
+  text-align: right;
+  margin-top: -4px;
+}
+
+/* ─── Sector select ───────────────────────────────────────────────────── */
+
+.trade-select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23888' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+.trade-select option {
+  background: var(--surface-3);
+  color: var(--text-secondary);
+}
+
+/* ─── Orders tab ──────────────────────────────────────────────────────── */
+
+.sm-order-row { gap: 6px; }
+
+.sm-order-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sm-order-action {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 3px 9px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.sm-order-action-buy {
+  color: var(--green);
+  background: var(--green-soft);
+  border: 1px solid var(--green-border);
+}
+
+.sm-order-action-sell {
+  color: var(--red);
+  background: rgba(255, 107, 107, 0.08);
+  border: 1px solid var(--red-border);
+}
+
+.sm-order-meta {
+  display: flex;
+  gap: 12px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--text-muted);
+}
+
+.sm-order-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2px;
+}
+
+/* ─── My Company stats ────────────────────────────────────────────────── */
+
+.sm-company-name {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.sm-company-stats { gap: 4px; }
+
+.sm-company-stats { gap: 8px; }
+
+.sm-company-stat-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: default;
+}
+
+.sm-company-stat-row:hover { border-color: rgba(255, 255, 255, 0.05); }
+
+.sm-company-stat-label {
+  font-family: var(--font-body);
+  font-size: 17px;
+  color: var(--text-muted);
+}
+
+.sm-company-stat-hint {
+  font-size: 14px;
+  color: var(--text-dim);
+  font-style: italic;
+  margin-left: 4px;
+}
+
+.sm-company-stat-total {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: 2px;
+}
+
+.sm-company-stat-total .sm-company-stat-value {
+  color: var(--text-primary);
+  font-size: 19px;
+}
+
+.sm-company-stat-value {
+  font-family: var(--font-body);
+  font-size: 18px;
+  color: var(--text-primary);
+  text-align: right;
+}
+
+/* ─── Dilution form ───────────────────────────────────────────────────── */
+
+.sm-dilute-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  margin-top: 4px;
+}
+
+.sm-dilute-preview {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  margin-top: -4px;
+}
+
+.sm-dilute-btn { align-self: flex-start; }
+
+
+.sm-allocation {
+  width: 100%;
+  padding: 0.75rem 0 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 0.75rem;
+}

@@ -52,7 +52,7 @@
 .nav-options p,
 .user-options p {
   padding: 0.5rem 1rem;
-  border-radius: 16px;
+  border-radius: 0;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   user-select: none;
@@ -68,8 +68,8 @@
 }
 
 .user-options p {
-  background: linear-gradient(135deg, rgba(87, 201, 106, 0.15), rgba(87, 201, 106, 0.05));
-  border: 1px solid rgba(87, 201, 106, 0.3);
+  background: linear-gradient(135deg, rgba(255, 210, 63, 0.15), rgba(255, 210, 63, 0.05));
+  border: 1px solid rgba(255, 210, 63, 0.3);
   color: var(--green);
   font-family: var(--font-display);
   font-size: 0.85rem;
@@ -77,8 +77,8 @@
 }
 
 .user-options p:hover {
-  background: linear-gradient(135deg, rgba(87, 201, 106, 0.25), rgba(87, 201, 106, 0.1));
-  border-color: rgba(87, 201, 106, 0.5);
+  background: linear-gradient(135deg, rgba(255, 210, 63, 0.25), rgba(255, 210, 63, 0.1));
+  border-color: rgba(255, 210, 63, 0.5);
   color: var(--green);
   transform: translateY(-1px);
 }
@@ -117,10 +117,10 @@
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--green);
-  background: rgba(87, 201, 106, 0.1);
-  border: 1px solid rgba(87, 201, 106, 0.2);
+  background: rgba(255, 210, 63, 0.1);
+  border: 1px solid rgba(255, 210, 63, 0.2);
   padding: 0.35rem 1rem;
-  border-radius: 26px;
+  border-radius: 0;
 }
 
 .section-title {
@@ -157,14 +157,14 @@
   letter-spacing: 0.08em;
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 0.4rem 1.2rem;
-  border-radius: 26px;
+  border-radius: 0;
   margin-bottom: 2rem;
   background: rgba(255, 255, 255, 0.03);
 }
 
 .hero-title {
   font-family: var(--font-display);
-  font-size: 7rem;
+  font-size: 2.6rem;
   margin-bottom: 1.5rem;
   letter-spacing: 6px;
   background: linear-gradient(180deg, var(--text-primary) 30%, rgba(255, 255, 255, 0.4) 100%);
@@ -199,7 +199,7 @@
   background: var(--text-primary);
   color: var(--surface-0);
   border: none;
-  border-radius: 26px;
+  border-radius: 0;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -225,7 +225,7 @@
   background: transparent;
   color: rgba(255, 255, 255, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 26px;
+  border-radius: 0;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -247,7 +247,7 @@
 .preview-card {
   background: rgba(12, 12, 16, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 18px;
+  border-radius: 0;
   overflow: hidden;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
 }
@@ -290,7 +290,7 @@
   align-items: center;
   gap: 10px;
   padding: 6px 10px;
-  border-radius: 16px;
+  border-radius: 0;
   background: rgba(255, 255, 255, 0.03);
 }
 
@@ -371,7 +371,7 @@
 .feature-card {
   text-align: left;
   padding: 2rem;
-  border-radius: 26px;
+  border-radius: 0;
   border: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(255, 255, 255, 0.02);
   transition: all 0.3s ease;
@@ -390,7 +390,7 @@
 .feature-icon {
   width: 44px;
   height: 44px;
-  border-radius: 16px;
+  border-radius: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -403,26 +403,26 @@
 }
 
 .icon-market {
-  background: rgba(87, 201, 106, 0.12);
-  border: 1px solid rgba(87, 201, 106, 0.2);
+  background: rgba(255, 210, 63, 0.12);
+  border: 1px solid rgba(255, 210, 63, 0.2);
 }
 .icon-market svg { fill: var(--green); }
 
 .icon-company {
-  background: rgba(77, 171, 247, 0.12);
-  border: 1px solid rgba(77, 171, 247, 0.2);
+  background: rgba(77, 210, 255, 0.12);
+  border: 1px solid rgba(77, 210, 255, 0.2);
 }
 .icon-company svg { fill: var(--blue); }
 
 .icon-career {
-  background: rgba(255, 146, 77, 0.12);
-  border: 1px solid rgba(255, 146, 77, 0.2);
+  background: rgba(255, 159, 77, 0.12);
+  border: 1px solid rgba(255, 159, 77, 0.2);
 }
 .icon-career svg { fill: var(--orange); }
 
 .icon-news {
-  background: rgba(176, 131, 240, 0.12);
-  border: 1px solid rgba(176, 131, 240, 0.2);
+  background: rgba(199, 125, 255, 0.12);
+  border: 1px solid rgba(199, 125, 255, 0.2);
 }
 .icon-news svg { fill: var(--purple); }
 
@@ -451,7 +451,7 @@
   color: rgba(255, 255, 255, 0.4);
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 26px;
+  border-radius: 0;
   padding: 0.2rem 0.55rem;
   letter-spacing: 0.02em;
 }
@@ -474,9 +474,9 @@
 .formula-card {
   text-align: center;
   padding: 2.5rem;
-  border-radius: 26px;
-  border: 1px solid rgba(87, 201, 106, 0.15);
-  background: rgba(87, 201, 106, 0.04);
+  border-radius: 0;
+  border: 1px solid rgba(255, 210, 63, 0.15);
+  background: rgba(255, 210, 63, 0.04);
 }
 
 .mechanic-label {
@@ -522,7 +522,7 @@
 .pillar {
   text-align: center;
   padding: 1.5rem 1rem;
-  border-radius: 18px;
+  border-radius: 0;
   border: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(255, 255, 255, 0.02);
   transition: all 0.25s ease;
@@ -598,7 +598,7 @@
   flex-direction: column;
   gap: 0.2rem;
   padding: 0.85rem 1rem;
-  border-radius: 26px;
+  border-radius: 0;
   border: 1px solid rgba(255, 255, 255, 0.04);
   transition: all 0.2s ease;
 }
@@ -627,7 +627,7 @@
   align-items: center;
   gap: 0.75rem;
   padding: 1.5rem 2.5rem;
-  border-radius: 18px;
+  border-radius: 0;
   border: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(255, 255, 255, 0.02);
 }
@@ -637,7 +637,7 @@
   font-size: 0.8rem;
   letter-spacing: 0.04em;
   padding: 0.65rem 1.25rem;
-  border-radius: 26px;
+  border-radius: 0;
   white-space: nowrap;
 }
 
@@ -648,14 +648,14 @@
 }
 
 .arch-server {
-  background: rgba(87, 201, 106, 0.1);
-  border: 1px solid rgba(87, 201, 106, 0.25);
+  background: rgba(255, 210, 63, 0.1);
+  border: 1px solid rgba(255, 210, 63, 0.25);
   color: var(--green);
 }
 
 .arch-db {
-  background: rgba(77, 171, 247, 0.1);
-  border: 1px solid rgba(77, 171, 247, 0.25);
+  background: rgba(77, 210, 255, 0.1);
+  border: 1px solid rgba(77, 210, 255, 0.25);
   color: var(--blue);
 }
 
@@ -715,7 +715,7 @@
   color: rgba(255, 255, 255, 0.55);
   text-decoration: none;
   padding: 0.6rem 1.2rem;
-  border-radius: 26px;
+  border-radius: 0;
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.2s ease;
 }
@@ -758,7 +758,7 @@
   }
 
   .hero-title {
-    font-size: 4.5rem;
+    font-size: 2rem;
   }
 
   .hero-subtitle {
@@ -807,7 +807,7 @@
 
 @media (max-width: 480px) {
   .hero-title {
-    font-size: 3.5rem;
+    font-size: 1.6rem;
   }
 
   .hero-actions {

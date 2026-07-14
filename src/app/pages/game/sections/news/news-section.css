@@ -1,0 +1,182 @@
+/* News page styles. Shared UI primitives live in game-ui.css. */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   News — Overlay
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.news-overlay { padding-top: 0.5rem; }
+
+.news-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0 10px;
+  flex-wrap: wrap;
+}
+
+.news-search-wrap {
+  flex: 1;
+  min-width: 220px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface-2);
+  border: 2px solid var(--edge);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  transition: border-color 0.2s;
+}
+
+.news-search-wrap:focus-within {
+  border-color: var(--purple-border);
+}
+
+.news-search-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.news-search-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 1rem;
+}
+
+.news-search-input::placeholder {
+  color: var(--text-dim);
+}
+
+.news-sort-toggle {
+  display: flex;
+  border: 2px solid var(--edge);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.news-sort-btn {
+  background: var(--surface-2);
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.news-sort-btn + .news-sort-btn {
+  border-left: 1px solid var(--border-subtle);
+}
+
+.news-sort-btn.active {
+  background: var(--purple-dim);
+  color: var(--purple);
+}
+
+.news-list { gap: 10px; }
+
+.news-item {
+  gap: 7px;
+  padding: 12px 16px;
+  cursor: default;
+  transition: border-color 0.2s;
+}
+
+.news-item:hover { border-color: rgba(255, 255, 255, 0.08); }
+
+.news-item-yours {
+  border-left: 2px solid var(--purple-border);
+}
+
+.news-yours-badge {
+  font-size: 0.6rem;
+  color: var(--purple);
+  background: var(--purple-dim);
+  border: 1px solid var(--purple-border);
+  border-radius: 3px;
+  padding: 0 5px;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.news-item-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.news-ticker {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+  background: var(--surface-hover);
+  border: 1px solid var(--border-default);
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+
+.news-sector-tag {
+  font-size: 0.68rem;
+  color: var(--purple);
+  background: var(--purple-dim);
+  border: 1px solid var(--purple-border);
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+
+.news-impact-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.03em;
+}
+
+.news-impact-badge.impact-badge-pos {
+  color: var(--green);
+  background: var(--green-soft);
+  border: 1px solid var(--green-border);
+}
+
+.news-impact-badge.impact-badge-neg {
+  color: var(--red);
+  background: rgba(255, 107, 107, 0.08);
+  border: 1px solid var(--red-border);
+}
+
+.news-timestamp {
+  margin-left: auto;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+/* Headlines use the readable pixel font (VT323), not the chunky display face —
+   press-start is unreadable across long sentences. */
+.news-headline {
+  font-family: var(--font-body);
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+
+.news-body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  max-width: 90ch;
+}
+

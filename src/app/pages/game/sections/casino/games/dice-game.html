@@ -1,0 +1,34 @@
+<div class="game-page">
+  <div class="game-top">
+    <a class="back-link" routerLink=".."><span>&#8592;</span> Casino</a>
+    <span class="game-title">Dice</span>
+    <span class="game-balance">{{ state.branks() | number: '1.0-0' }} B</span>
+  </div>
+
+  <div class="stage">
+    <div class="die" [class.rolling]="rolling()">
+      <img [src]="'/casino/dice/d' + face() + '.png'" [alt]="'Die showing ' + face()" />
+    </div>
+  </div>
+
+  <div class="choice-row">
+    <button
+      *ngFor="let opt of options"
+      class="choice-btn"
+      [class.active]="pick() === opt"
+      [disabled]="busy()"
+      (click)="pick.set(opt)"
+    >{{ label(opt) }}</button>
+  </div>
+  <p class="choice-hint">High/Low pays 1.95×. Exact number pays 5×.</p>
+
+  <app-bet-controls
+    [balance]="state.branks()"
+    [busy]="busy()"
+    [result]="result()"
+    [bet]="bet()"
+    (betChange)="bet.set($event)"
+    playLabel="Roll"
+    (play)="submit()"
+  />
+</div>

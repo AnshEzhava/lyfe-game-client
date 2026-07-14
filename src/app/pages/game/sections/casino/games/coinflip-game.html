@@ -1,0 +1,30 @@
+<div class="game-page">
+  <div class="game-top">
+    <a class="back-link" routerLink=".."><span>&#8592;</span> Casino</a>
+    <span class="game-title">Coin Flip</span>
+    <span class="game-balance">{{ state.branks() | number: '1.0-0' }} B</span>
+  </div>
+
+  <div class="stage">
+    <div class="coin" [class.flipping]="flipping()" [class.tails]="landed() === 'TAILS'">
+      <img class="coin-face front" src="/casino/coin/heads.png" alt="Heads" />
+      <img class="coin-face back" src="/casino/coin/tails.png" alt="Tails" />
+    </div>
+  </div>
+
+  <div class="choice-row">
+    <button class="choice-btn" [class.active]="pick() === 'HEADS'" [disabled]="busy()" (click)="pick.set('HEADS')">Heads</button>
+    <button class="choice-btn" [class.active]="pick() === 'TAILS'" [disabled]="busy()" (click)="pick.set('TAILS')">Tails</button>
+  </div>
+  <p class="choice-hint">Call it right to win 1.95×.</p>
+
+  <app-bet-controls
+    [balance]="state.branks()"
+    [busy]="busy()"
+    [result]="result()"
+    [bet]="bet()"
+    (betChange)="bet.set($event)"
+    playLabel="Flip"
+    (play)="submit()"
+  />
+</div>

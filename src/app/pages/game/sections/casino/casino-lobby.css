@@ -1,0 +1,96 @@
+.lobby {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.lobby-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.lobby-head h2 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--text-primary);
+}
+
+.lobby-balance { color: var(--text-muted); font-size: 0.9rem; }
+.lobby-balance span { color: var(--green); font-variant-numeric: tabular-nums; }
+
+/* Illustrated game grid */
+.lobby-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.game-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1.1rem 0.75rem 0.9rem;
+  background: var(--surface-raised);
+  border: 2px solid var(--border-subtle);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.game-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: 0 6px 0 0 var(--shadow-color);
+}
+
+.card-art {
+  width: 96px;
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  /* Idle bob so the lobby feels alive; each card offset a touch via :nth-child below. */
+  animation: card-bob 2.4s ease-in-out infinite;
+}
+
+.game-card:nth-child(2n) .card-art img { animation-delay: -0.8s; }
+.game-card:nth-child(3n) .card-art img { animation-delay: -1.6s; }
+.game-card:hover .card-art img { animation-duration: 0.9s; }
+
+@keyframes card-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.card-label {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.card-tag {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.lobby-hint {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-art img { animation: none; }
+}

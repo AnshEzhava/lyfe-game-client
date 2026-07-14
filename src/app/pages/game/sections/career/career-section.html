@@ -1,0 +1,163 @@
+      <div class="section-view job-overlay">
+        <div class="overlay-header">
+          <h3>Job / Education</h3>
+        </div>
+
+        <!-- Tab switcher -->
+        <div class="tab-bar">
+          <button class="tab-btn" [class.active]="jobTab() === 'jobs'" (click)="jobTab.set('jobs')">
+            Jobs
+          </button>
+          <button
+            class="tab-btn"
+            [class.active]="jobTab() === 'education'"
+            (click)="jobTab.set('education')"
+          >
+            Education
+          </button>
+        </div>
+
+        <!-- Jobs tab -->
+        <div *ngIf="jobTab() === 'jobs'" class="tab-content">
+          <!-- Active job panel -->
+          <div class="active-panel" *ngIf="activeJob(); else noJob">
+            <div class="active-panel-title">Currently Working</div>
+            <div class="active-panel-name">{{ activeJob()!.jobName }}</div>
+            <div class="active-panel-wage">
+              <span class="wage-label">Pending wages</span>
+              <span class="wage-amount">{{ pendingWages() }} Branks</span>
+            </div>
+            <div class="active-panel-rate">
+              {{ activeJob()!.effectiveHourlyRate | number: '1.0-1' }} B/game-hr
+            </div>
+            <div class="active-panel-actions">
+              <button class="btn-primary" (click)="claimWage()">Claim Wages</button>
+              <button class="btn-danger" (click)="quitJob()">Quit Job</button>
+            </div>
+          </div>
+
+          <ng-template #noJob>
+            <div class="empty-state">
+              <div class="empty-state-icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.34C18 3.1 16.91 2 15.56 2H8.44C7.09 2 6 3.1 6 4.66c0 .46.11.9.18 1.34H4C2.9 6 2 6.9 2 8v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z" fill="currentColor"/></svg>
+              </div>
+              <span class="empty-state-text">No active job</span>
+              <span class="empty-state-hint">Pick a job below to start earning Branks</span>
+            </div>
+          </ng-template>
+
+          <!-- Job list -->
+          <div class="section-label">Available Jobs</div>
+          <div class="item-list">
+            <div
+              *ngFor="let job of availableJobs()"
+              class="list-item"
+              [class.item-locked]="!job.eligible"
+              [class.item-active]="activeJob()?.jobId === job.id"
+            >
+              <div class="item-header">
+                <span class="item-name">{{ job.name }}</span>
+                <span class="item-badge" *ngIf="job.partTime">Part-time</span>
+                <span class="item-badge badge-locked" *ngIf="!job.eligible"
+                  >IQ {{ job.minIntelligence }}+</span
+                >
+              </div>
+              <div class="item-desc">{{ job.description }}</div>
+              <div class="item-footer">
+                <span class="item-rate"
+                  >{{ job.effectiveHourlyRate | number: '1.0-1' }} B/game-hr</span
+                >
+                <button
+                  class="btn-sm btn-primary"
+                  *ngIf="job.eligible && activeJob()?.jobId !== job.id"
+                  (click)="startJob(job.id)"
+                >
+                  {{ activeJob() ? 'Switch' : 'Start' }}
+                </button>
+                <span class="item-current" *ngIf="activeJob()?.jobId === job.id">Current</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Education tab -->
+        <div *ngIf="jobTab() === 'education'" class="tab-content">
+          <!-- Active enrollment panel -->
+          <div class="active-panel" *ngIf="activeCourse(); else noCourse">
+            <div class="active-panel-title" *ngIf="!activeCourse()!.complete">Enrolled</div>
+            <div class="active-panel-title complete-title" *ngIf="activeCourse()!.complete">
+              Completed!
+            </div>
+            <div class="active-panel-name">{{ activeCourse()!.courseName }}</div>
+
+            <div *ngIf="!activeCourse()!.complete" class="course-timer">
+              <div class="timer-label">Time remaining (game time)</div>
+              <div class="timer-value">{{ formatCountdown(courseRemainingMs()) }}</div>
+              <div class="timer-bar-wrap">
+                <div
+                  class="timer-bar-fill"
+                  [style.width.%]="
+                    100 -
+                    (courseRemainingMs() /
+                      (activeCourse()!.completesAt - activeCourse()!.enrolledAt)) *
+                      100
+                  "
+                ></div>
+              </div>
+            </div>
+
+            <div
+              *ngIf="activeCourse()!.complete && !activeCourse()!.rewardClaimed"
+              class="course-complete"
+            >
+              <p>+{{ activeCourse()!.intelligenceReward }} Intelligence awaiting claim</p>
+              <button class="btn-primary" (click)="completeCourse()">Claim Reward</button>
+            </div>
+          </div>
+
+          <ng-template #noCourse>
+            <div class="empty-state">
+              <div class="empty-state-icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg"><path d="M12 3L1 9l4 2.18V15c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-3.82L21 9l-9-6z" fill="currentColor"/></svg>
+              </div>
+              <span class="empty-state-text">Not enrolled in a course</span>
+              <span class="empty-state-hint">Study to boost Intelligence and unlock better jobs</span>
+            </div>
+          </ng-template>
+
+          <!-- Course list -->
+          <div class="section-label">Available Courses</div>
+          <div class="item-list">
+            <div
+              *ngFor="let course of availableCourses()"
+              class="list-item"
+              [class.item-locked]="!course.eligible"
+            >
+              <div class="item-header">
+                <span class="item-name">{{ course.name }}</span>
+                <span class="item-badge badge-locked" *ngIf="!course.eligible"
+                  >IQ {{ course.minIntelligence }}+</span
+                >
+              </div>
+              <div class="item-desc">{{ course.description }}</div>
+              <div class="item-meta">
+                <span class="meta-tag">Duration: {{ formatDuration(course.durationSeconds) }}</span>
+                <span class="meta-tag reward-tag">+{{ course.intelligenceReward }} IQ</span>
+              </div>
+              <div class="item-footer">
+                <span class="item-cost">Cost: {{ course.cost }} Branks</span>
+                <button
+                  class="btn-sm btn-primary"
+                  *ngIf="course.eligible && !activeCourse()"
+                  (click)="enrollCourse(course.id)"
+                >
+                  Enroll
+                </button>
+                <span class="item-current" *ngIf="activeCourse()?.courseId === course.id"
+                  >Enrolled</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>

@@ -1,0 +1,29 @@
+<div class="game-page">
+  <div class="game-top">
+    <a class="back-link" routerLink=".."><span>&#8592;</span> Casino</a>
+    <span class="game-title">Slots</span>
+    <span class="game-balance">{{ state.branks() | number: '1.0-0' }} B</span>
+  </div>
+
+  <div class="stage">
+    <div class="cabinet">
+      <div class="reels" [class.spinning]="spinning()">
+        <div class="reel" *ngFor="let s of reels()">
+          <img [src]="art(s)" [alt]="s" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="choice-hint">Match three to win up to 25×. Any pair pays 1.5×.</p>
+
+  <app-bet-controls
+    [balance]="state.branks()"
+    [busy]="busy()"
+    [result]="result()"
+    [bet]="bet()"
+    (betChange)="bet.set($event)"
+    playLabel="Spin"
+    (play)="submit()"
+  />
+</div>

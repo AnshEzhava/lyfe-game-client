@@ -1,0 +1,38 @@
+.cabinet {
+  padding: 1rem 1.1rem;
+  background: var(--surface-raised);
+  border: 3px solid var(--accent);
+  box-shadow: 0 6px 0 0 var(--shadow-color);
+}
+
+.reels {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.reel {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg, #0f0f1c);
+  border: 2px solid var(--border-subtle);
+  overflow: hidden;
+}
+
+.reel img {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+}
+
+/* While spinning, the symbols blur-shift vertically to sell the reel motion. */
+.reels.spinning .reel img {
+  animation: reel-spin 0.12s linear infinite;
+}
+
+@keyframes reel-spin {
+  0% { transform: translateY(-60%); opacity: 0.5; }
+  100% { transform: translateY(60%); opacity: 0.5; }
+}

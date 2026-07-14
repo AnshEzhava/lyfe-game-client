@@ -1,0 +1,186 @@
+.roulette {
+  /* Table palette in our theme: real roulette red/black/green, tuned to the arcade look. */
+  --rl-red: #d13a4f;
+  --rl-black: #1b1b2e;
+  --rl-green: #2fae66;
+  --rl-line: rgba(255, 255, 255, 0.55);
+  max-width: 760px;
+}
+
+/* Wooden roulette table: wood rim + green felt bed holding the wheel and the betting grid. */
+.table-surface {
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  background: #0e5233;                /* felt green */
+  border: 12px solid #6b4423;        /* wood rim */
+  border-radius: 22px;
+  box-shadow: 0 7px 0 var(--shadow-color), inset 0 0 0 3px #3a2510;
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+/* ---- Wheel ---- */
+.wheel-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.wheel-svg {
+  width: 300px;
+  height: 300px;
+  max-width: 100%;
+  filter: drop-shadow(0 6px 0 var(--shadow-color));
+}
+
+.wheel-rotor {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 3s cubic-bezier(0.12, 0.7, 0.1, 1);
+}
+
+.pocket-num {
+  fill: #fff;
+  font-size: 6px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.wheel-bowl { fill: #08301d; stroke: #3a2510; stroke-width: 2; }
+.wheel-center { stroke: var(--accent); stroke-width: 1.5; transition: fill 0.2s ease; }
+
+.wheel-result {
+  fill: #fff;
+  font-family: var(--font-display);
+  font-size: 30px;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+.wheel-idle {
+  fill: var(--text-dim);
+  font-family: var(--font-display);
+  font-size: 12px;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.wheel-pointer { fill: var(--accent); }
+.ball { fill: #fff; stroke: #000; stroke-width: 0.5; }
+.ball.spinning { animation: ball-pulse 0.35s ease-in-out infinite alternate; }
+@keyframes ball-pulse { from { r: 4; opacity: 0.7; } to { r: 5.5; opacity: 1; } }
+
+/* Recent spins */
+.history {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  min-height: 1.6rem; /* reserved even when empty, so nothing below shifts on the first spin */
+}
+.history-label { color: var(--text-dim); font-size: 0.65rem; margin-right: 0.15rem; }
+.history-chip {
+  min-width: 18px;
+  padding: 1px 3px;
+  font-size: 0.62rem;
+  text-align: center;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Felt ---- */
+.felt-wrap {
+  width: 100%;
+  overflow-x: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.felt {
+  display: grid;
+  /* minmax(0,1fr) — not 1fr — so columns shrink to fit narrow screens instead of overflowing. */
+  grid-template-columns: repeat(14, minmax(0, 1fr));
+  /* Fluid rows so cells stay proportional from phone to desktop without a breakpoint. */
+  grid-template-rows: repeat(3, clamp(30px, 8.5vw, 46px)) repeat(2, clamp(26px, 6.5vw, 36px));
+  gap: 3px;
+  width: 100%;
+  max-width: 720px;
+  /* Sits directly on the table felt — the surface provides the green + frame. */
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  font-size: clamp(0.55rem, 2.3vw, 0.92rem);
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  border: 1px solid var(--rl-line);
+  cursor: pointer;
+  padding: 0;
+  overflow: hidden;
+  transition: transform 0.06s ease, outline-color 0.1s ease;
+}
+.cell:hover:not(:disabled) { transform: translateY(-1px); }
+
+.num.red { background: var(--rl-red); }
+.num.black { background: var(--rl-black); }
+.num.green { background: var(--rl-green); }
+.zero { grid-column: 1; grid-row: 1 / span 3; }
+
+.out {
+  background: rgba(255, 255, 255, 0.04);
+  font-size: clamp(0.42rem, 1.7vw, 0.72rem);
+  color: var(--text-primary);
+}
+.out.col { font-size: clamp(0.38rem, 1.5vw, 0.68rem); }
+.diamond { font-size: clamp(0.7rem, 2.5vw, 1.1rem); }
+.diamond.red { color: var(--rl-red); }
+.diamond.black { color: #cfcfe6; }
+
+/* Selected bet */
+.cell.sel { outline: 3px solid var(--accent); outline-offset: -1px; z-index: 2; }
+
+/* Winning number flash */
+.cell.win { animation: cell-win 1.8s ease; }
+@keyframes cell-win {
+  0%, 100% { box-shadow: none; }
+  20%, 60% { box-shadow: inset 0 0 0 3px #fff, 0 0 12px 2px var(--accent); }
+}
+
+/* Side-by-side when there's room — wheel + felt hug together and centre as one unit.
+   flex-wrap lets the felt drop below the wheel (still centred) if the area is too narrow. */
+@media (min-width: 820px) {
+  .roulette { max-width: 1180px; }
+  .table { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1.75rem; }
+  .wheel-col { flex: 0 0 auto; }
+  .felt-wrap { flex: 0 1 660px; min-width: 0; }
+  .felt { max-width: 660px; }
+  .wheel-svg { width: 300px; height: 300px; }
+}
+
+/* Mobile: slimmer frame + a bit less gap so the fluid felt has more room. */
+@media (max-width: 600px) {
+  .table-surface { padding: 12px; border-width: 8px; }
+  .felt { gap: 2px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wheel-rotor { transition: transform 0.3s linear; }
+  .ball.spinning, .cell.win { animation: none; }
+}

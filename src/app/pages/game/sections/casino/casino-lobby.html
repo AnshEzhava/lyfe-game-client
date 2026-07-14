@@ -1,0 +1,18 @@
+<section class="lobby">
+  <div class="lobby-head">
+    <h2>Casino</h2>
+    <div class="lobby-balance">Balance: <span>{{ state.branks() | number: '1.0-0' }} B</span></div>
+  </div>
+
+  <div class="lobby-grid">
+    <a *ngFor="let g of games" class="game-card" [routerLink]="g.path">
+      <span class="card-art">
+        <img [src]="g.art" [alt]="g.label" />
+      </span>
+      <span class="card-label">{{ g.label }}</span>
+      <span class="card-tag">{{ g.tag }}</span>
+    </a>
+  </div>
+
+  <p class="lobby-hint">Every game carries a small house edge — bet responsibly.</p>
+</section>

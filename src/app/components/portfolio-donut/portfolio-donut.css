@@ -7,8 +7,8 @@
 
 .pd-ring {
   position: relative;
-  width: 130px;
-  height: 130px;
+  width: 150px;
+  height: 150px;
   flex-shrink: 0;
 }
 
@@ -32,16 +32,23 @@
   text-align: center;
 }
 
+.pd-center {
+  padding: 0 10px;
+}
+
 .pd-center-label {
-  font-size: 0.62rem;
+  font-family: var(--font-body);
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-muted);
 }
 
+/* VT323 instead of the wide display face so the value stays inside the ring. */
 .pd-center-value {
-  font-family: var(--font-display);
-  font-size: 1.15rem;
+  font-family: var(--font-body);
+  font-size: 26px;
+  line-height: 1.05;
   color: var(--text-primary);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -50,28 +57,29 @@
 .pd-legend {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.6rem;
   flex: 1;
-  min-width: 140px;
+  min-width: 160px;
 }
 
 .pd-legend-row {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
-  font-size: 0.82rem;
+  gap: 0.6rem;
+  font-family: var(--font-body);
+  font-size: 17px;
 }
 
 .pd-dot {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   flex-shrink: 0;
 }
 
 .pd-legend-label {
   flex: 1;
-  color: var(--text-secondary);
+  color: var(--text-primary);
 }
 
 .pd-legend-pct {
@@ -81,6 +89,6 @@
 
 .pd-empty {
   color: var(--text-dim);
-  font-size: 0.85rem;
+  font-size: 16px;
   padding: 1rem 0;
 }

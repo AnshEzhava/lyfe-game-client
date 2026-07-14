@@ -1,0 +1,29 @@
+<!-- Outcome banner — always occupies its slot so nothing below ever shifts. -->
+<div class="outcome">
+  <ng-container *ngIf="result() as r">
+    <span class="outcome-tag" [class.win]="r.win" [class.loss]="!r.win">{{ r.win ? 'WIN' : 'LOSS' }}</span>
+    <span class="outcome-delta" [class.pos]="r.netDelta > 0" [class.neg]="r.netDelta < 0">
+      {{ r.netDelta > 0 ? '+' : '' }}{{ r.netDelta | number: '1.0-0' }} B
+    </span>
+  </ng-container>
+</div>
+
+<!-- Bet row -->
+<div class="bet-row">
+  <label class="bet-label">Bet</label>
+  <input
+    class="bet-input"
+    type="number"
+    min="10"
+    [ngModel]="bet()"
+    (ngModelChange)="bet.set(+$event)"
+    [disabled]="busy()"
+  />
+  <button *ngFor="let c of chips" class="bet-chip" [disabled]="busy()" (click)="setChip(c)">
+    {{ c >= 1000 ? (c / 1000) + 'K' : c }}
+  </button>
+</div>
+
+<button class="play-btn" [disabled]="busy()" (click)="play.emit()">
+  {{ busy() ? '…' : playLabel() }}
+</button>

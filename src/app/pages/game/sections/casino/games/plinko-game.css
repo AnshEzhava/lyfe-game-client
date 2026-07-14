@@ -1,0 +1,49 @@
+.board-wrap {
+  position: relative;
+  width: 220px;
+  height: 200px;
+}
+
+.board {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.ball {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  transform: translate(-50%, -50%);
+}
+/* Glide between pegs while dropping; snaps instantly when reset for a new drop. */
+.ball.dropping {
+  transition: left 0.13s linear, top 0.13s linear;
+}
+
+.buckets {
+  display: flex;
+  gap: 3px;
+  width: 100%;
+  max-width: 420px;
+}
+
+.bucket {
+  flex: 1;
+  padding: 0.3rem 0;
+  text-align: center;
+  font-size: 0.62rem;
+  font-variant-numeric: tabular-nums;
+  background: var(--surface-raised);
+  border: 2px solid var(--border-subtle);
+  color: var(--text-muted);
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.bucket.hit {
+  background: var(--accent);
+  color: var(--bg, #0f0f1c);
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  font-weight: bold;
+}

@@ -1,0 +1,55 @@
+      <div class="section-view">
+        <h3>Activity</h3>
+
+        <div class="activity-panel">
+        <div class="section-label">Automation</div>
+        <div class="afk-settings">
+          <div class="afk-setting-row">
+            <div class="afk-setting-text">
+              <span class="afk-setting-title">Auto-claim wages</span>
+              <span class="afk-setting-sub">Collect pending wages automatically when you return.</span>
+            </div>
+            <button
+              class="afk-toggle"
+              [class.on]="afkSettings().autoClaimWages"
+              (click)="toggleAutoClaim()"
+            >
+              <span class="afk-toggle-knob"></span>
+            </button>
+          </div>
+          <div class="afk-setting-row">
+            <div class="afk-setting-text">
+              <span class="afk-setting-title">Auto-reinvest</span>
+              <span class="afk-setting-sub">Invest auto-claimed wages into the government bond.</span>
+            </div>
+            <button
+              class="afk-toggle"
+              [class.on]="afkSettings().autoReinvest"
+              (click)="toggleAutoReinvest()"
+            >
+              <span class="afk-toggle-knob"></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="section-label">Recent activity</div>
+        <div class="afk-feed">
+          <ng-container *ngIf="activityEvents().length > 0; else emptyFeed">
+            <div *ngFor="let ev of activityEvents()" class="afk-feed-row">
+              <span
+                class="afk-feed-amount"
+                [class.pos]="ev.amount > 0"
+                [class.neg]="ev.amount < 0"
+              >
+                {{ ev.amount > 0 ? '+' : '' }}{{ ev.amount !== 0 ? (ev.amount | number: '1.0-0') + ' B' : '—' }}
+              </span>
+              <span class="afk-feed-label">{{ ev.label }}</span>
+              <span class="afk-feed-time">{{ formatNewsTime(ev.at) }}</span>
+            </div>
+          </ng-container>
+          <ng-template #emptyFeed>
+            <p class="coming-soon">No activity yet. Get a job, invest, and check back.</p>
+          </ng-template>
+        </div>
+        </div>
+      </div>

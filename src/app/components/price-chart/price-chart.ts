@@ -23,6 +23,9 @@ export class PriceChart {
   readonly W = 300;
   readonly H = 120;
   readonly PAD = 10;
+  // Horizontal inset so the first/last point's hover dot + crosshair aren't clipped
+  // by the plot's overflow:hidden edge.
+  readonly PADX = 6;
 
   range = signal<Range>('ALL');
   hoverIdx = signal<number | null>(null);
@@ -44,8 +47,9 @@ export class PriceChart {
     const min = this.minP();
     const range = this.maxP() - min || 1;
     const inner = this.H - this.PAD * 2;
+    const innerW = this.W - this.PADX * 2;
     return pts.map((p, i) => ({
-      x: (i / (pts.length - 1)) * this.W,
+      x: this.PADX + (i / (pts.length - 1)) * innerW,
       y: this.H - this.PAD - ((p - min) / range) * inner,
     }));
   });

@@ -119,7 +119,7 @@
           </div>
 
           <div class="section-label">Holdings</div>
-          <div class="item-list" *ngIf="portfolio()?.holdings?.length; else noHoldings">
+          <div class="item-list sm-stock-list" *ngIf="portfolio()?.holdings?.length; else noHoldings">
             <div *ngFor="let h of portfolio()!.holdings; let i = index" class="list-item sm-holding-row">
               <div class="item-header">
                 <span class="item-name" [style.color]="getChartScheme(i).stroke">{{ h.ticker }}</span>
